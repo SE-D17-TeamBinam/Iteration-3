@@ -140,7 +140,9 @@ public class ListPoints {
     return p;
   }
 
-
+  public ArrayList<Point> executeStrategy(Point start, Point goal){
+    return CentralController.currSession.algorithm.execute(start, goal);
+  }
 
   /**
    * gridCreate creates a grid based on width and height

@@ -33,6 +33,7 @@ import javafx.stage.Stage;
 import org.ElevatorPoint;
 import org.FindDirections;
 import org.ListPoints;
+import org.PathfindingStrategy;
 import org.Point;
 import org.StairPoint;
 
@@ -1019,7 +1020,8 @@ public class MapViewController extends CentralUIController implements Initializa
       saveButton.setDisable(true);
       goButton.setDisable(true);
       ListPoints lp = new ListPoints(allPoints);
-      ArrayList<Point> lp2 = lp.Astar(startPoint, endPoint);
+      ArrayList<Point> lp2 = lp.executeStrategy(startPoint, endPoint);
+      //ArrayList<Point> lp2 = lp.Astar(startPoint, endPoint);
 //      System.out.println("Path size: " + lp2.size());
 //      System.out.println("Total Points (Neighbors included): " + checked.size());
       allPoints.clear();

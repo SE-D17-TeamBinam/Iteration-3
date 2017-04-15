@@ -14,6 +14,7 @@ public class Session {
   public Language currLang = Language.ENGLISH;
   public CredentialManager credentialManager = new CredentialManager();
   public Dictionary dictionary = new Dictionary();
+  public PathfindingStrategy algorithm = new Astar(); //Default to Astar
 
   public void setLanguage(Language lang) {
     this.currLang = lang;
