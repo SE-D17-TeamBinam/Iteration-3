@@ -190,9 +190,11 @@ public class MapViewController extends CentralUIController implements Initializa
   private final Color ELEVATOR_POINT_COLOR = new Color(1, 0, 1, 1);
   private final Color POINT_COLOR = new Color(1, 0, 0, 1);
   private final Color POINT_STROKE = new Color(0, 0, 0, 1);
+  private double PATHFINDING_LINE_MULT = 3;
+  private final Color PATH_COLOR = new Color(1,0,0,1);
 
   // For drawing connections between points
-  private final double LINE_FILL = 4;
+  private final double LINE_FILL = 8;
   private final Color LINE_COLOR = new Color(0, 0, 0, 1);
 
   private final Color PRIMARY_POINT_FOCUS_COLOR = new Color(1, 1, 0, 1);
@@ -279,7 +281,7 @@ public class MapViewController extends CentralUIController implements Initializa
   public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
     textDirectionsBox.setVisible(false);
     //mapViewFlag = 3;
-    if(mapViewFlag != 3){ // Todo you know
+    if (mapViewFlag != 3) { // Todo you know
       helpButton.setVisible(false);
     }
     helpPane.setVisible(false);
@@ -489,9 +491,9 @@ public class MapViewController extends CentralUIController implements Initializa
         Connection c = new Connection(p, p.getNeighbors().get(j));
         if (mapViewFlag > 2 || pathfinding) {
           addVisualConnection(c);
-          if(pathfinding) {
-            lines.get(c).setStrokeWidth(LINE_FILL * current_zoom_scale * 4);
-            lines.get(c).setStroke(Color.RED);
+          if (pathfinding) {
+            lines.get(c).setStrokeWidth(LINE_FILL * current_zoom_scale * PATHFINDING_LINE_MULT*(point_radius/POINT_RADIUS_MAX));
+            lines.get(c).setStroke(PATH_COLOR);
           }
         }
       }
@@ -537,8 +539,9 @@ public class MapViewController extends CentralUIController implements Initializa
       connections.add(c);
       Line l = new Line();
       lines.put(c, l);
+      addLineListeners(l, c);
       updateLineForConnection(c);
-      l.setMouseTransparent(true);
+//      l.setMouseTransparent(true);
       // ensures that lines will always be drawn behind points
       mapViewPane.getChildren().add(1, l);
     }
@@ -584,7 +587,7 @@ public class MapViewController extends CentralUIController implements Initializa
     l.setStartY(startCoord.getY());
     l.setEndX(endCoord.getX());
     l.setEndY(endCoord.getY());
-    l.setStrokeWidth(LINE_FILL * current_zoom_scale * (pathfinding ? 4 : 1));
+    l.setStrokeWidth(LINE_FILL * current_zoom_scale * (pathfinding ? PATHFINDING_LINE_MULT * (point_radius/POINT_RADIUS_MAX) : 1));
   }
 
   /**
@@ -621,6 +624,12 @@ public class MapViewController extends CentralUIController implements Initializa
     c.setOnMouseReleased(e -> circleMouseReleased(e, p, c));
     c.setOnMouseEntered(e -> circleMouseEntered(e, p, c));
     c.setOnScroll(e -> circleMouseScrolled(e, p, c));
+  }
+
+  private void addLineListeners(Line l, Connection c) {
+    l.setOnMouseDragged(e -> lineMouseDragged(e, c, l));
+    l.setOnMouseClicked(e -> lineMouseClicked(e, c, l));
+    l.setOnMousePressed(e -> lineMousePressed(e, c, l));
   }
 
 
@@ -755,7 +764,8 @@ public class MapViewController extends CentralUIController implements Initializa
     xLabel.setText("X Pos: " + xText);
     yLabel.setText("Y Pos: " + yText);
     floorLabel.setText(dictionary.getString("Floor", currSession.getLanguage()) + ": " + floorText);
-    selectedNameLabel.setText(dictionary.getString("Name", currSession.getLanguage()) + ": " + nameText);
+    selectedNameLabel
+        .setText(dictionary.getString("Name", currSession.getLanguage()) + ": " + nameText);
     floorSelectLabel
         .setText(dictionary.getString("Floor", currSession.getLanguage()) + ":");
     nameLabel.setText(dictionary.getString("Name", currSession.getLanguage()) + ":");
@@ -1029,7 +1039,7 @@ public class MapViewController extends CentralUIController implements Initializa
       FindDirections td = new FindDirections();
       ArrayList<String> directions = td.getTextDirections(allPoints);
       String out = "";
-      for(String s : directions){
+      for (String s : directions) {
         out += s + ", ";
       }
       textDirectionsBox.setText(out);
@@ -1090,13 +1100,13 @@ public class MapViewController extends CentralUIController implements Initializa
   @FXML
   private void deleteButtonClicked(MouseEvent e) {
     // Clone the neighbors so that data isn't lost when a neighbor is removed
-   deletePoints(e.isControlDown());
+    deletePoints(e.isControlDown());
   }
 
   // TODO TOP - BOTTOM: (2512, 873) - (2512, 2312) = 388.35 ft
   // 1439 pixels = 388 feet
 
-  private void deletePoints(boolean ctrl){
+  private void deletePoints(boolean ctrl) {
     if (!ctrl) {
       if (pointFocus == null) {
         return;
@@ -1263,7 +1273,7 @@ public class MapViewController extends CentralUIController implements Initializa
     if (buttonUsed.equals("SECONDARY")) {
       // Rotate the map
 //      mapViewPane.setRotate(mapViewPane.getRotate()+1);// TODO
-  // Rotate around starting point as origin
+      // Rotate around starting point as origin
       // angle of rotation is based on angle in scene, rather than
 
     } else {
@@ -1350,20 +1360,17 @@ public class MapViewController extends CentralUIController implements Initializa
         setPointFocus(null);
         if (mapViewFlag == 3) {
           if (e.isShiftDown()) {
-            String s = new String();
-            s = typeSelect.getSelectedToggle().getUserData().toString();
+            String s = typeSelect.getSelectedToggle().getUserData().toString();
+            Coordinate c = coordinateToPixel(new Coordinate(e.getX(), e.getY()));
             Point p;
             if (s.equals("Stair")) {
-              Coordinate c = coordinateToPixel(new Coordinate(e.getX(), e.getY()));
               p = new StairPoint((int) c.getX(), (int) c.getY(), "STAIR", 0, new ArrayList<Point>(),
                   (int) floorChoiceBox.getValue());
             } else if (s.equals("Elevator")) {
-              Coordinate c = coordinateToPixel(new Coordinate(e.getX(), e.getY()));
               p = new ElevatorPoint((int) c.getX(), (int) c.getY(), "ELEVATOR", 0,
                   new ArrayList<Point>(),
                   (int) floorChoiceBox.getValue());
             } else {
-              Coordinate c = coordinateToPixel(new Coordinate(e.getX(), e.getY()));
               p = new Point(c.getX(), c.getY(), (int) floorChoiceBox.getValue());
             }
             floorPoints.add(p);
@@ -1382,7 +1389,7 @@ public class MapViewController extends CentralUIController implements Initializa
   @FXML
   private void mapKeyPressed(KeyEvent e) {
     if (mapViewFlag > 2) {
-      if(e.getCode().toString().equals("DELETE")){
+      if (e.getCode().toString().equals("DELETE")) {
         deletePoints(e.isControlDown());
       }
       if (e.isControlDown()) {
@@ -1418,7 +1425,7 @@ public class MapViewController extends CentralUIController implements Initializa
             mapViewPane.setCursor(Cursor.DEFAULT);
           }
         }
-        if(e.getCode().toString().equals("S")){
+        if (e.getCode().toString().equals("S")) {
           saveMapButtonClicked();
         }
       }
@@ -1500,12 +1507,12 @@ public class MapViewController extends CentralUIController implements Initializa
                 addVisualConnection(new Connection(p, pointFocus));
               }
             }
-          }else{
+          } else {
           }
-        }else{
-          if(mapViewFlag > 2){
+        } else {
+          if (mapViewFlag > 2) {
 
-          }else{
+          } else {
             endPoint = p;
           }
         }
@@ -1553,7 +1560,52 @@ public class MapViewController extends CentralUIController implements Initializa
     c.setCursor(Cursor.HAND);
   }
 
-  private void toggleHelp () {
+  @FXML
+  private void toggleHelp() {
     helpPane.setVisible(!helpPane.isVisible());
   }
+
+  ////////////////////
+  // Line Listeners //
+  ////////////////////
+
+  private void lineMouseClicked(MouseEvent e, Connection c1, Line l) {
+    if (mapViewFlag > 2) {
+      if (e.isShiftDown()) {
+        if (!mouseDragged) {
+          // Get rid of the old connection
+          removeVisualConnection(c1);
+          c1.getStart().severFrom(c1.getEnd());
+          // Create a point in between that is connected to both points
+          String s = typeSelect.getSelectedToggle().getUserData().toString();
+          Coordinate c = coordinateToPixel(new Coordinate(e.getX(), e.getY()));
+          Point p;
+          if (s.equals("Stair")) {
+            p = new StairPoint((int) c.getX(), (int) c.getY(), "STAIR", 0, new ArrayList<Point>(),
+                (int) floorChoiceBox.getValue());
+          } else if (s.equals("Elevator")) {
+            p = new ElevatorPoint((int) c.getX(), (int) c.getY(), "ELEVATOR", 0,
+                new ArrayList<Point>(),
+                (int) floorChoiceBox.getValue());
+          } else {
+            p = new Point(c.getX(), c.getY(), (int) floorChoiceBox.getValue());
+          }
+          allPoints.add(p);
+          floorPoints.add(p);
+          p.connectTo(c1.getStart());
+          p.connectTo(c1.getEnd());
+          addVisualNodesForPoint(p);
+        }
+      }
+    }
+  }
+
+  private void lineMouseDragged(MouseEvent e, Connection c, Line l) {
+    mouseDragged = true;
+  }
+
+  private void lineMousePressed(MouseEvent e, Connection c, Line l) {
+    mouseDragged = false;
+  }
+
 }
