@@ -162,6 +162,7 @@ public class DatabaseController implements DatabaseInterface {
       }
       this.addPhysician(ap.get(i).getID(), ap.get(i).getFirstName(), ap.get(i).getLastName(),
           ap.get(i).getTitle(), fakePoints);
+      progressBarPercentage = .5+.5*i/(ap.size()-1);
     }
 
     return true;
@@ -269,6 +270,7 @@ public class DatabaseController implements DatabaseInterface {
     int i;
     for (i = 0; i < al.size(); i++) {
       this.addPoint(al.get(i));
+      progressBarPercentage = .25 * i/al.size();
     }
     //int i;
 
@@ -280,6 +282,7 @@ public class DatabaseController implements DatabaseInterface {
       for (l = 0; l < neighbor_ids.size(); l++) {
         this.addNeighbor(point.getId(), neighbor_ids.get(l));
         //this.addNeighboring(pl.get(i).id,point.id);
+        progressBarPercentage = .25 + .25*l/neighbor_ids.size();
       }
     }
 
