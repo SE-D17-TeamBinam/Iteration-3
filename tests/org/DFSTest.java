@@ -37,15 +37,14 @@ class DFSTest {
   void simpleMultiFloor(){
     CentralController.getCurrSession().algorithm = strat;
 
-    ArrayList<ArrayList<Point>> floors = test.grid3dCreate(5, 5, 3);
+    ArrayList<ArrayList<Point>> floors = test.grid3dCreate(2, 2, 3);
 
-    floors.get(0).get(3).connectTo(floors.get(1).get(2));
-    floors.get(1).get(2).compareTo(floors.get(0).get(3));
-    floors.get(1).get(2).connectTo(floors.get(2).get(0));
-    floors.get(2).get(0).connectTo(floors.get(1).get(2));
+    floors.get(0).get(0).connectTo(floors.get(1).get(0));
 
-    Point node1 = floors.get(0).get(2);
-    Point node2 = floors.get(2).get(4);
+    floors.get(2).get(0).connectTo(floors.get(1).get(0));
+
+    Point node1 = floors.get(0).get(0);
+    Point node2 = floors.get(2).get(0);
 
     ArrayList<Point> path = new ArrayList<Point>();
 

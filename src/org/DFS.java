@@ -31,7 +31,12 @@ public class DFS extends PathfindingStrategy {
       neighbor.parent = start;
       return execute(neighbor, goal);
     }
-    startingLoc = null;
-    throw new NoPathException();
+
+    if(start.equals(startingLoc)) {
+      startingLoc = null;
+      throw new NoPathException();
+    }else {
+      return null;
+    }
   }
 }
