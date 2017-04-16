@@ -13,6 +13,8 @@ import org.Point;
  */
 public class DatabaseController implements DatabaseInterface {
 
+  SaveThread saveThread;
+  public double progressBarPercentage = 0;
   ArrayList<Point> localPoints;
   ArrayList<Physician> localPhysicians;
 
@@ -23,6 +25,7 @@ public class DatabaseController implements DatabaseInterface {
     this.localPhysicians = new ArrayList<Physician>();
     this.localPoints = new ArrayList<Point>();
     this.dbc = _dbc;
+    saveThread = new SaveThread(this);
   }
 
   ///////////////////////////
@@ -553,6 +556,7 @@ public class DatabaseController implements DatabaseInterface {
 
   @Override
   public ArrayList<Point> getPoints() {
+    while (saveThread.running);
     try {
       System.out.println("requesting points from DB, trying to load");
       load();
@@ -570,11 +574,12 @@ public class DatabaseController implements DatabaseInterface {
     System.out.println("Setting the DB local points copy");
     localPoints = points;
     //save_and_verify();
-    save();
+    saveThread.start();
   }
 
   @Override
   public ArrayList<Physician> getPhysicians() {
+    while (saveThread.running);
     try {
       System.out.println("requesting physicians from DB, trying to load");
       load();
@@ -592,7 +597,7 @@ public class DatabaseController implements DatabaseInterface {
     System.out.println("Setting the DB local physicians copy");
     localPhysicians = physicians;
     //save_and_verify();
-    save();
+    saveThread.start();
   }
 
   ElevatorPoint toElevatorPoint(Point p){
