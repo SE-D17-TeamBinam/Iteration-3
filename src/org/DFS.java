@@ -29,7 +29,10 @@ public class DFS extends PathfindingStrategy {
       }
 
       neighbor.parent = start;
-      return execute(neighbor, goal);
+      ArrayList<Point> result =  execute(neighbor, goal);
+      if(result != null){
+        return result;
+      }
     }
 
     if(start.equals(startingLoc)) {
