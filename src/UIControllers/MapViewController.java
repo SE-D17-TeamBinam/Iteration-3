@@ -192,7 +192,7 @@ public class MapViewController extends CentralUIController implements Initializa
   private final Color POINT_STROKE = new Color(0, 0, 0, 1);
 
   // For drawing connections between points
-  private final double LINE_FILL = 2;
+  private final double LINE_FILL = 4;
   private final Color LINE_COLOR = new Color(0, 0, 0, 1);
 
   private final Color PRIMARY_POINT_FOCUS_COLOR = new Color(1, 1, 0, 1);
@@ -435,13 +435,14 @@ public class MapViewController extends CentralUIController implements Initializa
   // Add values to the floor selector, add a listener, and set its default value
   private void initializeChoiceBox() {
     // Add options to change floors
-    floorChoiceBox.getItems().add(1);
-    floorChoiceBox.getItems().add(2);
-    floorChoiceBox.getItems().add(3);
-    floorChoiceBox.getItems().add(4);
-    floorChoiceBox.getItems().add(5);
-    floorChoiceBox.getItems().add(6);
     floorChoiceBox.getItems().add(7);
+    floorChoiceBox.getItems().add(6);
+    floorChoiceBox.getItems().add(5);
+    floorChoiceBox.getItems().add(4);
+    floorChoiceBox.getItems().add(3);
+    floorChoiceBox.getItems().add(2);
+    floorChoiceBox.getItems().add(1);
+
     // Add a ChangeListener to the floorChoiceBox
     floorChoiceBox.getSelectionModel().selectedIndexProperty().addListener(
         new ChangeListener<Number>() {
@@ -489,7 +490,7 @@ public class MapViewController extends CentralUIController implements Initializa
         if (mapViewFlag > 2 || pathfinding) {
           addVisualConnection(c);
           if(pathfinding) {
-//            lines.get(c).setStrokeWidth(LINE_FILL * current_zoom_scale * 2);
+            lines.get(c).setStrokeWidth(LINE_FILL * current_zoom_scale * 4);
             lines.get(c).setStroke(Color.RED);
           }
         }
@@ -583,7 +584,7 @@ public class MapViewController extends CentralUIController implements Initializa
     l.setStartY(startCoord.getY());
     l.setEndX(endCoord.getX());
     l.setEndY(endCoord.getY());
-    l.setStrokeWidth(LINE_FILL * current_zoom_scale);
+    l.setStrokeWidth(LINE_FILL * current_zoom_scale * (pathfinding ? 4 : 1));
   }
 
   /**
@@ -844,7 +845,7 @@ public class MapViewController extends CentralUIController implements Initializa
   }
 
 
-  public void getMap() {
+  private void getMap() {
     // Generate names for
     allPoints = database.getPoints();
 
@@ -870,7 +871,7 @@ public class MapViewController extends CentralUIController implements Initializa
   }
 
 
-  public Point getNearestPointWithinRadius(Coordinate coord, double radius) {
+  private Point getNearestPointWithinRadius(Coordinate coord, double radius) {
     Point closestPoint = null;
     double closestDistance = Double.MAX_VALUE;
     for (int i = 0; i < floorPoints.size(); i++) {
@@ -931,7 +932,7 @@ public class MapViewController extends CentralUIController implements Initializa
   }
 
   // Takes a point in the scene and returns the pixel on the map that corresponds
-  public Coordinate coordinateToPixel(Coordinate p) {
+  private Coordinate coordinateToPixel(Coordinate p) {
     double xRelToMapOrigin = p.getX();
     double yRelToMapOrigin = p.getY();
     return new Coordinate(xRelToMapOrigin / current_zoom_scale,
@@ -941,7 +942,7 @@ public class MapViewController extends CentralUIController implements Initializa
 
   // Takes the pixel on the map image and returns the position in the scene where it corresponds to.
   // Useful for drawing
-  public Coordinate pixelToCoordinate(Coordinate p) {
+  private Coordinate pixelToCoordinate(Coordinate p) {
     double actualX = p.getX() * current_zoom_scale;
     double actualY = p.getY() * current_zoom_scale;
     return new Coordinate(actualX, actualY);
@@ -1013,7 +1014,7 @@ public class MapViewController extends CentralUIController implements Initializa
   TextArea textDirectionsBox;
 
   @FXML
-  public void drawPathButtonClicked() {
+  private void drawPathButtonClicked() {
     if (startPoint != null && endPoint != null) {
       pathfinding = true;
       saveButton.setDisable(true);
@@ -1037,12 +1038,12 @@ public class MapViewController extends CentralUIController implements Initializa
   }
 
   @FXML
-  public void zoomIn() {
+  private void zoomIn() {
     changeZoom(true);
   }
 
   @FXML
-  public void zoomOut() {
+  private void zoomOut() {
     changeZoom(false);
   }
 
@@ -1087,7 +1088,7 @@ public class MapViewController extends CentralUIController implements Initializa
   }
 
   @FXML
-  public void deleteButtonClicked(MouseEvent e) {
+  private void deleteButtonClicked(MouseEvent e) {
     // Clone the neighbors so that data isn't lost when a neighbor is removed
    deletePoints(e.isControlDown());
   }
@@ -1131,7 +1132,7 @@ public class MapViewController extends CentralUIController implements Initializa
   }
 
   @FXML
-  public void updateSelectedButtonClicked() {
+  private void updateSelectedButtonClicked() {
     System.out.println("Update Point button is currently disabled.");
     /*
     double x = Double.parseDouble(xCoordField.getText());
@@ -1147,7 +1148,7 @@ public class MapViewController extends CentralUIController implements Initializa
 
   // Navigates back to the main menu
   @FXML
-  public void backButtonClicked() {
+  private void backButtonClicked() {
     Stage primaryStage = (Stage) floorChoiceBox.getScene().getWindow();
     try {
       loadScene(primaryStage, "/MainMenu.fxml");
@@ -1158,7 +1159,7 @@ public class MapViewController extends CentralUIController implements Initializa
   }
 
   @FXML
-  public void newButtonClicked() {
+  private void newButtonClicked() {
     System.out.println("New Point button is currently disabled");
     /*
     double x = Double.parseDouble(xCoordField.getText());
@@ -1552,7 +1553,7 @@ public class MapViewController extends CentralUIController implements Initializa
     c.setCursor(Cursor.HAND);
   }
 
-  public void toggleHelp () {
+  private void toggleHelp () {
     helpPane.setVisible(!helpPane.isVisible());
   }
 }
