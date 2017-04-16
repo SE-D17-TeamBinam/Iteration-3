@@ -13,6 +13,8 @@ import org.Point;
  */
 public class DatabaseController implements DatabaseInterface {
 
+  SaveThread saveThread;
+  public double progressBarPercentage = 0;
   ArrayList<Point> localPoints;
   ArrayList<Physician> localPhysicians;
 
@@ -23,6 +25,7 @@ public class DatabaseController implements DatabaseInterface {
     this.localPhysicians = new ArrayList<Physician>();
     this.localPoints = new ArrayList<Point>();
     this.dbc = _dbc;
+    saveThread = new SaveThread(this);
   }
 
   ///////////////////////////
@@ -159,6 +162,7 @@ public class DatabaseController implements DatabaseInterface {
       }
       this.addPhysician(ap.get(i).getID(), ap.get(i).getFirstName(), ap.get(i).getLastName(),
           ap.get(i).getTitle(), fakePoints);
+      progressBarPercentage = .5+.5*i/(ap.size()-1);
     }
 
     return true;
@@ -266,6 +270,7 @@ public class DatabaseController implements DatabaseInterface {
     int i;
     for (i = 0; i < al.size(); i++) {
       this.addPoint(al.get(i));
+      progressBarPercentage = .25 * i/al.size();
     }
     //int i;
 
@@ -277,6 +282,7 @@ public class DatabaseController implements DatabaseInterface {
       for (l = 0; l < neighbor_ids.size(); l++) {
         this.addNeighbor(point.getId(), neighbor_ids.get(l));
         //this.addNeighboring(pl.get(i).id,point.id);
+        progressBarPercentage = .25 + .25*l/neighbor_ids.size();
       }
     }
 
@@ -553,6 +559,7 @@ public class DatabaseController implements DatabaseInterface {
 
   @Override
   public ArrayList<Point> getPoints() {
+    while (saveThread.running);
     try {
       System.out.println("requesting points from DB, trying to load");
       load();
@@ -570,11 +577,12 @@ public class DatabaseController implements DatabaseInterface {
     System.out.println("Setting the DB local points copy");
     localPoints = points;
     //save_and_verify();
-    save();
+    saveThread.start();
   }
 
   @Override
   public ArrayList<Physician> getPhysicians() {
+    while (saveThread.running);
     try {
       System.out.println("requesting physicians from DB, trying to load");
       load();
@@ -592,7 +600,7 @@ public class DatabaseController implements DatabaseInterface {
     System.out.println("Setting the DB local physicians copy");
     localPhysicians = physicians;
     //save_and_verify();
-    save();
+    saveThread.start();
   }
 
   ElevatorPoint toElevatorPoint(Point p){
