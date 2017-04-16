@@ -10,10 +10,18 @@ import java.util.ArrayList;
  */
 public abstract class PathfindingStrategy {
 
+
+  /**
+   * Execute the current algorithm in Session
+   * @param start: starting Point
+   * @param goal: ending Point
+   * @return path from start to goal
+   * @throws NoPathException
+   */
   public abstract ArrayList<Point> execute(Point start, Point goal) throws NoPathException;
 
   /**
-   *  ListPath will create a path from the A* algorithm
+   *  ListPath will create a path from the pathfinding algorithm
    *  <p>
    *    It creates a ListPoints classs which will hold the arraylist of the path from
    *    one direction to another.
