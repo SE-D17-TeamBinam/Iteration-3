@@ -41,10 +41,10 @@ public class DatabaseController implements DatabaseInterface {
         "delete from physician where PID = " + pid + ")"
     );
 
-    ArrayList<Physician> new_physicians = localPhysicians;
-    Physician old_physician = findRealPhysician((int) pid, new_physicians);
-    new_physicians.remove(old_physician);
-    setPhysicians(new_physicians);
+    //ArrayList<Physician> new_physicians = localPhysicians;
+    Physician old_physician = findRealPhysician((int) pid, localPhysicians);
+    localPhysicians.remove(old_physician);
+    //setPhysicians(new_physicians);
 
     return true;
   }
@@ -70,13 +70,29 @@ public class DatabaseController implements DatabaseInterface {
     for (i = 0; i < array_points.size(); i++) {
       this.addPhysicianLocation(PID, array_points.get(i).getId());
     }
+    System.out.println("added or tried to add physician with id : " + PID);
 
-    ArrayList<Physician> new_physicians = localPhysicians;
-    new_physicians.add(real_ph);
-    setPhysicians(new_physicians);
-
+    //ArrayList<Physician> new_physicians = localPhysicians;
+    //new_physicians.add(real_ph);
+    //setPhysicians(new_physicians);
+    //localPhysicians.add(real_ph);
+    if(check(localPhysicians,real_ph)){
+      localPhysicians.add(real_ph);
+    }
     return true;
   }
+
+  private boolean check(ArrayList<Physician> ap, Physician p){
+    long id = p.getID();
+    for(int i = 0;i < ap.size();i++){
+      if(id == ap.get(i).getID()){
+        return false;
+      }
+    }
+    //ap.add(p);
+    return true;
+  }
+
 
   public boolean editPhysician(
       Physician real_ph
@@ -102,11 +118,11 @@ public class DatabaseController implements DatabaseInterface {
       this.addPhysicianLocation(PID, array_points.get(i).getId());
     }
 
-    ArrayList<Physician> new_physicians = localPhysicians;
-    Physician old_physician = findRealPhysician((int) real_ph.getID(), new_physicians);
-    new_physicians.remove(old_physician);
-    new_physicians.add(real_ph);
-    setPhysicians(new_physicians);
+    //ArrayList<Physician> new_physicians = localPhysicians;
+    Physician old_physician = findRealPhysician((int) real_ph.getID(), localPhysicians);
+    localPhysicians.remove(old_physician);
+    localPhysicians.add(real_ph);
+    //setPhysicians(new_physicians);
 
     return true;
   }
@@ -305,7 +321,7 @@ public class DatabaseController implements DatabaseInterface {
     for (int q = 0; q < rpal.size(); q++) {
       al.add(new FakePoint(rpal.get(q)));
     }
-    dbc.send_Command("DELETE from Point where 1=1;DELETE from Neighbor 1=1;");
+    dbc.send_Command("DELETE from Point where 1=1;DELETE from Neighbor where 1=1;");
     int i;
     for (i = 0; i < al.size(); i++) {
       this.addPoint(al.get(i));
@@ -354,15 +370,15 @@ public class DatabaseController implements DatabaseInterface {
 
         ArrayList<Integer> neighbor_ids = new ArrayList<Integer>();
         ResultSet res4 = dbc.send_Command(
-            "select pid1,pid2 from Neighbor where pid1 = " + pid + " OR pid2 = " + pid).get(0);
+            "select pid1,pid2 from Neighbor where pid1 = " + pid /*+ " OR pid2 = " + pid*/).get(0);
         while (res4.next()) {
-          int pid1 = res4.getInt("Pid1");
+          //int pid1 = res4.getInt("Pid1");
           int pid2 = res4.getInt("Pid2");
-          if (pid1 != my_pid) {
-            neighbor_ids.add(pid1);
-          } else {
-            neighbor_ids.add(pid2);
-          }
+          //if (pid1 != my_pid) {
+          //  neighbor_ids.add(pid1);
+          //} else {
+          neighbor_ids.add(pid2);
+          //}
 
         }
         res4.close();
@@ -589,6 +605,11 @@ public class DatabaseController implements DatabaseInterface {
     while (saveThread.running) {
       ;
     }
+    try {
+      load();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
     System.out.println("trying to get Points with names");
     ArrayList<Point> namedPoints = new ArrayList<Point>();
     int i;
@@ -622,6 +643,9 @@ public class DatabaseController implements DatabaseInterface {
 
   @Override
   public void setPoints(ArrayList<Point> points) {
+    while (saveThread.running) {
+      ;
+    }
     System.out.println("Setting the DB local points copy");
     localPoints = points;
     //save_and_verify();
@@ -647,6 +671,9 @@ public class DatabaseController implements DatabaseInterface {
 
   @Override
   public void setPhysicians(ArrayList<Physician> physicians) {
+    while (saveThread.running) {
+      ;
+    }
     System.out.println("Setting the DB local physicians copy");
     localPhysicians = physicians;
     //save_and_verify();
@@ -667,8 +694,10 @@ public class DatabaseController implements DatabaseInterface {
         if (soundex.difference(searchTerm, p.getFirstName()) > fuzzySearchThreshold
             || soundex.difference(searchTerm, p.getLastName()) > fuzzySearchThreshold
             || soundex.difference(searchTerm, p.getTitle()) > fuzzySearchThreshold
-            || soundex.difference(searchTerm, p.getFirstName() + p.getLastName()) > fuzzySearchThreshold
-            || soundex.difference(searchTerm, p.getLastName() + p.getFirstName()) > fuzzySearchThreshold){
+            || soundex.difference(searchTerm, p.getFirstName() + p.getLastName())
+            > fuzzySearchThreshold
+            || soundex.difference(searchTerm, p.getLastName() + p.getFirstName())
+            > fuzzySearchThreshold) {
           ret.add(p);
         }
 
@@ -686,11 +715,11 @@ public class DatabaseController implements DatabaseInterface {
     Soundex soundex = new Soundex();
     try {
       for (Point p : getNamedPoints()) {
-        if (soundex.difference(searchTerm, p.getName()) > fuzzySearchThreshold){
+        if (soundex.difference(searchTerm, p.getName()) > fuzzySearchThreshold) {
           ret.add(p);
         }
       }
-    }catch (EncoderException e){
+    } catch (EncoderException e) {
       e.printStackTrace();
       System.out.println("There was a problem encoding one of the strings");
     }
