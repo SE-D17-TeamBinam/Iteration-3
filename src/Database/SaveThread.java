@@ -22,9 +22,6 @@ class SaveThread implements Runnable {
   }
 
   public void start(){
-    if (t == null){
-      t = new Thread(this,"Saving Thread");
-      t.start();
-    }
+    (new Thread(this, "Save Thread")).start();
   }
 }

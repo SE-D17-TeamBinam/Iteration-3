@@ -80,6 +80,15 @@ public interface DatabaseInterface {
       Physician real_ph
   );
 
-}
+
+  //TODO Javadoc
+  public ArrayList<Physician> fuzzySearchPhysicians(String searchTerm);
+
+
+  //TODO Javadoc
+  public ArrayList<Point> fuzzySearchPoints(String searchTerm);
+
+
+  }
 
 
