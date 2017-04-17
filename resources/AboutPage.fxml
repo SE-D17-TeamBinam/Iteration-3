@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750" prefWidth="1300" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UIControllers.AboutPageController">
+  <children>
+      <Pane fx:id="AboutPage" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750" prefWidth="1300" style="-fx-background-color: #FFFFFF;">
+         <children>
+            <Button fx:id="AboutBack" layoutX="5.0" layoutY="5.0" mnemonicParsing="false" onMouseClicked="#back" prefHeight="75.0" prefWidth="150.0" text="Back">
+               <font>
+                  <Font size="26.0" />
+               </font>
+            </Button>
+            <Button fx:id="AboutDone" layoutX="1145.0" layoutY="5.0" mnemonicParsing="false" onMouseClicked="#back" prefHeight="75.0" prefWidth="150.0" text="Done">
+               <font>
+                  <Font size="26.0" />
+               </font>
+            </Button>
+            <Label fx:id="MainLabel" layoutX="575.0" layoutY="135.0" prefHeight="68.0" prefWidth="150.0" text="ABOUT">
+               <font>
+                  <Font size="46.0" />
+               </font>
+            </Label>
+            <TextArea fx:id="TeamInfo" layoutX="204.0" layoutY="235.0" prefHeight="378.0" prefWidth="899.0" text="Lead Software Engineer: Thomas White&#10;Assistant Lead Software Engineer 1: Matthew Collins&#10;Assistant Lead Software Engineer 2: Brandon Coll&#10;Scrum Master/Project Manager: Andrew Nagal&#10;Product Owner: Evan Duffy&#10;Test Engineer: Haofan Zhang&#10;Documentation Analyst: John Bieber&#10;Junior Developer 1: Praneeth Appikatla&#10;Junior Developer 2: Spyridon Antonatos&#10;Junior Developer 3: Alberto Ramirez&#10;Coach: Binam Kayastha&#10;Professor: Wilson Wong&#10;&#10;&#10;">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </TextArea>
+            <Label layoutX="249.0" layoutY="649.0" prefHeight="68.0" prefWidth="810.0" text="Thank You to Brigham and Women's Faulkner Hospital and Andrew Shinn!">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>
