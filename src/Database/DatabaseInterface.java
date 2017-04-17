@@ -53,4 +53,33 @@ public interface DatabaseInterface {
    */
   public void setPhysicians(ArrayList<Physician> physicians);
 
+
+  /**
+   *removes the physician with the given id from the database and the local copy of physicians
+   * @param pid , integer id of the physican to remove
+   * @return true if everything was successful
+   */
+  public boolean removePhysician(long pid);
+
+
+  /**
+   *adds a new physician to the database and the local copy
+   * @param real_ph , the physician to add
+   * @return true if everything was successful
+   */
+  public boolean addPhysician(
+      Physician real_ph
+  );
+
+  /**
+   * edits a physician, updating it with the new fields of the physician given to the function
+   * @param real_ph , the updated physician
+   * @return true if everything was successful
+   */
+  public boolean editPhysician(
+      Physician real_ph
+  );
+
 }
+
+

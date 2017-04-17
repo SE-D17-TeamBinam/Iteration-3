@@ -1,5 +1,6 @@
 package Database;
 
+import java.lang.reflect.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -32,15 +33,32 @@ public class DatabaseController implements DatabaseInterface {
   /////// Physician /////////
   ///////////////////////////
 
-  public boolean removePhysician(String first_name, String last_name, String title) {
+  public boolean removePhysician(long pid) {
     dbc.send_Command(
-        "delete from physician (first_name, last_name, title) values ('" + first_name + "','"
-            + last_name + "','" + title + "')");
+        "delete from physician where PID = " + pid + ")"
+    );
+
+
+    ArrayList<Physician> new_physicians = localPhysicians;
+    Physician old_physician = findRealPhysician((int)pid,new_physicians);
+    new_physicians.remove(old_physician);
+    setPhysicians(new_physicians);
+
     return true;
   }
 
-  public boolean addPhysician(long PID, String first_name, String last_name, String title,
-      ArrayList<FakePoint> array_points) {
+  public boolean addPhysician(
+      //long PID, String first_name, String last_name, String title,
+      //ArrayList<FakePoint> array_points,
+      Physician real_ph
+  ) {
+    //FakePhysician fake_ph = new FakePhysician(real_ph);
+    long PID = real_ph.getID();
+    String first_name = real_ph.getFirstName();
+    String last_name = real_ph.getLastName();
+    String title = real_ph.getTitle();
+    ArrayList<Point> array_points = real_ph.getLocations();
+
     dbc.send_Command(
         "insert into physician (pid,first_name, last_name, title) values (" + PID + ",'"
             + first_name + "','"
@@ -48,10 +66,51 @@ public class DatabaseController implements DatabaseInterface {
 
     int i;
     for (i = 0; i < array_points.size(); i++) {
-      this.addPhysicianLocation(PID, array_points.get(i).id);
+      this.addPhysicianLocation(PID, array_points.get(i).getId());
     }
+
+
+    ArrayList<Physician> new_physicians = localPhysicians;
+    new_physicians.add(real_ph);
+    setPhysicians(new_physicians);
+
     return true;
   }
+
+  public boolean editPhysician(
+      Physician real_ph
+  ) {
+    //FakePhysician fake_ph = new FakePhysician(real_ph);
+    long PID = real_ph.getID();
+    String first_name = real_ph.getFirstName();
+    String last_name = real_ph.getLastName();
+    String title = real_ph.getTitle();
+    ArrayList<Point> array_points = real_ph.getLocations();
+
+    dbc.send_Command(
+        "update physician SET first_name = '" + first_name + "', last_name =  '" + last_name +  "', title  =  '" + title + "' WHERE PID = " + PID + ")"
+    );
+
+    dbc.send_Command(
+        "delete from physician_location WHERE PID_ph = " + PID + ")"
+    );
+
+    int i;
+    for (i = 0; i < array_points.size(); i++) {
+      this.addPhysicianLocation(PID, array_points.get(i).getId());
+    }
+
+    ArrayList<Physician> new_physicians = localPhysicians;
+    Physician old_physician = findRealPhysician((int)real_ph.getID(),new_physicians);
+    new_physicians.remove(old_physician);
+    new_physicians.add(real_ph);
+    setPhysicians(new_physicians);
+
+    return true;
+  }
+
+
+
 
   public FakePhysician get_physician(int pid) {
     ResultSet res = dbc.send_Command("select * from physician where pid = " + pid).get(0);
@@ -156,37 +215,19 @@ public class DatabaseController implements DatabaseInterface {
     int i;
     for (i = 0; i < ap.size(); i++) {
       ArrayList<Point> points = ap.get(i).getLocations();
-      ArrayList<FakePoint> fakePoints = new ArrayList<FakePoint>();
+      /*ArrayList<FakePoint> fakePoints = new ArrayList<FakePoint>();
       for (int j = 0; j < points.size(); j++) {
         fakePoints.add(new FakePoint(points.get(j)));
-      }
-      this.addPhysician(ap.get(i).getID(), ap.get(i).getFirstName(), ap.get(i).getLastName(),
-          ap.get(i).getTitle(), fakePoints);
+      }*/
+      Physician physician = ap.get(i);
+      this.addPhysician(physician);
       progressBarPercentage = .5+.5*i/(ap.size()-1);
     }
 
     return true;
   }
 
-  ///////////////////////////
-  //// Location - Service ///
-  ///////////////////////////
 
-  public boolean addServiceLocation(String service_name, String md_related, String location_name) {
-    dbc.send_Command(
-        "insert into ServiceLocation (lid,sid) select lid,sid from service_location, service where location.name = '"
-            + location_name + "', select sid from service where"
-            + " service.name = '" + service_name + "')\n ");
-    return true;
-  }
-
-  public boolean removeServiceLocation(String service_name, String location_name) {
-    dbc.send_Command(
-        "delete from ServiceLocation  where sid = (select sid from service where name = '"
-            + service_name + "') and  lid = (select lid from location where"
-            + " name = '" + location_name + "')\n ");
-    return true;
-  }
 
   ///////////////////////////
   /// Location - Physician //
