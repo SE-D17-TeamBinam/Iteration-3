@@ -58,10 +58,6 @@ public class MapViewController extends CentralUIController implements Initializa
   private Button backButton;
 
   @FXML
-  private Pane infoPane;
-  @FXML
-  private Rectangle infoPaneRectangle;
-  @FXML
   private Pane adminPane;
   @FXML
   private Rectangle adminPaneRectangle;
@@ -78,21 +74,13 @@ public class MapViewController extends CentralUIController implements Initializa
 
   // User Pane fields
   @FXML
-  private Label floorLabel;
-  @FXML
   private Text startLabel;
   @FXML
   private Text endLabel;
   @FXML
   private Button goButton;
   @FXML
-  private Label selectLabel;
-  @FXML
   private Text floorSelectLabel;
-  @FXML
-  private Label xLabel;
-  @FXML
-  private Label yLabel;
   @FXML
   private Text nameLabel;
   @FXML
@@ -280,7 +268,6 @@ public class MapViewController extends CentralUIController implements Initializa
   @FXML
   public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
     textDirectionsBox.setVisible(false);
-    //mapViewFlag = 3;
     if (mapViewFlag != 3) { // Todo you know
       helpButton.setVisible(false);
     }
@@ -300,11 +287,9 @@ public class MapViewController extends CentralUIController implements Initializa
 
   private void initializeLanguageConfigs() {
         /* apply language configs */
-    floorLabel.setText(dictionary.getString("Floor", currSession.getLanguage()) + ":");
     startLabel.setText(dictionary.getString("Start", currSession.getLanguage()));
     endLabel.setText(dictionary.getString("End", currSession.getLanguage()));
     goButton.setText(dictionary.getString("Go", currSession.getLanguage()));
-    selectLabel.setText(dictionary.getString("Selected:", currSession.getLanguage()));
     floorSelectLabel.setText(dictionary.getString("Floor", currSession.getLanguage()) + ":");
     backButton.setText(dictionary.getString("Back", currSession.getLanguage()));
     selectedNameLabel.setText(dictionary.getString("Name", currSession.getLanguage()) + ":");
@@ -385,17 +370,15 @@ public class MapViewController extends CentralUIController implements Initializa
       adminPane.setVisible(false);
       typeSelectionPane.setVisible(false);
     } else {
-      infoPane.setVisible(false);
       fixZoomPanePos();
     }
   }
 
   @Override
   public void customListenerX() {
-    map_x_max = x_res - infoPaneRectangle.getWidth();
-    infoPane.setLayoutX(x_res - infoPaneRectangle.getWidth());
-    adminPane.setLayoutX(infoPane.getLayoutX());
-    typeSelectionPane.setLayoutX(infoPane.getLayoutX());
+    map_x_max = x_res - adminPaneRectangle.getWidth() * (adminPane.isVisible() ? 1 : 0);
+    adminPane.setLayoutX(x_res - adminPaneRectangle.getWidth());
+    typeSelectionPane.setLayoutX(adminPane.getLayoutX());
     fixMapDisplayLocation();
     fixZoomPanePos();
   }
@@ -407,12 +390,11 @@ public class MapViewController extends CentralUIController implements Initializa
   public void customListenerY() {
     leftBar.setHeight(y_res - banner.getHeight());
     leftBar.setY(banner.getHeight());
+    adminPane.setLayoutY(leftBar.getY());
     map_y_max = y_res;
-    infoPaneRectangle.setHeight((y_res - banner.getHeight()) / 2);
-    adminPaneRectangle.setHeight(infoPaneRectangle.getHeight());
-    adminPane.setLayoutY(infoPane.getLayoutY());
-    typeSelectionPane.setLayoutY(infoPane.getLayoutY() + infoPaneRectangle.getHeight());
-    typeSelectionPaneRectangle.setHeight(infoPaneRectangle.getHeight());
+    adminPaneRectangle.setHeight((y_res - banner.getHeight()) / 2);
+    typeSelectionPane.setLayoutY(adminPane.getLayoutY() + adminPaneRectangle.getHeight());
+    typeSelectionPaneRectangle.setHeight(adminPaneRectangle.getHeight());
     fixMapDisplayLocation();
     fixZoomPanePos();
     textDirectionsBox.setLayoutY(y_res - 180); // TODO Not constant height
@@ -579,15 +561,22 @@ public class MapViewController extends CentralUIController implements Initializa
    */
   private void updateLineForConnection(Connection c) {
     Line l = lines.get(c);
-    Point start = c.getStart();
-    Point end = c.getEnd();
-    Coordinate startCoord = pixelToCoordinate(new Coordinate(start.getXCoord(), start.getYCoord()));
-    Coordinate endCoord = pixelToCoordinate(new Coordinate(end.getXCoord(), end.getYCoord()));
-    l.setStartX(startCoord.getX());
-    l.setStartY(startCoord.getY());
-    l.setEndX(endCoord.getX());
-    l.setEndY(endCoord.getY());
-    l.setStrokeWidth(LINE_FILL * current_zoom_scale * (pathfinding ? PATHFINDING_LINE_MULT * (point_radius/POINT_RADIUS_MAX) : 1));
+    if(l != null) {
+      Point start = c.getStart();
+      Point end = c.getEnd();
+      Coordinate startCoord = pixelToCoordinate(
+          new Coordinate(start.getXCoord(), start.getYCoord()));
+      Coordinate endCoord = pixelToCoordinate(new Coordinate(end.getXCoord(), end.getYCoord()));
+      l.setStartX(startCoord.getX());
+      l.setStartY(startCoord.getY());
+      l.setEndX(endCoord.getX());
+      l.setEndY(endCoord.getY());
+      l.setStrokeWidth(
+          LINE_FILL * current_zoom_scale * (pathfinding ? PATHFINDING_LINE_MULT * (point_radius
+              / POINT_RADIUS_MAX) : 1));
+    }else{
+      // This could be when dragging nodes that are connected to other floors
+    }
   }
 
   /**
@@ -739,6 +728,7 @@ public class MapViewController extends CentralUIController implements Initializa
       }
     }
     pointFocus = newFocus;
+
     String xText = "";
     String yText = "";
     String floorText = "";
@@ -761,9 +751,6 @@ public class MapViewController extends CentralUIController implements Initializa
         nameField.requestFocus();
       }
     }
-    xLabel.setText("X Pos: " + xText);
-    yLabel.setText("Y Pos: " + yText);
-    floorLabel.setText(dictionary.getString("Floor", currSession.getLanguage()) + ": " + floorText);
     selectedNameLabel
         .setText(dictionary.getString("Name", currSession.getLanguage()) + ": " + nameText);
     floorSelectLabel
@@ -1336,52 +1323,63 @@ public class MapViewController extends CentralUIController implements Initializa
 
   @FXML
   private void mapMouseClicked(MouseEvent e) {
-    String buttonUsed = e.getButton().name();
     if (!mouseDragged) {
-      if (buttonUsed.equals("SECONDARY")) {
-        if (mapViewFlag > 2) {
-          if (e.isShiftDown()) {
-            if (!pointFocus.getNeighbors().containsAll(secondaryPointFoci)) {
-              for (Point p : secondaryPointFoci) {
-                p.connectTo(pointFocus);
-                addVisualConnection(new Connection(p, pointFocus));
+      mapMouseClickNoDrag(e);
+    }
+  }
 
-              }
-            } else {
-              for (Point p : secondaryPointFoci) {
-                p.severFrom(pointFocus);
-                removeVisualConnection(new Connection(p, pointFocus));
-              }
-            }
+  private void mapMouseClickNoDrag(MouseEvent e){
+    String buttonUsed = e.getButton().name();
+    if (buttonUsed.equals("SECONDARY")) {
+      mapMouseRightClick(e);
+    } else {
+      mapMouseLeftClick(e);
+    }
+  }
+
+  private void mapMouseRightClick(MouseEvent e){
+    if (mapViewFlag > 2) {
+      if (e.isShiftDown()) {
+        if (!pointFocus.getNeighbors().containsAll(secondaryPointFoci)) {
+          for (Point p : secondaryPointFoci) {
+            p.connectTo(pointFocus);
+            addVisualConnection(new Connection(p, pointFocus));
+
+          }
+        } else {
+          for (Point p : secondaryPointFoci) {
+            p.severFrom(pointFocus);
+            removeVisualConnection(new Connection(p, pointFocus));
           }
         }
+      }
+    }
+  }
 
-      } else {
-        setPointFocus(null);
-        if (mapViewFlag == 3) {
-          if (e.isShiftDown()) {
-            String s = typeSelect.getSelectedToggle().getUserData().toString();
-            Coordinate c = coordinateToPixel(new Coordinate(e.getX(), e.getY()));
-            Point p;
-            if (s.equals("Stair")) {
-              p = new StairPoint((int) c.getX(), (int) c.getY(), "STAIR", 0, new ArrayList<Point>(),
-                  (int) floorChoiceBox.getValue());
-            } else if (s.equals("Elevator")) {
-              p = new ElevatorPoint((int) c.getX(), (int) c.getY(), "ELEVATOR", 0,
-                  new ArrayList<Point>(),
-                  (int) floorChoiceBox.getValue());
-            } else {
-              p = new Point(c.getX(), c.getY(), (int) floorChoiceBox.getValue());
-            }
-            floorPoints.add(p);
-            allPoints.add(p);
-            addVisualNodesForPoint(p);
-            setPointFocus(p);
-          }
-          if (e.isControlDown()) {
-            clearSecondaryPointFoci();
-          }
+  private void mapMouseLeftClick(MouseEvent e){
+    setPointFocus(null);
+    if (mapViewFlag == 3) {
+      if (e.isShiftDown()) {
+        String s = typeSelect.getSelectedToggle().getUserData().toString();
+        Coordinate c = coordinateToPixel(new Coordinate(e.getX(), e.getY()));
+        Point p;
+        if (s.equals("Stair")) {
+          p = new StairPoint((int) c.getX(), (int) c.getY(), "STAIR", 0, new ArrayList<Point>(),
+              (int) floorChoiceBox.getValue());
+        } else if (s.equals("Elevator")) {
+          p = new ElevatorPoint((int) c.getX(), (int) c.getY(), "ELEVATOR", 0,
+              new ArrayList<Point>(),
+              (int) floorChoiceBox.getValue());
+        } else {
+          p = new Point(c.getX(), c.getY(), (int) floorChoiceBox.getValue());
         }
+        floorPoints.add(p);
+        allPoints.add(p);
+        addVisualNodesForPoint(p);
+        setPointFocus(p);
+      }
+      if (e.isControlDown()) {
+        clearSecondaryPointFoci();
       }
     }
   }
@@ -1476,46 +1474,61 @@ public class MapViewController extends CentralUIController implements Initializa
   }
 
   private void circleMouseClicked(MouseEvent e, Point p, Circle c) {
-
     if (!mouseDragged) { // if it was dragged, then it's not a click
-      String button = e.getButton().toString();
-      if (button.equals("PRIMARY")) {
-        if (mapViewFlag > 2) {
-          if (e.isControlDown()) {
-            togglePointToSecondarySelection(p);
-          } else {
-            setPointFocus(p);
-          }
-        } else {
-          if (e.isControlDown()) {
+      circleMouseClickNoDrag(e, p, c);
+    }
+  }
 
-          } else {
-            setPointFocus(p);
-            startPoint = p;
-          }
-        }
-      } else if (button.equals("SECONDARY")) {
-        if (e.isShiftDown()) {
-          if (mapViewFlag > 2) {
-            // Ensure that it does not get connected to itself or a repeat connection
-            if (!p.equals(pointFocus) && pointFocus != null) {
-              if (p.getNeighbors().contains(pointFocus)) {
-                p.severFrom(pointFocus);
-                removeVisualConnection(new Connection(p, pointFocus));
-              } else {
-                p.connectTo(pointFocus);
-                addVisualConnection(new Connection(p, pointFocus));
-              }
-            }
-          } else {
-          }
-        } else {
-          if (mapViewFlag > 2) {
+  private void circleMouseClickNoDrag(MouseEvent e, Point p, Circle c){
+    String button = e.getButton().toString();
+    if (button.equals("PRIMARY")) {
+      circleMouseLeftClick(e, p, c);
+    } else if (button.equals("SECONDARY")) {
+      circleMouseRightClick(e, p, c);
+    }
+  }
 
-          } else {
-            endPoint = p;
-          }
-        }
+  private void circleMouseLeftClick(MouseEvent e, Point p, Circle c){
+    if (mapViewFlag > 2) {
+      if (e.isControlDown()) {
+        togglePointToSecondarySelection(p);
+      } else {
+        setPointFocus(p);
+      }
+    } else {
+      if (e.isControlDown()) {
+
+      } else {
+        setPointFocus(p);
+        startPoint = p;
+      }
+    }
+  }
+
+  private void circleMouseRightClick(MouseEvent e, Point p, Circle c){
+    if (e.isShiftDown()) {
+      if (mapViewFlag > 2) {
+        adminCircleMouseRightClick(e, p, c);
+      } else {
+      }
+    } else {
+      if (mapViewFlag > 2) {
+
+      } else {
+        endPoint = p;
+      }
+    }
+  }
+
+  private void adminCircleMouseRightClick(MouseEvent e, Point p, Circle c){
+    // Ensure that it does not get connected to itself or a repeat connection
+    if (!p.equals(pointFocus) && pointFocus != null) {
+      if (p.getNeighbors().contains(pointFocus)) {
+        p.severFrom(pointFocus);
+        removeVisualConnection(new Connection(p, pointFocus));
+      } else {
+        p.connectTo(pointFocus);
+        addVisualConnection(new Connection(p, pointFocus));
       }
     }
   }

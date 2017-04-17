@@ -9,6 +9,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
@@ -74,20 +75,6 @@
                </font>
             </Text>
             <Button fx:id="saveButton" layoutX="31.0" layoutY="237.0" mnemonicParsing="false" onMouseClicked="#saveMapButtonClicked" prefHeight="31.0" prefWidth="168.0" text="Save Map" />
-         </children>
-      </Pane>
-      <Pane fx:id="infoPane" layoutX="1070.0" layoutY="160.0" prefHeight="295.0" prefWidth="230.0">
-         <children>
-            <Rectangle fx:id="infoPaneRectangle" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="295.0" stroke="BLACK" strokeType="INSIDE" width="230.0" />
-            <Label layoutX="20.0" layoutY="85.0" text="X Pos:" fx:id="xLabel" />
-            <Label fx:id="yLabel" layoutX="133.0" layoutY="85.0" text="Y Pos:" />
-            <Label fx:id="floorLabel" layoutX="20.0" layoutY="148.0" text="Floor:" />
-            <Label fx:id="selectedNameLabel" layoutX="20.0" layoutY="193.0" text="Name:" />
-            <Label fx:id="selectLabel" layoutX="50.0" layoutY="24.0" text="Selected:">
-               <font>
-                  <Font size="33.0" />
-               </font>
-            </Label>
          </children>
       </Pane>
       <Pane fx:id="typeSelectionPane" layoutX="10.0" layoutY="260.0" prefHeight="451.0" prefWidth="130.0">
@@ -529,6 +516,16 @@
                   <Font name="System Bold" size="17.0" />
                </font>
             </Text>
+         </children>
+      </Pane>
+      <HBox layoutX="10.0" layoutY="716.0" prefHeight="29.0" prefWidth="130.0">
+         <children>
+            <Label fx:id="selectedNameLabel" layoutX="76.0" text="Name:" />
+         </children>
+      </HBox>
+      <Pane fx:id="userPane" layoutX="1100.0" layoutY="109.0" prefHeight="533.0" prefWidth="200.0">
+         <children>
+            <Rectangle fx:id="userPaneRectangle" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="533.0" stroke="BLACK" strokeType="INSIDE" width="200.0" />
          </children>
       </Pane>
    </children>
