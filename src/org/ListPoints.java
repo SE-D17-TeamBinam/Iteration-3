@@ -338,6 +338,7 @@ public class ListPoints {
    * </p>
    * @param path - array list of points in reverse order, taken from the pathfinding algorithm
    * @return String - Describes the amount of the time in a string
+   *          if it is under a minute, it will say that otherwise it will round to the nearest minute
    */
   public String TimedPath(ArrayList<Point> path){
     double pixelToFeet = .20;//483/2242; // ft/pixel
