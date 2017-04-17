@@ -788,4 +788,55 @@ public class ListPointsTest { //tests Astar for one floor, all floor, and error 
     }
     assertTrue(true);
   }
+  @Test
+  void TimePathTestWithElevator(){
+    Point point1 = new Point(0,0,7);
+    Point point2 = new Point(500,500,7);
+    ElevatorPoint elevatorPoint1 = new ElevatorPoint(1000,50,7);
+    ElevatorPoint elevatorPoint2 = new ElevatorPoint(1000,50,6);
+    ElevatorPoint elevatorPoint3 = new ElevatorPoint(1000,50,5);
+    StairPoint stairPoint1 = new StairPoint(90,200,7);
+    StairPoint stairPoint2 = new StairPoint(90,200,6);
+    StairPoint stairPoint3 = new StairPoint(90,200,5);
+    Point point3 = new Point(400,200,5);
+    Point point4 = new Point(100,0,5);
+    ArrayList<Point> reverse = new ArrayList<Point>();
+    reverse.add(point4);
+    reverse.add(point3);
+    reverse.add(elevatorPoint3);
+    reverse.add(elevatorPoint2);
+    reverse.add(elevatorPoint1);
+    reverse.add(point2);
+    reverse.add(point1);
+
+    String expect = "The time estimation to arrive at your Destination will take 2 minutes.";
+    String actual = test.TimedPath(reverse);
+    assertEquals(expect,actual);
+  }
+  @Test
+  void TimePathTestWithStair(){
+    Point point1 = new Point(0,0,7);
+    Point point2 = new Point(500,500,7);
+    ElevatorPoint elevatorPoint1 = new ElevatorPoint(1000,50,7);
+    ElevatorPoint elevatorPoint2 = new ElevatorPoint(1000,50,6);
+    ElevatorPoint elevatorPoint3 = new ElevatorPoint(1000,50,5);
+    StairPoint stairPoint1 = new StairPoint(90,200,7);
+    StairPoint stairPoint2 = new StairPoint(90,200,6);
+    StairPoint stairPoint3 = new StairPoint(90,200,5);
+    Point point3 = new Point(400,200,5);
+    Point point4 = new Point(100,0,5);
+    ArrayList<Point> reverse = new ArrayList<Point>();
+    reverse.add(point4);
+    reverse.add(point3);
+    reverse.add(stairPoint3);
+    reverse.add(stairPoint2);
+    reverse.add(stairPoint1);
+    reverse.add(point2);
+    reverse.add(point1);
+
+    String expect = "The time estimation to arrive at your Destination will take 2 minutes.";
+    String actual = test.TimedPath(reverse);
+    assertEquals(expect,actual);
+  }
+
 }
