@@ -586,6 +586,7 @@ public class DatabaseController implements DatabaseInterface {
 
   @Override
   public ArrayList<Point> getNamedPoints() {
+    while (saveThread.running);
     System.out.println("trying to get Points with names");
     ArrayList<Point> namedPoints = new ArrayList<Point>();
     int i;
