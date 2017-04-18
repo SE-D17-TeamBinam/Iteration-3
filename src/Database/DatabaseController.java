@@ -4,7 +4,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import org.apache.commons.codec.EncoderException;
@@ -783,39 +786,75 @@ public class DatabaseController implements DatabaseInterface {
 
   public ArrayList<Physician> fuzzySearchPhysicians(String searchTerm) {
     ArrayList<Physician> candidates = new ArrayList<Physician>();
-    HashMap<Integer,Physician> map = new HashMap<Integer,Physician>();
+    LinkedHashMap<Physician,Integer> my_map = new LinkedHashMap<Physician,Integer>();
     Soundex soundex = new Soundex();
-      for (Physician p : localPhysicians) {
-        if(StringUtils.containsAny(p.getFirstName(),searchTerm) ||
-            StringUtils.containsAny(p.getLastName(),searchTerm)||
-            StringUtils.containsAny(p.getTitle(),searchTerm)){
+    System.out.println("here");
+    for (Physician p : localPhysicians) {
+      System.out.println("here");
+      if(StringUtils.containsAny(p.getFirstName(),searchTerm) ||
+            StringUtils.containsAny(p.getLastName(),searchTerm)/*||
+            StringUtils.containsAny(p.getTitle(),searchTerm)*/){
           //candidates.add(p);
           int fn = StringUtils.getLevenshteinDistance(p.getFirstName(),searchTerm);
           int ln = StringUtils.getLevenshteinDistance(p.getLastName(),searchTerm);
           int t = StringUtils.getLevenshteinDistance(p.getTitle(),searchTerm);
-          int value = Math.min(Math.min(fn,ln),t);
-          map.put(value,p);
+          int value = Math.min(fn,ln);//,t);
+          my_map.put(p,value);
+          System.out.println("here, value, id: " + value + " " + p.getID());
 
         }
 
       }
-      //HashMap<Physician,Integer> sortedMap = sortByValues(map);
-      Map<Integer,Physician> sortedMap = new TreeMap<Integer,Physician>(map);
+      LinkedHashMap sortedMap = sortByValues(my_map);
+      //Map<Integer,Physician> sortedMap = new TreeMap<Integer,Physician>(map);
+      ArrayList list2 = new ArrayList(sortedMap.entrySet());
 
-      int counter = 0;
-      Set set = map.entrySet();
-      Iterator iterator2 = set.iterator();
-      while(iterator2.hasNext() && counter < fuzzySearchLimit) {
+      int counter = -1;
+      //Set set = sortedMap.entrySet();
+      //Iterator iterator = set.iterator();
+      //HashMap sortedHashMap = new HashMap();
+      for (Iterator it2 = list2.iterator(); it2.hasNext() && counter < fuzzySearchLimit;) {
         counter++;
-        Map.Entry my_entry = (Map.Entry)iterator2.next();
-        candidates.add((Physician) my_entry.getValue());
+        Entry my_entry = (Map.Entry) it2.next();
+        //sortedHashMap.put(entry.getKey(),entry.getValue());
+        candidates.add(counter,(Physician) my_entry.getKey());
+        System.out.println("key, value : " + my_entry.getKey() + " " + my_entry.getValue());
       }
+
+
+/*      while(iterator.hasNext() && counter < fuzzySearchLimit) {
+        counter++;
+        Map.Entry my_entry = (Map.Entry)iterator.next();
+        //candidates.add((Physician) my_entry.getKey());
+        candidates.add(counter,(Physician) my_entry.getKey());
+        System.out.println("key, value : " + my_entry.getKey() + " " + my_entry.getValue());
+        iterator.remove();
+      }*/
+      System.out.println("size : " + candidates.size());
 
     return candidates;
   }
-/*
-  private  HashMap sortByValues(HashMap map) {
+
+  private  LinkedHashMap sortByValues(Map map) {
+
+    /*
+    Set<Entry<Physician, Integer>> set = map.entrySet();
+    List<Entry<Physician, Integer>> list = new ArrayList<Entry<Physician, Integer>>(set);
+    Collections.sort( list, new Comparator<Map.Entry<Physician, Integer>>()
+    {
+      public int compare( Map.Entry<Physician, Integer> o1, Map.Entry<Physician, Integer> o2 )
+      {
+        return (o2.getValue()).compareTo( o1.getValue() );
+      }
+    } );
+    HashMap sortedHashMap = new HashMap();
+    for (Iterator it = list.iterator(); it.hasNext();) {
+      Map.Entry entry = (Map.Entry) it.next();
+      sortedHashMap.put(entry.getKey(),entry.getValue());
+    }
+*/
     ArrayList list = new ArrayList(map.entrySet());
+
     // Define comparator
     Collections.sort(list, new Comparator() {
       public int compare(Object o1, Object o2) {
@@ -824,14 +863,15 @@ public class DatabaseController implements DatabaseInterface {
       }
     });
 
-    HashMap sortedHashMap = new HashMap();
+    LinkedHashMap sortedHashMap = new LinkedHashMap();
     for (Iterator it = list.iterator(); it.hasNext();) {
       Map.Entry entry = (Map.Entry) it.next();
       sortedHashMap.put(entry.getKey(),entry.getValue());
+      System.out.println("in comaprator : " + entry.getValue());
     }
     return sortedHashMap;
   }
-*/
+
 
   public ArrayList<Point> fuzzySearchPoints(String searchTerm) {
     ArrayList<Point> ret = new ArrayList<Point>();

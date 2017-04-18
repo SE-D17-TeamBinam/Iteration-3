@@ -20,13 +20,13 @@ public class TestDB {
   DatabaseController dbc;
 
   @Test
-  void testSearch() {
+  void testSearch() throws Exception{
     dbd =  new DatabaseDriver("org.apache.derby.jdbc.EmbeddedDriver",
       "jdbc:derby:testDB;create=true");
 
     dbc = new DatabaseController(dbd);
-
-    ArrayList<Physician> s = dbc.fuzzySearchPhysicians("alz");
+    dbc.load();
+    ArrayList<Physician> s = dbc.fuzzySearchPhysicians("mitchel");
     for(Physician p:s){
       System.out.println(p.getFirstName() + " " + p.getLastName() + " " + p.getTitle());
     }
