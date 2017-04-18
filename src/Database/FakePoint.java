@@ -1,6 +1,7 @@
 package Database;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import org.Point;
 
 /**
@@ -47,7 +48,10 @@ public class FakePoint {
   public FakePoint(Point equivalent) {
     this.xCoord = equivalent.getXCoord();
     this.yCoord = equivalent.getYCoord();
-    this.name = equivalent.getName();
+    this.name = "";
+    for (String n : equivalent.getNames()){
+      this.name += n + ";";
+    }
     this.id = equivalent.getId();
     if (equivalent.getParent() == null) {
       this.parent = -1;
@@ -74,7 +78,8 @@ public class FakePoint {
    * @return The Real Point Equivalent (w/o Neighbors)
    */
   Point toRealPoint() {
-    Point ret = new Point(this.xCoord, this.yCoord, this.name, this.id, new ArrayList<Point>(),
+    ArrayList<String> names = new ArrayList<String>(Arrays.asList(this.name.split(";")));
+    Point ret = new Point(this.xCoord, this.yCoord, names, this.id, new ArrayList<Point>(),
         this.floor);
     return ret;
   }
