@@ -1,7 +1,6 @@
 package Database;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import org.Point;
 
 /**
@@ -61,6 +60,7 @@ public class FakePoint {
         this.name = this.name.substring(0, this.name.length() - 1);
       }
     }
+
     this.id = equivalent.getId();
     if (equivalent.getParent() == null) {
       this.parent = -1;
