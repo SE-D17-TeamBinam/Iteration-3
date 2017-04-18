@@ -283,9 +283,9 @@ public class MapViewController extends CentralUIController implements Initializa
     if(mapViewFlag != 3){ // Todo you know
       AdminLogOff.setVisible(false);
       helpButton.setVisible(false);
+      initializeLanguageConfigs();
     }
     helpPane.setVisible(false);
-    initializeLanguageConfigs();
     typeSelection();
     getMap();
     selectionRectangle.setStroke(Color.BLACK);
@@ -396,6 +396,7 @@ public class MapViewController extends CentralUIController implements Initializa
     infoPane.setLayoutX(x_res - infoPaneRectangle.getWidth());
     adminPane.setLayoutX(infoPane.getLayoutX());
     typeSelectionPane.setLayoutX(infoPane.getLayoutX());
+    AdminLogOff.setLayoutX(x_res - AdminLogOff.getPrefWidth() - 5);
     fixMapDisplayLocation();
     fixZoomPanePos();
   }
@@ -755,12 +756,12 @@ public class MapViewController extends CentralUIController implements Initializa
     }
     xLabel.setText("X Pos: " + xText);
     yLabel.setText("Y Pos: " + yText);
-    floorLabel.setText(dictionary.getString("Floor", currSession.getLanguage()) + ": " + floorText);
-    selectedNameLabel.setText(dictionary.getString("Name", currSession.getLanguage()) + ": " + nameText);
-    floorSelectLabel
-        .setText(dictionary.getString("Floor", currSession.getLanguage()) + ":");
-    nameLabel.setText(dictionary.getString("Name", currSession.getLanguage()) + ":");
-
+    if (mapViewFlag != 3) {
+      floorLabel.setText(dictionary.getString("Floor", currSession.getLanguage()) + ": " + floorText);
+      selectedNameLabel.setText(dictionary.getString("Name", currSession.getLanguage()) + ": " + nameText);
+      floorSelectLabel.setText(dictionary.getString("Floor", currSession.getLanguage()) + ":");
+      nameLabel.setText(dictionary.getString("Name", currSession.getLanguage()) + ":");
+    }
   }
 
 

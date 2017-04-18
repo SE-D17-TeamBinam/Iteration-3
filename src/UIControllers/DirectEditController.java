@@ -95,18 +95,6 @@ public class DirectEditController extends CentralUIController implements Initial
     addResolutionListener(anchorPane);
     setBackground(anchorPane);
 
-    /* apply language configs */
-    DirectBack.setText(dictionary.getString("Back", currSession.getLanguage()));
-    DirectFirstName.setText(dictionary.getString("First Name", currSession.getLanguage()));
-    DirectLastName.setText(dictionary.getString("Last Name", currSession.getLanguage()));
-    DirectTitle.setText(dictionary.getString("Title", currSession.getLanguage()));
-    DirectCancel.setText(dictionary.getString("Cancel",currSession.getLanguage()));
-    DirectCreate.setText(dictionary.getString("Create", currSession.getLanguage()));
-    DirectDelete.setText(dictionary.getString("Delete", currSession.getLanguage()));
-    DirectLocations.setText(dictionary.getString("Locations", currSession.getLanguage()));
-    DirectSave.setText(dictionary.getString("Save", currSession.getLanguage()));
-    DirectLogoff.setText(dictionary.getString("Log off", currSession.getLanguage()));
-
     rooms = database.getNamedPoints();
     docs = database.getPhysicians();
     roomNames = new ArrayList<>();

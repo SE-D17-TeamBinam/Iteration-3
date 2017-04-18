@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1300.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UIControllers.MainMenuController">
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1300.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UIControllers.MainMenuController">
    <children>
       <Pane fx:id="MainMenu" prefHeight="750.0" prefWidth="1300.0">
          <children>
@@ -61,9 +61,9 @@
                   <Font size="36.0" />
                </font>
             </Label>
-            <ImageView fx:id="InfoButton" fitHeight="47.0" fitWidth="47.0" layoutX="8.0" layoutY="163.0" onMouseClicked="#gotoAbout" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="InfoButton" fitHeight="31.0" fitWidth="35.0" layoutX="1261.0" layoutY="163.0" onMouseClicked="#gotoAbout" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@icons/question_mark.png" />
+                  <Image url="@icons/About.png" />
                </image>
             </ImageView>
          </children>

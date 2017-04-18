@@ -54,7 +54,7 @@
                   <Font size="30.0" />
                </font>
             </Label>
-            <Button fx:id="AdminBack" layoutX="1145.0" layoutY="5.0" mnemonicParsing="false" onMouseClicked="#logoff" prefHeight="75.0" prefWidth="150.0" text="Log off">
+            <Button fx:id="LogOffButton" layoutX="1145.0" layoutY="5.0" mnemonicParsing="false" onMouseClicked="#logoff" prefHeight="75.0" prefWidth="150.0" text="Log off">
                <font>
                   <Font size="26.0" />
                </font>
