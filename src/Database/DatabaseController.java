@@ -1,5 +1,12 @@
 package Database;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.language.Soundex;
 import java.sql.ResultSet;
@@ -8,6 +15,7 @@ import java.util.ArrayList;
 import Definitions.*;
 import org.ElevatorPoint;
 import org.Point;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by evan on 3/25/17.
@@ -16,6 +24,7 @@ import org.Point;
 public class DatabaseController implements DatabaseInterface {
 
   private static final int fuzzySearchThreshold = 10;
+  private static final int fuzzySearchLimit = 20;
   SaveThread saveThread;
   public double progressBarPercentage = 0;
   ArrayList<Point> localPoints;
@@ -389,17 +398,13 @@ public class DatabaseController implements DatabaseInterface {
 
 
 
-  public boolean removePoint(Point realpoint) {
-    FakePoint point = new FakePoint(realpoint);
-    int cost = point.getCost();
-    int x = point.getXCoord();
-    int y = point.getYCoord();
-    int id = point.getId();
-    int floor = point.getFloor();
-    String name = point.getName();
+  public boolean removePoint(long pid) {
 
     dbc.send_Command(
-        "delete from Point where pid = " + id + ";");
+        "delete from Point where pid = " + pid + ";");
+
+    Point old_point = findRealPoint((int) pid, localPoints);
+    localPhysicians.remove(old_point);
     return true;
   }
 
@@ -777,28 +782,56 @@ public class DatabaseController implements DatabaseInterface {
   }
 
   public ArrayList<Physician> fuzzySearchPhysicians(String searchTerm) {
-    ArrayList<Physician> ret = new ArrayList<Physician>();
+    ArrayList<Physician> candidates = new ArrayList<Physician>();
+    HashMap<Integer,Physician> map = new HashMap<Integer,Physician>();
     Soundex soundex = new Soundex();
-    try {
       for (Physician p : localPhysicians) {
-        if (soundex.difference(searchTerm, p.getFirstName()) > fuzzySearchThreshold
-            || soundex.difference(searchTerm, p.getLastName()) > fuzzySearchThreshold
-            || soundex.difference(searchTerm, p.getTitle()) > fuzzySearchThreshold
-            || soundex.difference(searchTerm, p.getFirstName() + p.getLastName())
-            > fuzzySearchThreshold
-            || soundex.difference(searchTerm, p.getLastName() + p.getFirstName())
-            > fuzzySearchThreshold) {
-          ret.add(p);
+        if(StringUtils.containsAny(p.getFirstName(),searchTerm) ||
+            StringUtils.containsAny(p.getLastName(),searchTerm)||
+            StringUtils.containsAny(p.getTitle(),searchTerm)){
+          //candidates.add(p);
+          int fn = StringUtils.getLevenshteinDistance(p.getFirstName(),searchTerm);
+          int ln = StringUtils.getLevenshteinDistance(p.getLastName(),searchTerm);
+          int t = StringUtils.getLevenshteinDistance(p.getTitle(),searchTerm);
+          int value = Math.min(Math.min(fn,ln),t);
+          map.put(value,p);
+
         }
 
       }
-    } catch (EncoderException e) {
-      e.printStackTrace();
-      System.out.println("There was a problem encoding one of the strings");
-    }
+      //HashMap<Physician,Integer> sortedMap = sortByValues(map);
+      Map<Integer,Physician> sortedMap = new TreeMap<Integer,Physician>(map);
 
-    return ret;
+      int counter = 0;
+      Set set = map.entrySet();
+      Iterator iterator2 = set.iterator();
+      while(iterator2.hasNext() && counter < fuzzySearchLimit) {
+        counter++;
+        Map.Entry my_entry = (Map.Entry)iterator2.next();
+        candidates.add((Physician) my_entry.getValue());
+      }
+
+    return candidates;
   }
+/*
+  private  HashMap sortByValues(HashMap map) {
+    ArrayList list = new ArrayList(map.entrySet());
+    // Define comparator
+    Collections.sort(list, new Comparator() {
+      public int compare(Object o1, Object o2) {
+        return ((Comparable) ((Map.Entry) (o1)).getValue())
+            .compareTo(((Map.Entry) (o2)).getValue());
+      }
+    });
+
+    HashMap sortedHashMap = new HashMap();
+    for (Iterator it = list.iterator(); it.hasNext();) {
+      Map.Entry entry = (Map.Entry) it.next();
+      sortedHashMap.put(entry.getKey(),entry.getValue());
+    }
+    return sortedHashMap;
+  }
+*/
 
   public ArrayList<Point> fuzzySearchPoints(String searchTerm) {
     ArrayList<Point> ret = new ArrayList<Point>();
@@ -815,4 +848,6 @@ public class DatabaseController implements DatabaseInterface {
     }
     return ret;
   }
+
+
 }

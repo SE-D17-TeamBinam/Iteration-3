@@ -91,6 +91,35 @@ public interface DatabaseInterface {
       Physician real_ph
   );
 
+  /**
+   * removes the physician with the given id from the database and the local copy of physicians
+   *
+   * @param pid , integer id of the point to remove
+   * @return true if everything was successful
+   */
+  public boolean removePoint(long pid);
+
+
+  /**
+   * adds a new point to the database and the local copy
+   *
+   * @param real_po , the point to add
+   * @return true if everything was successful
+   */
+  public boolean addPoint(
+      Point real_po
+  );
+
+  /**
+   * edits a physician, updating it with the new fields of the physician given to the function
+   *
+   * @param real_po , the updated point
+   * @return true if everything was successful
+   */
+  public boolean editPoint(
+      Point real_po
+  );
+
 
   //TODO Javadoc
   public ArrayList<Physician> fuzzySearchPhysicians(String searchTerm);
