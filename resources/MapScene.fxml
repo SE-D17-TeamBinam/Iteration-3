@@ -577,11 +577,11 @@
                   </Label>
                </children>
             </VBox>
-            <VBox fx:id="searchPaneVBox" layoutX="42.0" layoutY="131.0" prefHeight="451.0" prefWidth="200.0">
+            <VBox fx:id="searchPaneVBox" layoutX="42.0" layoutY="131.0" prefWidth="200.0">
                <children>
                   <Label fx:id="searchFieldLabel" text="Search Floor" />
                   <TextField fx:id="searchTextField" prefHeight="31.0" prefWidth="200.0" />
-                  <ListView fx:id="resultsList" prefWidth="200.0" />
+                  <ListView fx:id="resultsList" prefHeight="150.0" prefWidth="200.0" />
                   <Button fx:id="searchGoButton" mnemonicParsing="false" onMouseClicked="#searchGoButtonClicked" prefHeight="54.0" prefWidth="200.0" text="Go">
                      <font>
                         <Font size="25.0" />
