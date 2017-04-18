@@ -24,7 +24,6 @@ public class CentralUIController {
    */
   protected static int mapViewFlag = 0;
   protected static Session currSession;
-  // TODO have a current physician here that's selected in search
   protected static CredentialManager credentialManager;
   protected static Dictionary dictionary;
   protected static double x_res = 1300;

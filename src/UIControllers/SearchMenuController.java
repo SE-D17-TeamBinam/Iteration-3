@@ -96,18 +96,6 @@ public class SearchMenuController extends CentralUIController implements Initial
     }
   }
 
-  public void searchOnMap(){
-    mapViewFlag = 1;
-    Stage primaryStage = (Stage) SearchDirectory.getScene().getWindow();
-    try {
-      loadScene(primaryStage, "/MapScene.fxml");
-      //TODO changes a global variable physician
-    } catch (Exception e){
-      System.out.println("Cannot load Map");
-      e.printStackTrace();
-    }
-  }
-
   public void clear () {
     SearchField.clear();
   }
