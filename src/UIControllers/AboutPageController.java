@@ -17,9 +17,9 @@ import javafx.stage.Stage;
 public class AboutPageController extends CentralUIController implements Initializable{
   // define all UI elements
   @FXML
-  private Pane AboutPage;
-  @FXML
   private AnchorPane anchorPane;
+  @FXML
+  private Pane AboutPage;
   @FXML
   private TextArea TeamInfo;
   @FXML
@@ -36,6 +36,7 @@ public class AboutPageController extends CentralUIController implements Initiali
 
     /* apply language configs */
     AboutBack.setText(dictionary.getString("Back", currSession.getLanguage()));
+    backgroundView.toBack();
   }
 
   public void back () {
