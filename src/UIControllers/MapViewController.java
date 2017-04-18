@@ -68,7 +68,8 @@ public class MapViewController extends CentralUIController implements Initializa
 
   @FXML
   private Button backButton;
-
+  @FXML
+  private Button AdminLogOff;
   @FXML
   private Pane adminPane;
   @FXML
@@ -299,17 +300,17 @@ public class MapViewController extends CentralUIController implements Initializa
   @FXML
   public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
     initializeSearch();
-
     textDirectionsBox.setVisible(false);
-    if (mapViewFlag != 3) { // Todo you know
+    
+    //mapViewFlag = 3;
+    if(mapViewFlag != 3){ // Todo you know
+      AdminLogOff.setVisible(false);
       helpButton.setVisible(false);
-    } else {
+      initializeLanguageConfigs();
+    }else{
       userPane.setVisible(false);
     }
     helpPane.setVisible(false);
-    if (mapViewFlag < 3) {
-      initializeLanguageConfigs();
-    }
     typeSelection();
     getMap();
     selectionRectangle.setStroke(Color.BLACK);
@@ -440,8 +441,10 @@ public class MapViewController extends CentralUIController implements Initializa
   @Override
   public void customListenerX() {
     map_x_max = x_res - adminPaneRectangle.getWidth() * (adminPane.isVisible() ? 1 : 0);
+    infoPane.setLayoutX(x_res - infoPaneRectangle.getWidth());
     adminPane.setLayoutX(x_res - adminPaneRectangle.getWidth());
-    typeSelectionPane.setLayoutX(adminPane.getLayoutX());
+    typeSelectionPane.setLayoutX(infoPane.getLayoutX());
+    AdminLogOff.setLayoutX(x_res - AdminLogOff.getPrefWidth() - 5);
     fixMapDisplayLocation();
     updateUserPane();
   }
@@ -828,7 +831,6 @@ public class MapViewController extends CentralUIController implements Initializa
     floorSelectLabel
         .setText(dictionary.getString("Floor", currSession.getLanguage()) + ":");
     nameLabel.setText(dictionary.getString("Name", currSession.getLanguage()) + ":");
-
   }
 
 
@@ -1162,7 +1164,8 @@ public class MapViewController extends CentralUIController implements Initializa
       saveButton.setDisable(true);
       goButton.setDisable(true);
       ListPoints lp = new ListPoints(allPoints);
-      ArrayList<Point> lp2 = lp.Astar(startPoint, endPoint);
+      ArrayList<Point> lp2 = lp.executeStrategy(startPoint, endPoint);
+      //ArrayList<Point> lp2 = lp.Astar(startPoint, endPoint);
 //      System.out.println("Path size: " + lp2.size());
 //      System.out.println("Total Points (Neighbors included): " + checked.size());
       allPoints.clear();
@@ -1293,7 +1296,12 @@ public class MapViewController extends CentralUIController implements Initializa
   private void backButtonClicked() {
     Stage primaryStage = (Stage) floorChoiceBox.getScene().getWindow();
     try {
-      loadScene(primaryStage, "/MainMenu.fxml");
+      if (mapViewFlag == 3) {
+        loadScene(primaryStage, "/AdminMenu.fxml");
+      }
+      else {
+        loadScene(primaryStage, "/MainMenu.fxml");
+      }
     } catch (Exception e) {
       System.out.println("Cannot load main menu");
       e.printStackTrace();
@@ -1849,6 +1857,17 @@ public class MapViewController extends CentralUIController implements Initializa
   private void toggleHelp() {
     helpPane.setVisible(!helpPane.isVisible());
   }
+
+
+  public void logoff() {
+      Stage primaryStage = (Stage) mapViewPane.getScene().getWindow();
+      try {
+        loadScene(primaryStage, "/MainMenu.fxml");
+      } catch (Exception e) {
+        System.out.println("Cannot load main menu");
+        e.printStackTrace();
+      }
+    }
 
   ////////////////////
   // Line Listeners //

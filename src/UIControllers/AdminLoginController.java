@@ -94,9 +94,9 @@ public class AdminLoginController extends CentralUIController implements Initial
     if (credentialManager.userIsAdmin(enteredName, enteredPass))  {
       LoginError.setVisible(false);
       try {
-        loadScene(primaryStage, "/DirectEdit.fxml");
+        loadScene(primaryStage, "/AdminMenu.fxml");
       } catch (Exception e) {
-        System.out.println("Cannot load directory editor");
+        System.out.println("Cannot load Admin Menu");
         e.printStackTrace();
       }
     } else {

@@ -30,6 +30,8 @@ public class MainMenuController extends CentralUIController implements Initializ
   private AnchorPane anchorPane;
   @FXML
   private ImageView MainKey;
+  @FXML
+  private ImageView InfoButton;
 
   @FXML
   private Button MapButton;
@@ -46,6 +48,10 @@ public class MainMenuController extends CentralUIController implements Initializ
     addResolutionListener(anchorPane);
     setBackground(anchorPane);
     CentralController.resetSession();
+    applyLanguageConfig();
+  }
+
+  public void applyLanguageConfig(){
     SearchLabel.setText(dictionary.getString("Search", currSession.getLanguage()));
     MapLabel.setText(dictionary.getString("Map", currSession.getLanguage()));
   }
@@ -56,6 +62,7 @@ public class MainMenuController extends CentralUIController implements Initializ
     MapButton.setLayoutX(5*(x_res/7) - 175);
     SearchButton.setLayoutX(2*(x_res/7) - 175);
     MainKey.setLayoutX(x_res - MainKey.getFitWidth());
+    InfoButton.setLayoutX(x_res - InfoButton.getFitWidth());
     SearchLabel.setLayoutX(2*(x_res/7) - 95);
   }
 
@@ -91,6 +98,14 @@ public class MainMenuController extends CentralUIController implements Initializ
     Stage primaryStage = (Stage) MainMenu.getScene().getWindow();
     try {
       loadScene(primaryStage, "/AdminLogin.fxml");
+    } catch (Exception e) {
+    }
+  }
+
+  public void gotoAbout() {
+    Stage primaryStage = (Stage) MainMenu.getScene().getWindow();
+    try {
+      loadScene(primaryStage, "/AboutPage.fxml");
     } catch (Exception e) {
     }
   }

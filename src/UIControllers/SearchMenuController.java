@@ -1,9 +1,6 @@
 package UIControllers;
 
 import Definitions.Physician;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import org.Point;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +12,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+
 /**
  * Created by Leon Zhang on 2017/4/1.
  */
@@ -31,9 +31,6 @@ public class SearchMenuController extends CentralUIController implements Initial
   private Button SearchClear;
   @FXML
   private Pane SearchPane;
-
-  @FXML
-  private ListView DropMenu;
   @FXML
   private Button SearchMap;
   @FXML

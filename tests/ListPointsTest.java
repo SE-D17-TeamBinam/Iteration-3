@@ -17,13 +17,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * The purpose of this class is to take test functions in the listPoints class
  *
  */
-public class ListPointsTest { //tests Astar for one floor, all floor, and error case- not on floor
+public class ListPointsTest { //tests executeStrategy for one floor, all floor, and error case- not on floor
   ListPoints test = new ListPoints(new ArrayList<Point>());
   ArrayList<ArrayList<Point>> floor = new ArrayList<ArrayList<Point>>();
 
 
   @Test
-  void AstarMultifloorElevatorTest(){ // tests to see if it doesnt touch any other floors
+  void executeStrategyMultifloorElevatorTest(){ // tests to see if it doesnt touch any other floors
     ArrayList<ArrayList<Point>> floor = test.grid3dCreate(5,5,3);
     Point node1 = floor.get(0).get(4);
     Point node2 = floor.get(1).get(4);
@@ -75,7 +75,7 @@ public class ListPointsTest { //tests Astar for one floor, all floor, and error 
     ArrayList<Point> path = new ArrayList<Point>();
 
     try {
-      path = test.Astar(start,goal);
+      path = test.executeStrategy(start,goal);
     } catch (Exception e) {
       assertTrue(false);
       e.printStackTrace();
@@ -94,7 +94,7 @@ public class ListPointsTest { //tests Astar for one floor, all floor, and error 
   }
 
   @Test
-  void AstarMultifloorElevator2Test(){ // tests to see if it doesnt touch any other floors
+  void executeStrategyMultifloorElevator2Test(){ // tests to see if it doesnt touch any other floors
     ArrayList<ArrayList<Point>> floor = test.grid3dCreate(5,5,3);
     Point node1 = floor.get(0).get(4);
     Point node2 = floor.get(1).get(4);
@@ -172,7 +172,7 @@ public class ListPointsTest { //tests Astar for one floor, all floor, and error 
     ArrayList<Point> path = new ArrayList<Point>();
 
     try {
-      path = test.Astar(start,goal);
+      path = test.executeStrategy(start,goal);
     } catch (Exception e) {
       assertTrue(false);
       e.printStackTrace();
@@ -191,7 +191,7 @@ public class ListPointsTest { //tests Astar for one floor, all floor, and error 
   }
 
   @Test
-  void AstarMultifloorStairTest(){ // tests to see if it doesnt touch any other floors
+  void executeStrategyMultifloorStairTest(){ // tests to see if it doesnt touch any other floors
     ArrayList<ArrayList<Point>> floor = test.grid3dCreate(5,5,3);
     Point node1 = floor.get(0).get(4);
     Point node2 = floor.get(1).get(4);
@@ -243,7 +243,7 @@ public class ListPointsTest { //tests Astar for one floor, all floor, and error 
     ArrayList<Point> path = new ArrayList<Point>();
 
     try {
-      path = test.Astar(start,goal);
+      path = test.executeStrategy(start,goal);
     } catch (Exception e) {
       assertTrue(false);
       e.printStackTrace();
@@ -262,7 +262,7 @@ public class ListPointsTest { //tests Astar for one floor, all floor, and error 
   }
 
   @Test
-  void AstarMultifloorStair2Test(){ // tests to see if it doesnt touch any other floors
+  void executeStrategyMultifloorStair2Test(){ // tests to see if it doesnt touch any other floors
     ArrayList<ArrayList<Point>> floor = test.grid3dCreate(5,5,3);
     Point node1 = floor.get(0).get(4);
     Point node2 = floor.get(1).get(4);
@@ -341,7 +341,7 @@ public class ListPointsTest { //tests Astar for one floor, all floor, and error 
     ArrayList<Point> path = new ArrayList<Point>();
 
     try {
-      path = test.Astar(start,goal);
+      path = test.executeStrategy(start,goal);
     } catch (Exception e) {
       assertTrue(false);
       e.printStackTrace();
@@ -360,7 +360,7 @@ public class ListPointsTest { //tests Astar for one floor, all floor, and error 
   }
 
   @Test
-  void AstarMultifloorStairAndElevatorTest(){ // tests to see if it doesnt touch any other floors
+  void executeStrategyMultifloorStairAndElevatorTest(){ // tests to see if it doesnt touch any other floors
     ArrayList<ArrayList<Point>> floor = test.grid3dCreate(5,5,3);
     Point node1 = floor.get(0).get(4);
     Point node2 = floor.get(1).get(4);
@@ -454,7 +454,7 @@ public class ListPointsTest { //tests Astar for one floor, all floor, and error 
     ArrayList<Point> path = new ArrayList<Point>();
 
     try {
-      path = test.Astar(start,goal);
+      path = test.executeStrategy(start,goal);
     } catch (Exception e) {
       assertTrue(false);
       e.printStackTrace();
@@ -473,7 +473,7 @@ public class ListPointsTest { //tests Astar for one floor, all floor, and error 
   }
 
   @Test
-  void AstarMultifloorStairAndElevator2Test(){ // tests to see if it doesnt touch any other floors
+  void executeStrategyMultifloorStairAndElevator2Test(){ // tests to see if it doesnt touch any other floors
     ArrayList<ArrayList<Point>> floor = test.grid3dCreate(5,5,3);
     Point node1 = floor.get(0).get(4);
     Point node2 = floor.get(1).get(4);
@@ -623,7 +623,7 @@ public class ListPointsTest { //tests Astar for one floor, all floor, and error 
     ArrayList<Point> path = new ArrayList<Point>();
 
     try {
-      path = test.Astar(start,goal);
+      path = test.executeStrategy(start,goal);
     } catch (Exception e) {
       assertTrue(false);
       e.printStackTrace();
@@ -642,7 +642,7 @@ public class ListPointsTest { //tests Astar for one floor, all floor, and error 
   }
 
   @Test
-  void AstarMultifloorErrorTest(){ // tests to see if it doesnt touch any other floors
+  void executeStrategyMultifloorErrorTest(){ // tests to see if it doesnt touch any other floors
     ArrayList<ArrayList<Point>> floor = test.grid3dCreate(5,5,3);
     Point node1 = floor.get(0).get(4);
     Point node2 = floor.get(1).get(4);
@@ -738,7 +738,7 @@ public class ListPointsTest { //tests Astar for one floor, all floor, and error 
     ArrayList<Point> path = new ArrayList<Point>();
 
     try {
-      path = test.Astar(start,goal);
+      path = test.executeStrategy(start,goal);
     } catch (NoPathException e) {
       assertTrue(true);
 
@@ -753,7 +753,7 @@ public class ListPointsTest { //tests Astar for one floor, all floor, and error 
     ArrayList<Point> path = new ArrayList<Point>();
 
     try {
-      path = test.Astar(start,goal);
+      path = test.executeStrategy(start,goal);
     } catch (NoPathException e) {
       assertTrue(true);
 
