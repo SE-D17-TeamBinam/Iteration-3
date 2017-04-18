@@ -1,20 +1,38 @@
-//import Definitions.Physician;
-//import java.sql.SQLException;
-//import java.util.ArrayList;
-//import java.util.Arrays;
-//import org.DatabaseController;
-//import org.DatabaseEditor;
-//import org.FakePoint;
-//import org.Point;
-//import org.junit.jupiter.api.Assertions;
-//import org.junit.jupiter.api.Test;
+import Definitions.Physician;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import Database.DatabaseController;
+import Database.DatabaseDriver;
+import Database.FakePoint;
+import org.Point;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 //
 ///**
 // * Created by Evan on 4/8/2017.
 // */
 //
 //
-//public class TestDB {
+public class TestDB {
+
+  DatabaseDriver dbd;
+  DatabaseController dbc;
+
+  @Test
+  void testSearch() {
+    dbd =  new DatabaseDriver("org.apache.derby.jdbc.EmbeddedDriver",
+      "jdbc:derby:testDB;create=true");
+
+    dbc = new DatabaseController(dbd);
+
+    ArrayList<Physician> s = dbc.fuzzySearchPhysicians("alz");
+    for(Physician p:s){
+      System.out.println(p.getFirstName() + " " + p.getLastName() + " " + p.getTitle());
+    }
+  }
+
+}
 //
 //  DatabaseController dbc = new DatabaseController("org.apache.derby.jdbc.EmbeddedDriver",
 //      "jdbc:derby:testDB;create=true");
@@ -179,4 +197,4 @@
 //
 //  }
 //
-//}
+
