@@ -1,58 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750" prefWidth="1300" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UIControllers.DetailMenuController">
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750" prefWidth="1300" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
   <children>
-      <Pane fx:id="DetailMenu" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750" prefWidth="1300" style="-fx-background-color: #FFFFFF;">
+      <Pane fx:id="DetailDoc" prefHeight="750.0" prefWidth="1300.0" style="-fx-background-color: transparent;">
          <children>
-            <Label fx:id="DetailTitle" alignment="CENTER" contentDisplay="BOTTOM" layoutX="508.0" layoutY="180.0" text="Room Details">
+            <ScrollPane fx:id="DocPane" layoutX="494.0" layoutY="457.0" prefHeight="247.0" prefWidth="520.0" style="-fx-background-color: transparent;" stylesheets="@DetailScroll.css">
+               <content>
+                  <VBox fx:id="DocLocations" prefWidth="500.0" style="-fx-background-color: transparent;" />
+               </content></ScrollPane>
+            <Label fx:id="DocFirstNameLabel" alignment="CENTER_RIGHT" layoutX="226.0" layoutY="250.0" prefHeight="45.0" prefWidth="152.0" text="First Name">
                <font>
-                  <Font size="48.0" />
+                  <Font name="Times New Roman" size="30.0" />
                </font>
             </Label>
-            <Label fx:id="DetailRoomName" layoutX="300.0" layoutY="300.0" text="Room Name">
+            <Label fx:id="DocInfoLabel" alignment="CENTER" contentDisplay="BOTTOM" layoutX="489.0" layoutY="167.0" text="Doctor Information">
                <font>
-                  <Font size="30.0" />
-               </font></Label>
-            <Label fx:id="DetailRoomHCPs" layoutX="192.0" layoutY="450.0" text="Healthcare Providers">
-               <font>
-                  <Font size="30.0" />
-               </font></Label>
-            <Label fx:id="DetailRoomFloor" layoutX="398.0" layoutY="375.0" text="Floor">
-               <font>
-                  <Font size="30.0" />
-               </font></Label>
-            <Button fx:id="DetailBack" layoutX="5.0" layoutY="5.0" mnemonicParsing="false" onMouseClicked="#back" prefHeight="75.0" prefWidth="150.0" text="&lt;- Back  ">
-               <font>
-                  <Font size="26.0" />
-               </font>
-            </Button>
-            <Button fx:id="DetailDone" layoutX="1145.0" layoutY="5.0" mnemonicParsing="false" onMouseClicked="#back" prefHeight="75.0" prefWidth="150.0" text="Done">
-               <font>
-                  <Font size="26.0" />
-               </font>
-            </Button>
-            <Label fx:id="DetailNameField" layoutX="505.0" layoutY="300.0" maxWidth="700.0" prefWidth="700.0" text=" ">
-               <font>
-                  <Font size="30.0" />
+                  <Font name="Times New Roman" size="38.0" />
                </font>
             </Label>
-            <Label fx:id="DetailFloorField" layoutX="505.0" layoutY="375.0" maxWidth="700.0" prefWidth="700.0" text=" ">
+            <Label fx:id="DocLastNameLabel" alignment="CENTER_RIGHT" layoutX="226.0" layoutY="318.0" prefHeight="45.0" prefWidth="152.0" text="Last Name">
                <font>
-                  <Font size="30.0" />
+                  <Font name="Times New Roman" size="30.0" />
                </font>
             </Label>
-            <Label fx:id="DetailHCPField" layoutX="505.0" layoutY="450.0" maxHeight="270.0" maxWidth="700.0" prefHeight="270.0" prefWidth="700.0" text=" ">
+            <Label fx:id="DocTitleLabel" alignment="CENTER_RIGHT" layoutX="226.0" layoutY="389.0" prefHeight="45.0" prefWidth="152.0" text="Title">
                <font>
-                  <Font size="30.0" />
+                  <Font name="Times New Roman" size="30.0" />
+               </font>
+            </Label>
+            <Label fx:id="DocLocationsLabel" alignment="CENTER_RIGHT" layoutX="226.0" layoutY="457.0" prefHeight="45.0" prefWidth="152.0" text="Locations">
+               <font>
+                  <Font name="Times New Roman" size="30.0" />
+               </font>
+            </Label>
+            <Label fx:id="DocFirstNameField" layoutX="494.0" layoutY="256.0" prefHeight="21.0" prefWidth="700.0">
+               <font>
+                  <Font name="Times New Roman" size="30.0" />
+               </font>
+            </Label>
+            <Label fx:id="DocLastNameField" layoutX="494.0" layoutY="324.0" prefHeight="21.0" prefWidth="700.0">
+               <font>
+                  <Font name="Times New Roman" size="30.0" />
+               </font>
+            </Label>
+            <Label fx:id="DocTitleField" layoutX="494.0" layoutY="395.0" prefHeight="21.0" prefWidth="700.0">
+               <font>
+                  <Font name="Times New Roman" size="30.0" />
                </font>
             </Label>
          </children>
       </Pane>
+      <Pane fx:id="DetailRoom" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750" prefWidth="1300" style="-fx-background-color: transparent;" visible="false">
+         <children>
+            <Label fx:id="RoomDetailLabel" alignment="CENTER" contentDisplay="BOTTOM" layoutX="538.0" layoutY="168.0" text="Room Details">
+               <font>
+                  <Font size="38.0" />
+               </font>
+            </Label>
+            <Label fx:id="RoomNameLabel" layoutX="252.0" layoutY="267.0" text="Room Name">
+               <font>
+                  <Font name="Times New Roman" size="30.0" />
+               </font></Label>
+            <Label fx:id="RoomHPLabel" layoutX="151.0" layoutY="399.0" text="Healthcare Providers">
+               <font>
+                  <Font name="Times New Roman" size="30.0" />
+               </font></Label>
+            <Label fx:id="RoomFloorLabel" layoutX="338.0" layoutY="334.0" text="Floor">
+               <font>
+                  <Font name="Times New Roman" size="30.0" />
+               </font></Label>
+            <Label fx:id="RoomNameField" layoutX="494.0" layoutY="267.0" maxWidth="700.0" prefWidth="700.0" text=" ">
+               <font>
+                  <Font name="Times New Roman" size="30.0" />
+               </font>
+            </Label>
+            <Label fx:id="RoomFloorField" layoutX="494.0" layoutY="334.0" maxWidth="700.0" prefWidth="700.0" text=" ">
+               <font>
+                  <Font name="Times New Roman" size="30.0" />
+               </font>
+            </Label>
+            <ScrollPane fx:id="RoomPane" layoutX="494.0" layoutY="399.0" prefHeight="304.0" prefWidth="520.0" style="-fx-background-color: transparent;" stylesheets="@DetailScroll.css">
+               <content>
+                  <VBox fx:id="RoomHPs" prefWidth="500.0" style="-fx-background-color: transparent;" />
+               </content>
+            </ScrollPane>
+         </children>
+      </Pane>
+      <Label fx:id="DetailBack" alignment="CENTER" layoutX="12.0" layoutY="12.0" mnemonicParsing="false" onMouseClicked="#back" prefHeight="60.0" prefWidth="134.0" style="-fx-background-color: #3255bc;" text="Back" textFill="WHITE">
+         <font>
+            <Font name="Times New Roman" size="26.0" />
+         </font>
+      </Label>
+      <Label fx:id="DetailDone" alignment="CENTER" layoutX="1154.0" layoutY="12.0" mnemonicParsing="false" onMouseClicked="#quit" prefHeight="60.0" prefWidth="134.0" style="-fx-background-color: #3255bc;" text="Done" textFill="WHITE">
+         <font>
+            <Font name="Times New Roman" size="26.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

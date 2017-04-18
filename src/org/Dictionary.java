@@ -136,11 +136,11 @@ public class Dictionary {
     this.addEntry("Show on Map", showOnMap);
 
     HashMap<Language, String> n = new HashMap<Language, String>();
-    n.put(Language.SPANISH, "Ver información");
-    n.put(Language.ENGLISH, "View Info");
-    n.put(Language.PORTUGESE, "Ver informações");
+    n.put(Language.SPANISH, "Ver Detalles");
+    n.put(Language.ENGLISH, "View Details");
+    n.put(Language.PORTUGESE, "Ver Detalhes");
     Entry viewInfo = new Entry(n);
-    this.addEntry("View Info", viewInfo);
+    this.addEntry("View Details", viewInfo);
 
     HashMap<Language, String> logOffLabel = new HashMap<Language, String>();
     logOffLabel.put(Language.SPANISH, "Cerrar sesión");

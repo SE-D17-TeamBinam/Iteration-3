@@ -143,6 +143,20 @@ public class Point {
     return (int) Math.sqrt(x * x + y * y);
   }
 
+  /**
+   * TimeDistance is just like Distance but it returns the double type instead of int
+   * <p>
+   *   creates the distance by using the pythagorean theorem between two coordinates
+   * </p>
+   * @param End  - Point type that always has an X,Y coordinate
+   * @return  Double
+   */
+  public double TimeDistance(Point End) {//Straight Line Distance
+    double x = End.xCoord - this.xCoord;
+    double y = End.yCoord - this.yCoord;
+    return  Math.sqrt(x * x + y * y);
+  }
+
   public void setID(int ID) {
     this.id = ID;
   }
