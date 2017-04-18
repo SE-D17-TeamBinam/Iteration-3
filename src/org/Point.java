@@ -18,7 +18,7 @@ public class Point {
 
   int xCoord;    //X coordinate
   int yCoord;    //Y coordinate
-  ArrayList<String> names;  //Name of the room
+  String name;  //Name of the room
   int id;      //Unique Identifier
   int floor;
   public ArrayList<Point> neighbors = new ArrayList<>();
@@ -27,10 +27,10 @@ public class Point {
   int cost;
 
   //Constructor
-  public Point(double xCoord, double yCoord, ArrayList<String> names) {
+  public Point(double xCoord, double yCoord, String name) {
     this.xCoord = (int) xCoord;
     this.yCoord = (int) yCoord;
-    this.names = names;
+    this.name = name;
   }
 
   public Point(double xCoord, double yCoord, int floor) {
@@ -39,11 +39,11 @@ public class Point {
     this.floor = floor;
   }
 
-  public Point(int xCoord, int yCoord, ArrayList<String> names, int id, ArrayList<Point> new_neighbors,
+  public Point(int xCoord, int yCoord, String name, int id, ArrayList<Point> new_neighbors,
       int floor) {
     this.xCoord = xCoord;
     this.yCoord = yCoord;
-    this.names = names;
+    this.name = name;
     this.id = id;
     this.parent = null;
     this.neighbors = new_neighbors;
@@ -73,24 +73,11 @@ public class Point {
   }
 
   public void setName(String newName) {
-    if (names.size() > 0)
-      names.set(0,newName);
-    else
-      names.add(newName);
+    name = newName;
   }
-  public ArrayList<String> getNames(){
-    return names;
-  }
-
-  public void setNames(ArrayList<String> _names){
-    this.names = _names;
-  }
-
 
   public String getName() {
-    if (names.size() > 0)
-      return names.get(0);
-    return null;
+    return name;
   }
 
   public void setFloor(int floor) {
