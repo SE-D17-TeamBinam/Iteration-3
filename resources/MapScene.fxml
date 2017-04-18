@@ -5,6 +5,7 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -77,9 +78,9 @@
                </font>
             </Text>
             <Button fx:id="saveButton" layoutX="31.0" layoutY="237.0" mnemonicParsing="false" onMouseClicked="#saveMapButtonClicked" prefHeight="31.0" prefWidth="168.0" text="Save Map" />
-            <Pane fx:id="progressPane" layoutX="15.0" layoutY="272.0" prefHeight="19.0" prefWidth="200.0" visible="false">
+            <Pane fx:id="progressPane1" layoutX="15.0" layoutY="272.0" prefHeight="19.0" prefWidth="200.0" visible="false">
                <children>
-                  <Rectangle fx:id="progressBar" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="19.0" stroke="BLACK" strokeType="INSIDE" width="200.0" />
+                  <ProgressBar layoutY="-2.0" prefWidth="200.0" progress="0.0" />
                   <Text layoutX="3.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Saving..." />
                </children>
             </Pane>
@@ -547,38 +548,47 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <Label fx:id="searchLabel" layoutX="23.0" layoutY="-3.0" prefHeight="47.0" prefWidth="158.0" text="Search:">
-               <font>
-                  <Font size="32.0" />
-               </font>
-            </Label>
-            <ImageView fx:id="choice1" fitHeight="50.0" fitWidth="50.0" layoutX="42.0" layoutY="155.0" onMouseClicked="#choose1" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@icons/unselectedbutton.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="choice2" fitHeight="50.0" fitWidth="50.0" layoutX="116.0" layoutY="155.0" onMouseClicked="#choose2" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@icons/unselectedbutton.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="choice3" fitHeight="50.0" fitWidth="50.0" layoutX="190.0" layoutY="155.0" onMouseClicked="#choose3" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@icons/unselectedbutton.png" />
-               </image>
-            </ImageView>
-            <ListView fx:id="resultsList" layoutX="41.0" layoutY="291.0" prefHeight="200.0" prefWidth="200.0" />
-            <TextField fx:id="searchTextField" layoutX="41.0" layoutY="247.0" prefHeight="31.0" prefWidth="200.0" />
             <Label fx:id="searchTabLabel" layoutX="-27.0" layoutY="66.0" mouseTransparent="true" prefHeight="15.0" prefWidth="75.0" rotate="90.0" text="Search" />
-            <Label fx:id="floorSearchLabel" layoutX="50.0" layoutY="134.0" text="Floor" />
-            <Label fx:id="hospitalSearchLabel" layoutX="113.0" layoutY="134.0" text="Hospital" />
-            <Label fx:id="physicianSearchLabel" layoutX="181.0" layoutY="134.0" text="Physicians" />
-            <Label fx:id="searchFieldLabel" layoutX="42.0" layoutY="220.0" text="Search Floor" />
-            <Button fx:id="searchGoButton" layoutX="41.0" layoutY="527.0" mnemonicParsing="false" onMouseClicked="#searchGoButtonClicked" prefHeight="54.0" prefWidth="200.0" text="Go">
-               <font>
-                  <Font size="25.0" />
-               </font>
-            </Button>
+            <HBox layoutX="24.0" layoutY="6.0" prefHeight="47.0" prefWidth="132.0">
+               <children>
+                  <Label fx:id="searchLabel" prefHeight="47.0" prefWidth="158.0" text="Search">
+                     <font>
+                        <Font size="32.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <VBox fx:id="choice1" alignment="CENTER" layoutX="42.0" layoutY="53.0" onMouseClicked="#choose1" prefHeight="60.0" prefWidth="65.0" style="-fx-background-color: gray;">
+               <children>
+                  <Label fx:id="floorSearchLabel" text="Label" />
+               </children>
+            </VBox>
+            <VBox fx:id="choice2" alignment="CENTER" layoutX="107.0" layoutY="53.0" onMouseClicked="#choose2" prefHeight="60.0" prefWidth="65.0" style="-fx-background-color: black;">
+               <children>
+                  <Label fx:id="hospitalSearchLabel" text="Label" />
+               </children>
+            </VBox>
+            <VBox fx:id="choice3" alignment="CENTER" layoutX="172.0" layoutY="53.0" onMouseClicked="#choose3" prefHeight="60.0" prefWidth="65.0" style="-fx-background-color: blue;">
+               <children>
+                  <Label fx:id="physicianSearchLabel" text="Label">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+            <VBox fx:id="searchPaneVBox" layoutX="42.0" layoutY="131.0" prefHeight="451.0" prefWidth="200.0">
+               <children>
+                  <Label fx:id="searchFieldLabel" text="Search Floor" />
+                  <TextField fx:id="searchTextField" prefHeight="31.0" prefWidth="200.0" />
+                  <ListView fx:id="resultsList" prefWidth="200.0" />
+                  <Button fx:id="searchGoButton" mnemonicParsing="false" onMouseClicked="#searchGoButtonClicked" prefHeight="54.0" prefWidth="200.0" text="Go">
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                  </Button>
+               </children>
+            </VBox>
          </children>
       </Pane>
    </children>

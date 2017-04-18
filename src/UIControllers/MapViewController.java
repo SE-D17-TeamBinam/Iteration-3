@@ -34,6 +34,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -462,6 +463,7 @@ public class MapViewController extends CentralUIController implements Initializa
     textDirectionsBox.setLayoutY(y_res - 180); // TODO Not constant height
     helpButton.setLayoutY(y_res - 60);
     helpPane.setLayoutY(y_res - 540);
+    resultsList.setPrefHeight(userPaneRectangle.getHeight() - searchPaneVBox.getLayoutY() - resultsList.getLayoutY() - searchGoButton.getHeight() - 5);
   }
 
   private void initializeVisualNodes() {
@@ -1060,28 +1062,26 @@ public class MapViewController extends CentralUIController implements Initializa
 
   private int userPaneVisible = 0;
 
-  @FXML
-  private ImageView choice1;
-  @FXML
-  private ImageView choice2;
-  @FXML
-  private ImageView choice3;
-
-  private Image unselectedImage;
-  private Image selectedImage;
-
   private void initializeSearchChoices() {
-    unselectedImage = new Image("/icons/unselectedButton.png");
-    selectedImage = new Image("/icons/selectedButton.png");
     choose1();
   }
 
   @FXML
+  private VBox searchPaneVBox;
+
+  @FXML
+  private VBox choice1;
+  @FXML
+  private VBox choice2;
+  @FXML
+  private VBox choice3;
+
+  @FXML
   private void choose1() {
     searchType = 1;
-    choice1.setImage(selectedImage);
-    choice2.setImage(unselectedImage);
-    choice3.setImage(unselectedImage);
+    choice1.setStyle("-fx-background-color: gray");
+    choice2.setStyle("-fx-background-color: lightgray");
+    choice3.setStyle("-fx-background-color: lightgray");
     refreshListView();
   }
 
@@ -1089,9 +1089,9 @@ public class MapViewController extends CentralUIController implements Initializa
   private void choose2() {
     // Searching Points
     searchType = 2;
-    choice1.setImage(unselectedImage);
-    choice2.setImage(selectedImage);
-    choice3.setImage(unselectedImage);
+    choice1.setStyle("-fx-background-color: lightgray");
+    choice2.setStyle("-fx-background-color: gray");
+    choice3.setStyle("-fx-background-color: lightgray");
     refreshListView();
   }
 
@@ -1099,9 +1099,9 @@ public class MapViewController extends CentralUIController implements Initializa
   private void choose3() {
     // Searching Physicians
     searchType = 3;
-    choice1.setImage(unselectedImage);
-    choice2.setImage(unselectedImage);
-    choice3.setImage(selectedImage);
+    choice1.setStyle("-fx-background-color: lightgray");
+    choice2.setStyle("-fx-background-color: lightgray");
+    choice3.setStyle("-fx-background-color: gray");
     refreshListView();
   }
 
