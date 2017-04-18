@@ -75,13 +75,13 @@ public class DatabaseController implements DatabaseInterface {
     //new_physicians.add(real_ph);
     //setPhysicians(new_physicians);
     //localPhysicians.add(real_ph);
-    if (check(localPhysicians, real_ph)) {
+    if (check_physicians(localPhysicians, real_ph)) {
       localPhysicians.add(real_ph);
     }
     return true;
   }
 
-  private boolean check(ArrayList<Physician> ap, Physician p) {
+  private boolean check_physicians(ArrayList<Physician> ap, Physician p) {
     long id = p.getID();
     for (int i = 0; i < ap.size(); i++) {
       if (id == ap.get(i).getID()) {
@@ -91,6 +91,29 @@ public class DatabaseController implements DatabaseInterface {
     //ap.add(p);
     return true;
   }
+
+  private boolean check_points(ArrayList<Point> ap, Point p) {
+    long id = p.getId();
+    for (int i = 0; i < ap.size(); i++) {
+      if (id == ap.get(i).getId()) {
+        return false;
+      }
+    }
+    //ap.add(p);
+    return true;
+  }
+
+  private boolean check_points(ArrayList<Point> ap, long pid) {
+    //long id = p.getId();
+    for (int i = 0; i < ap.size(); i++) {
+      if (pid == ap.get(i).getId()) {
+        return false;
+      }
+    }
+    //ap.add(p);
+    return true;
+  }
+
 
 
   public boolean editPhysician(
@@ -281,9 +304,20 @@ public class DatabaseController implements DatabaseInterface {
     dbc.send_Command(
         "insert into Point (x,y,cost,pid,floor,name) values (" + x + ","
             + y + "," + cost + "," + id + "," + floor + ",'" + name + "'); \n");
+
+    for(int k = 0;k < neighbors.size();k++) {
+      this.addNeighbor(point.getId(), neighbors.get(k));
+    }
+
+    if(check_points(localPoints,realpoint)){
+      localPoints.add(realpoint);
+    }
+
+
     return true;
   }
 
+  //PREFERABLY NOT USE FOR SINGLE ADDING, BECAUSE IT CANNNOT ADD THE POIN TO THE LOCAL COPY
   public boolean addPoint(FakePoint point) {
     int cost = point.getCost();
     int x = point.getXCoord();
@@ -300,8 +334,59 @@ public class DatabaseController implements DatabaseInterface {
     dbc.send_Command(
         "insert into Point (x,y,cost,pid,floor,name) values (" + x + ","
             + y + "," + cost + "," + id + "," + floor + ",'" + name + "'); \n");
+
+    for(int k = 0;k < neighbors.size();k++) {
+      this.addNeighbor(point.getId(), neighbors.get(k));
+    }
+
+    if(check_points(localPoints,id)){
+      //localPoints.add(realpoint);
+    }
+
+
+
     return true;
   }
+
+  public boolean editPoint(
+      Point real_po
+  ) {
+    //FakePhysician fake_ph = new FakePhysician(real_ph);
+    long PID = real_po.getId();
+    String name = real_po.getName(); //real_po.getFirstName().replace(';','_');
+    //String last_name = real_ph.getLastName().replace(';','_');
+    //String title = real_ph.getTitle().replace(';','_');
+    int cost = real_po.getCost();
+    int xcoord = real_po.getXCoord();
+    int ycoord = real_po.getYCoord();
+    int floor = real_po.getFloor();
+    //real_po.ge
+    ArrayList<Point> array_points = real_po.getNeighbors();
+
+    dbc.send_Command(
+        "update point SET name = '" + name + "', cost =  " + cost
+            + ", x  =  " + xcoord + ", y  =  " + ycoord  + " WHERE PID = " + PID + ")"
+    );
+
+    dbc.send_Command(
+        "delete from neighbor WHERE PID1 = " + PID + "OR PID2 = " + PID + ")"
+    );
+
+    int i;
+    for (i = 0; i < array_points.size(); i++) {
+      this.addNeighbor((int)PID, array_points.get(i).getId());
+      this.addNeighbor(array_points.get(i).getId(),(int)PID);
+    }
+
+    //ArrayList<Physician> new_physicians = localPhysicians;
+    Point old_point = findRealPoint((int) real_po.getId(), localPoints);
+    localPoints.remove(old_point);
+    localPoints.add(real_po);
+    //setPhysicians(new_physicians);
+
+    return true;
+  }
+
 
 
   public boolean removePoint(Point realpoint) {
@@ -332,17 +417,17 @@ public class DatabaseController implements DatabaseInterface {
     }
     //int i;
 
-    int k, l;
-    for (k = 0; k < al.size(); k++) {
-      //this.addPoint(al.get(i));
-      FakePoint point = al.get(k);
-      ArrayList<Integer> neighbor_ids = point.getNeighbors();
-      for (l = 0; l < neighbor_ids.size(); l++) {
-        this.addNeighbor(point.getId(), neighbor_ids.get(l));
-        //this.addNeighboring(pl.get(i).id,point.id);
-        progressBarPercentage = .25 + .25 * l / neighbor_ids.size();
-      }
-    }
+//    int k, l;
+//    for (k = 0; k < al.size(); k++) {
+//      //this.addPoint(al.get(i));
+//      FakePoint point = al.get(k);
+//      ArrayList<Integer> neighbor_ids = point.getNeighbors();
+//      for (l = 0; l < neighbor_ids.size(); l++) {
+//        this.addNeighbor(point.getId(), neighbor_ids.get(l));
+//        //this.addNeighboring(pl.get(i).id,point.id);
+//        progressBarPercentage = .25 + .25 * l / neighbor_ids.size();
+//      }
+//    }
 
     return true;
   }
