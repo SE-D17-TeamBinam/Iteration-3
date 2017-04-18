@@ -248,7 +248,6 @@ public class DirectEditController extends CentralUIController implements Initial
     });
   }
 
-
   /////////////////////////////
   ///// Refresh functions /////
   /////////////////////////////
@@ -414,7 +413,7 @@ public class DirectEditController extends CentralUIController implements Initial
   public void back () {
     Stage primaryStage = (Stage) DirectEdit.getScene().getWindow();
     try {
-      loadScene(primaryStage, "/AdminLogin.fxml");
+      loadScene(primaryStage, "/AdminMenu.fxml");
     } catch (Exception e) {
       System.out.println("Cannot load admin login menu");
       e.printStackTrace();

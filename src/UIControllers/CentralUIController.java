@@ -1,11 +1,7 @@
 package UIControllers;
 
 import CredentialManager.CredentialManager;
-import Database.DatabaseController;
-import Database.DatabaseDriver;
 import Database.DatabaseInterface;
-import Definitions.Physician;
-import java.util.ArrayList;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
@@ -18,7 +14,6 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.Dictionary;
-import org.Point;
 import org.Session;
 
 
