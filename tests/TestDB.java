@@ -26,7 +26,7 @@ public class TestDB {
 
     dbc = new DatabaseController(dbd);
     dbc.load();
-    ArrayList<Physician> s = dbc.fuzzySearchPhysicians("mitchel");
+    ArrayList<Physician> s = dbc.fuzzySearchPhysicians("mitch");
     for(Physician p:s){
       System.out.println(p.getFirstName() + " " + p.getLastName() + " " + p.getTitle());
     }
