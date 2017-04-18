@@ -10,6 +10,11 @@ public class StairPoint extends VerticalPoint {
   public StairPoint(int xCoord, int yCoord, String name, int id, ArrayList<Point> new_neighbors, int floor){
     super(xCoord, yCoord, name, id, new_neighbors, floor);
   }
+
+  public StairPoint(int xCoord, int yCoord, int floor){
+    super(xCoord, yCoord, floor);
+  }
+
   public boolean isElevator(){
     return false;
   }
