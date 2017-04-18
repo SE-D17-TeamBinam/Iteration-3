@@ -24,6 +24,7 @@ public class FakePoint {
     this.xCoord = (int) xCoord;
     this.yCoord = (int) yCoord;
     this.name = name;
+    this.name.replace(';','_');
   }
 
   public FakePoint(double xCoord, double yCoord, int floor) {
@@ -42,12 +43,24 @@ public class FakePoint {
     this.neighbors = new_neighbors;
     this.cost = 0;
     this.floor = floor;
+    this.name.replace(';','_');
   }
 
   public FakePoint(Point equivalent) {
     this.xCoord = equivalent.getXCoord();
     this.yCoord = equivalent.getYCoord();
-    this.name = equivalent.getName();
+    this.name = "";
+    if (equivalent.getNames() != null) {
+      for (String n : equivalent.getNames()) {
+        if (n.length() > 1) {
+          this.name += n + "\t";
+        }
+      }
+      if (this.name.length() > 1) {
+        this.name = this.name.substring(0, this.name.length() - 1);
+      }
+    }
+
     this.id = equivalent.getId();
     if (equivalent.getParent() == null) {
       this.parent = -1;
@@ -56,9 +69,10 @@ public class FakePoint {
     }
     this.cost = equivalent.getCost();
     this.floor = equivalent.getFloor();
-    for (int i = 0; i < equivalent.neighbors.size(); i ++){
+    for (int i = 0; i < equivalent.neighbors.size(); i++) {
       this.neighbors.add(equivalent.neighbors.get(i).getId());
     }
+    this.name.replace(';','_');
   }
 
   //Methods
@@ -74,7 +88,8 @@ public class FakePoint {
    * @return The Real Point Equivalent (w/o Neighbors)
    */
   Point toRealPoint() {
-    Point ret = new Point(this.xCoord, this.yCoord, this.name, this.id, new ArrayList<Point>(),
+    ArrayList<String> names = new ArrayList<String>(Arrays.asList(this.name.split("\t")));
+    Point ret = new Point(this.xCoord, this.yCoord, names, this.id, new ArrayList<Point>(),
         this.floor);
     return ret;
   }

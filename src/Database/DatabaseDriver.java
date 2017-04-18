@@ -19,23 +19,24 @@ public class DatabaseDriver {
   private String url = "";
   private String driver = "";
 
-  public DatabaseDriver(String _driver, String _url){
+  public DatabaseDriver(String _driver, String _url) {
     this.url = _url;
     this.driver = _driver;
     try {
       this.registerDriver();
       this.connect();
-    }catch (SQLException e){
+    } catch (SQLException e) {
       System.out.println("Error Connecting To DB, Trying Again");
       try {
         this.connect();
-      }catch (SQLException e2){
+      } catch (SQLException e2) {
         System.out.println("\u001B[31m" + "Database Connection Error" + "\u001B[30m");
         System.out.println(e.getMessage());
       }
-    }
-    catch (ClassNotFoundException e){
-      System.out.println("\u001B[31m" + "Could not find Database Driver Jar File, make sure you add it to the classpath!" + "\u001B[30m");
+    } catch (ClassNotFoundException e) {
+      System.out.println("\u001B[31m"
+          + "Could not find Database Driver Jar File, make sure you add it to the classpath!"
+          + "\u001B[30m");
     }
   }
 

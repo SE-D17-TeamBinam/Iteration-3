@@ -4,11 +4,12 @@ package Database;
  * Created by Evan on 4/15/2017.
  */
 class SaveThread implements Runnable {
+
   Thread t = null;
   DatabaseInterface dbe;
   public boolean running = false;
 
-  SaveThread(DatabaseInterface _dbe){
+  SaveThread(DatabaseInterface _dbe) {
     dbe = _dbe;
     System.out.println("Creating new save thread");
   }
@@ -21,7 +22,7 @@ class SaveThread implements Runnable {
     running = false;
   }
 
-  public void start(){
+  public void start() {
     (new Thread(this, "Save Thread")).start();
   }
 }

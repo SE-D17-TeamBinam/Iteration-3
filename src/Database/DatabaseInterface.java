@@ -14,6 +14,7 @@ public interface DatabaseInterface {
 
   /**
    * Pulls data from the datababse and populates the local copies of the data
+   *
    * @throws SQLException If there was a problem communicating with the database
    */
   public void load() throws SQLException;
@@ -25,37 +26,45 @@ public interface DatabaseInterface {
 
   /**
    * Gets a sublist of the local copy of points that have a name (ie Destinations)
+   *
    * @return ArrayList of Points that are all the local points that have names
    */
   public ArrayList<Point> getNamedPoints();
 
   /**
-   * Tries to pull data from the database into the local copies then returns the local copy of points
+   * Tries to pull data from the database into the local copies then returns the local copy of
+   * points
+   *
    * @return ArrayList of Points that is the local copy of points
    */
   public ArrayList<Point> getPoints();
 
   /**
    * Set the local copy of points and then save them to the database
+   *
    * @param points The ArrayList of Points to replace the local copy
    */
   public void setPoints(ArrayList<Point> points);
 
   /**
-   * Tries to pull data from the database into the local copies then returns the local copy of physicians
+   * Tries to pull data from the database into the local copies then returns the local copy of
+   * physicians
+   *
    * @return The ArrayList of Physicians that is the local copy of physicians
    */
   public ArrayList<Physician> getPhysicians();
 
   /**
    * Set the local copy of points and then save them to the database
+   *
    * @param physicians The ArrayList of Points to replace the local copy
    */
   public void setPhysicians(ArrayList<Physician> physicians);
 
 
   /**
-   *removes the physician with the given id from the database and the local copy of physicians
+   * removes the physician with the given id from the database and the local copy of physicians
+   *
    * @param pid , integer id of the physican to remove
    * @return true if everything was successful
    */
@@ -63,7 +72,8 @@ public interface DatabaseInterface {
 
 
   /**
-   *adds a new physician to the database and the local copy
+   * adds a new physician to the database and the local copy
+   *
    * @param real_ph , the physician to add
    * @return true if everything was successful
    */
@@ -73,6 +83,7 @@ public interface DatabaseInterface {
 
   /**
    * edits a physician, updating it with the new fields of the physician given to the function
+   *
    * @param real_ph , the updated physician
    * @return true if everything was successful
    */
@@ -89,6 +100,6 @@ public interface DatabaseInterface {
   public ArrayList<Point> fuzzySearchPoints(String searchTerm);
 
 
-  }
+}
 
 

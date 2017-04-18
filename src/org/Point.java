@@ -4,6 +4,7 @@ import Database.FakePhysician;
 import Database.FakePoint;
 import Definitions.Physician;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * @author ajanagal and aramirez2
@@ -51,6 +52,18 @@ public class Point {
     this.floor = floor;
   }
 
+  public Point(int xCoord, int yCoord, String name, int id, ArrayList<Point> new_neighbors,
+      int floor) {
+    this.xCoord = xCoord;
+    this.yCoord = yCoord;
+    this.names = new ArrayList<String>(Arrays.asList(name));
+    this.id = id;
+    this.parent = null;
+    this.neighbors = new_neighbors;
+    this.cost = 0;
+    this.floor = floor;
+  }
+
   //Methods
   public void connectTo(Point node) {
     node.getNeighbors().add(this);
@@ -73,11 +86,20 @@ public class Point {
   }
 
   public void setName(String newName) {
-    name = newName;
+    if (names == null){
+      names = new ArrayList<String>();
+    }
+    if (names.size() > 0)
+      names.set(0,newName);
+    else
+      names.add(newName);
+
   }
 
   public String getName() {
-    return name;
+    if (names != null && names.size() > 0)
+      return names.get(0);
+    return null;
   }
 
   public void setFloor(int floor) {
