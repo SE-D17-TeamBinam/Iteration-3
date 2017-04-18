@@ -362,7 +362,11 @@ public class MapViewController extends CentralUIController implements Initializa
     ListPoints lp = new ListPoints(allPoints);
     floorPoints = lp.getFloor(floor).getPoints();
     initializeVisualNodes();
+    String start = (String)startNodeBox.getValue();
+    String end = (String)endNodeBox.getValue();
     listedPoints.clear();
+    listedPoints.put(start, startPoint);
+    listedPoints.put(end, endPoint);
     startNodeBox.getItems().clear();
     endNodeBox.getItems().clear();
 //    if(mapViewFlag > 2){
@@ -379,6 +383,8 @@ public class MapViewController extends CentralUIController implements Initializa
     }
     startNodeBox.getItems().addAll(listedPoints.keySet());
     endNodeBox.getItems().addAll(listedPoints.keySet());
+    startNodeBox.setValue(start);
+    endNodeBox.setValue(end);
 //    }
   }
 
