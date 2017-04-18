@@ -48,6 +48,10 @@ public class MainMenuController extends CentralUIController implements Initializ
     addResolutionListener(anchorPane);
     setBackground(anchorPane);
     CentralController.resetSession();
+    applyLanguageConfig();
+  }
+
+  public void applyLanguageConfig(){
     SearchLabel.setText(dictionary.getString("Search", currSession.getLanguage()));
     MapLabel.setText(dictionary.getString("Map", currSession.getLanguage()));
   }

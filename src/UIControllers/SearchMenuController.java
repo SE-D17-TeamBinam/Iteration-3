@@ -15,6 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+
 /**
  * Created by Leon Zhang on 2017/4/1.
  */
@@ -91,6 +92,18 @@ public class SearchMenuController extends CentralUIController implements Initial
       loadScene(primaryStage, "/MainMenu.fxml");
     } catch (Exception e) {
       System.out.println("Cannot load main menu");
+      e.printStackTrace();
+    }
+  }
+
+  public void searchOnMap(){
+    mapViewFlag = 1;
+    Stage primaryStage = (Stage) SearchDirectory.getScene().getWindow();
+    try {
+      loadScene(primaryStage, "/MapScene.fxml");
+      //TODO changes a global variable physician
+    } catch (Exception e){
+      System.out.println("Cannot load Map");
       e.printStackTrace();
     }
   }

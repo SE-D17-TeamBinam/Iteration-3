@@ -1,10 +1,7 @@
 package UIControllers;
 
 import CredentialManager.CredentialManager;
-import Database.DatabaseController;
-import Database.DatabaseDriver;
 import Database.DatabaseInterface;
-import java.util.ArrayList;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
@@ -15,7 +12,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.Dictionary;
-import org.Point;
 import org.Session;
 
 
@@ -28,6 +24,7 @@ public class CentralUIController {
    */
   protected static int mapViewFlag = 0;
   protected static Session currSession;
+  // TODO have a current physician here that's selected in search
   protected static CredentialManager credentialManager;
   protected static Dictionary dictionary;
   protected static double x_res = 1300;

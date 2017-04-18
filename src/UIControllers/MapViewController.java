@@ -294,6 +294,9 @@ public class MapViewController extends CentralUIController implements Initializa
     initializeScene();
     initializeChoiceBox();
     initializeMapImage();
+    if (mapViewFlag == 1){
+       // TODO go to the currently selected physician's node on map
+    }
 
     // Adds a circle to show where the mouse is on the map
   }
