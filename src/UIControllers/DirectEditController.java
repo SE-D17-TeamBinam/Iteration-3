@@ -56,8 +56,6 @@ public class DirectEditController extends CentralUIController implements Initial
   @FXML
   private Button DirectBack;
   @FXML
-  private Button DirectEditMap;
-  @FXML
   private Label DirectFirstName;
   @FXML
   private Label DirectLastName;
@@ -108,8 +106,6 @@ public class DirectEditController extends CentralUIController implements Initial
     DirectLocations.setText(dictionary.getString("Locations", currSession.getLanguage()));
     DirectSave.setText(dictionary.getString("Save", currSession.getLanguage()));
     DirectLogoff.setText(dictionary.getString("Log off", currSession.getLanguage()));
-    DirectEditMap.setText(dictionary.getString("Edit Map", currSession.getLanguage()));
-
 
     rooms = database.getNamedPoints();
     docs = database.getPhysicians();
@@ -148,18 +144,6 @@ public class DirectEditController extends CentralUIController implements Initial
           }
         });
   }
-
-  @FXML
-  public void editMap(){
-    mapViewFlag = 3;
-    Stage primaryStage = (Stage) DirectEdit.getScene().getWindow();
-    try {
-      loadScene(primaryStage, "/MapScene.fxml");
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-
 
   private void refreshLoc () {
     int i = 0;
@@ -292,7 +276,7 @@ public class DirectEditController extends CentralUIController implements Initial
   public void back () {
     Stage primaryStage = (Stage) DirectEdit.getScene().getWindow();
     try {
-      loadScene(primaryStage, "/AdminLogin.fxml");
+      loadScene(primaryStage, "/AdminMenu.fxml");
     } catch (Exception e) {
       System.out.println("Cannot load admin login menu");
       e.printStackTrace();

@@ -33,7 +33,6 @@ import javafx.stage.Stage;
 import org.ElevatorPoint;
 import org.FindDirections;
 import org.ListPoints;
-import org.PathfindingStrategy;
 import org.Point;
 import org.StairPoint;
 
@@ -57,7 +56,8 @@ public class MapViewController extends CentralUIController implements Initializa
 
   @FXML
   private Button backButton;
-
+  @FXML
+  private Button AdminLogOff;
   @FXML
   private Pane infoPane;
   @FXML
@@ -281,6 +281,7 @@ public class MapViewController extends CentralUIController implements Initializa
     textDirectionsBox.setVisible(false);
     //mapViewFlag = 3;
     if(mapViewFlag != 3){ // Todo you know
+      AdminLogOff.setVisible(false);
       helpButton.setVisible(false);
     }
     helpPane.setVisible(false);
@@ -1152,7 +1153,12 @@ public class MapViewController extends CentralUIController implements Initializa
   public void backButtonClicked() {
     Stage primaryStage = (Stage) floorChoiceBox.getScene().getWindow();
     try {
-      loadScene(primaryStage, "/MainMenu.fxml");
+      if (mapViewFlag == 3) {
+        loadScene(primaryStage, "/AdminMenu.fxml");
+      }
+      else {
+        loadScene(primaryStage, "/MainMenu.fxml");
+      }
     } catch (Exception e) {
       System.out.println("Cannot load main menu");
       e.printStackTrace();
@@ -1557,4 +1563,15 @@ public class MapViewController extends CentralUIController implements Initializa
   public void toggleHelp () {
     helpPane.setVisible(!helpPane.isVisible());
   }
+
+  public void logoff() {
+      Stage primaryStage = (Stage) mapViewPane.getScene().getWindow();
+      try {
+        loadScene(primaryStage, "/MainMenu.fxml");
+      } catch (Exception e) {
+        System.out.println("Cannot load main menu");
+        e.printStackTrace();
+      }
+    }
+
 }

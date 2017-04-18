@@ -28,12 +28,17 @@ public class AboutPageController extends CentralUIController implements Initiali
   private Button AboutDone;
   @FXML
   private Button AboutBack;
+  @FXML
+  private Label EndLabel;
 
   @Override
   public void initialize(URL fxmlFileLocation, ResourceBundle resources){
     AboutDone.setVisible(false);
     addResolutionListener(anchorPane);
     setBackground(anchorPane);
+
+    /* apply language configs */
+    AboutBack.setText(dictionary.getString("Back", currSession.getLanguage()));
   }
 
   public void back () {
