@@ -86,6 +86,9 @@ public class Point {
   }
 
   public void setName(String newName) {
+    if (names == null){
+      names = new ArrayList<String>();
+    }
     if (names.size() > 0)
       names.set(0,newName);
     else
@@ -101,7 +104,7 @@ public class Point {
 
 
   public String getName() {
-    if (names.size() > 0)
+    if (names != null && names.size() > 0)
       return names.get(0);
     return null;
   }

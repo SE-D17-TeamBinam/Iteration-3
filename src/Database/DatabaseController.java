@@ -55,9 +55,9 @@ public class DatabaseController implements DatabaseInterface {
   ) {
     //FakePhysician fake_ph = new FakePhysician(real_ph);
     long PID = real_ph.getID();
-    String first_name = real_ph.getFirstName();
-    String last_name = real_ph.getLastName();
-    String title = real_ph.getTitle();
+    String first_name = real_ph.getFirstName().replace(';','_');
+    String last_name = real_ph.getLastName().replace(';','_');
+    String title = real_ph.getTitle().replace(';','_');
     ArrayList<Point> array_points = real_ph.getLocations();
 
     dbc.send_Command(
@@ -98,9 +98,9 @@ public class DatabaseController implements DatabaseInterface {
   ) {
     //FakePhysician fake_ph = new FakePhysician(real_ph);
     long PID = real_ph.getID();
-    String first_name = real_ph.getFirstName();
-    String last_name = real_ph.getLastName();
-    String title = real_ph.getTitle();
+    String first_name = real_ph.getFirstName().replace(';','_');
+    String last_name = real_ph.getLastName().replace(';','_');
+    String title = real_ph.getTitle().replace(';','_');
     ArrayList<Point> array_points = real_ph.getLocations();
 
     dbc.send_Command(
@@ -203,7 +203,7 @@ public class DatabaseController implements DatabaseInterface {
         locations.add(findRealPoint(currentLocations.get(j), localPoints));
       }
       physicians.get(i).setLocations(locations);
-      progressBarPercentage = .75 + .25 * (i / (physicians.size() - 1));
+      progressBarPercentage = .75 + .25 * (i / physicians.size());
     }
     return physicians;
 
@@ -275,7 +275,7 @@ public class DatabaseController implements DatabaseInterface {
     int y = point.getYCoord();
     int id = point.getId();
     int floor = point.getFloor();
-    String name = point.getName();
+    String name = point.getName().replace(';','_');
     ArrayList<Integer> neighbors = point.getNeighbors();
 
     dbc.send_Command(
@@ -290,7 +290,7 @@ public class DatabaseController implements DatabaseInterface {
     int y = point.getYCoord();
     int id = point.getId();
     int floor = point.getFloor();
-    String name = point.getName();
+    String name = point.getName().replace(';','_');
     ArrayList<Integer> neighbors = point.getNeighbors();
 
     if (name == null) {
