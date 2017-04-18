@@ -441,9 +441,8 @@ public class MapViewController extends CentralUIController implements Initializa
   @Override
   public void customListenerX() {
     map_x_max = x_res - adminPaneRectangle.getWidth() * (adminPane.isVisible() ? 1 : 0);
-    infoPane.setLayoutX(x_res - infoPaneRectangle.getWidth());
     adminPane.setLayoutX(x_res - adminPaneRectangle.getWidth());
-    typeSelectionPane.setLayoutX(infoPane.getLayoutX());
+    typeSelectionPane.setLayoutX(adminPane.getLayoutX());
     AdminLogOff.setLayoutX(x_res - AdminLogOff.getPrefWidth() - 5);
     fixMapDisplayLocation();
     updateUserPane();
