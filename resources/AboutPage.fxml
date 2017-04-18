@@ -11,12 +11,7 @@
    <children>
       <Pane fx:id="AboutPage" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750" prefWidth="1300">
          <children>
-            <Button fx:id="AboutBack" layoutX="5.0" layoutY="5.0" mnemonicParsing="false" onMouseClicked="#back" prefHeight="75.0" prefWidth="150.0" text="Back">
-               <font>
-                  <Font size="26.0" />
-               </font>
-            </Button>
-            <Label fx:id="MainLabel" layoutX="575.0" layoutY="157.0" prefHeight="68.0" prefWidth="150.0" text="ABOUT">
+            <Label fx:id="MainLabel" layoutX="575.0" layoutY="161.0" prefHeight="68.0" prefWidth="150.0" text="ABOUT">
                <font>
                   <Font size="46.0" />
                </font>
@@ -33,5 +28,10 @@
             </Label>
          </children>
       </Pane>
+      <Button fx:id="AboutBack" layoutX="5.0" layoutY="5.0" mnemonicParsing="false" onMouseClicked="#back" prefHeight="75.0" prefWidth="150.0" text="Back">
+         <font>
+            <Font size="26.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

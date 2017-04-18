@@ -29,6 +29,17 @@ public class AboutPageController extends CentralUIController implements Initiali
   @FXML
   private Label EndLabel;
 
+
+  @Override
+  public void customListenerX(){
+    AboutPage.setLayoutX((x_res - AboutPage.getPrefWidth())/2);
+  }
+
+  @Override
+  public void customListenerY(){
+    AboutPage.setLayoutY((y_res - AboutPage.getPrefHeight())/2);
+  }
+
   @Override
   public void initialize(URL fxmlFileLocation, ResourceBundle resources){
     addResolutionListener(anchorPane);
