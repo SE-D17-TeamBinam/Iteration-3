@@ -1,7 +1,9 @@
 package org;
 
+import UIControllers.MapViewController;
 import java.util.ArrayList;
 import java.util.HashMap;
+import sun.swing.UIClientPropertyKey;
 
 /**
  * @author  ajanagal and aramirez2
@@ -328,5 +330,23 @@ public class ListPoints {
       p.add(gridCreate(width,length,i));
     }
     return p;
+  }
+
+  /**
+   * Checks if a node is unreachable from the ListPoint object
+   *
+   * @throws DisconnectedNodeException
+   */
+  public void verifyNodeConnections(Point p) throws DisconnectedNodeException{
+    if(p.getNeighbors().size() == 0){
+      throw new DisconnectedNodeException(p);
+    }
+    try{
+      for(Point goal : this.points){
+        Astar(p, goal);
+      }
+    } catch (NoPathException e){
+      throw new DisconnectedNodeException(p);
+    }
   }
 }
