@@ -40,7 +40,8 @@ public class Point {
     this.floor = floor;
   }
 
-  public Point(int xCoord, int yCoord, ArrayList<String> names, int id, ArrayList<Point> new_neighbors,
+  public Point(int xCoord, int yCoord, ArrayList<String> names, int id,
+      ArrayList<Point> new_neighbors,
       int floor) {
     this.xCoord = xCoord;
     this.yCoord = yCoord;
@@ -86,26 +87,29 @@ public class Point {
   }
 
   public void setName(String newName) {
-    if (names == null){
+    if (names == null) {
       names = new ArrayList<String>();
     }
-    if (names.size() > 0)
-      names.set(0,newName);
-    else
+    if (names.size() > 0) {
+      names.set(0, newName);
+    } else {
       names.add(newName);
+    }
   }
-  public ArrayList<String> getNames(){
+
+  public ArrayList<String> getNames() {
     return names;
   }
 
-  public void setNames(ArrayList<String> _names){
+  public void setNames(ArrayList<String> _names) {
     this.names = _names;
   }
 
 
   public String getName() {
-    if (names != null && names.size() > 0)
+    if (names != null && names.size() > 0) {
       return names.get(0);
+    }
     return null;
   }
 
@@ -145,11 +149,12 @@ public class Point {
     this.yCoord = (int) yCoord;
   }
 
-  /**Heurstic will give the manhattan straight line distance from one point to another
+  /**
+   * Heurstic will give the manhattan straight line distance from one point to another
    * <p>
-   *   it does the distance formula dist =difference of x  and difference of y
+   * it does the distance formula dist =difference of x  and difference of y
    * </p>
-   * @param End
+   *
    * @return int The return will be the manhattan line distance
    */
   public int Heuristic(Point End) {
@@ -161,9 +166,9 @@ public class Point {
   /**
    * Distance will find the straight line distance from one point to another
    * <p>
-   *   it does the distance formula dist = sqrt(diffence of x squared and difference of y squared)
+   * it does the distance formula dist = sqrt(diffence of x squared and difference of y squared)
    * </p>
-   * @param End
+   *
    * @return int The return will be the straight line distance
    */
   public int Distance(Point End) {//Straight Line Distance
