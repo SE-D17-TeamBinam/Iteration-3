@@ -809,7 +809,7 @@ public class ListPointsTest { //tests Astar for one floor, all floor, and error 
     reverse.add(point2);
     reverse.add(point1);
 
-    String expect = "The time estimation to arrive at your Destination will take 2 minutes.";
+    String expect = "The time estimation to arrive at your Destination will take about 2 minutes.";
     String actual = test.TimedPath(reverse);
     assertEquals(expect,actual);
   }
@@ -834,7 +834,7 @@ public class ListPointsTest { //tests Astar for one floor, all floor, and error 
     reverse.add(point2);
     reverse.add(point1);
 
-    String expect = "The time estimation to arrive at your Destination will take 2 minutes.";
+    String expect = "The time estimation to arrive at your Destination will take about 2 minutes.";
     String actual = test.TimedPath(reverse);
     assertEquals(expect,actual);
   }

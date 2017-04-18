@@ -343,7 +343,7 @@ public class ListPoints {
   public String TimedPath(ArrayList<Point> path){
     double pixelToFeet = .20;//483/2242; // ft/pixel
     double timeWalkConstant = pixelToFeet/4.54; //sec/pixel for walking
-    double timeElev = .2 ; // in sec , assumes average speed is 50 ft/sec - one flight is 10ft
+    double timeElev = 1 ; // in sec , assumes average speed is 50 ft/sec - one flight is 10ft
     double timeStair = 10; // sec assumes climbing up or down ten ft is ten seconds
 
     double totalmin = 0.0;
@@ -376,6 +376,6 @@ public class ListPoints {
     if(totalmin - total >= .5){
       total++;
     }
-    return "The time estimation to arrive at your Destination will take " + Integer.toString(total)+ " minutes.";
+    return "The time estimation to arrive at your Destination will take about " + Integer.toString(total)+ " minutes.";
   }
 }
