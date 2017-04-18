@@ -25,15 +25,12 @@ public class AboutPageController extends CentralUIController implements Initiali
   @FXML
   private Label MainLabel;
   @FXML
-  private Button AboutDone;
-  @FXML
   private Button AboutBack;
   @FXML
   private Label EndLabel;
 
   @Override
   public void initialize(URL fxmlFileLocation, ResourceBundle resources){
-    AboutDone.setVisible(false);
     addResolutionListener(anchorPane);
     setBackground(anchorPane);
 
