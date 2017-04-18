@@ -329,4 +329,53 @@ public class ListPoints {
     }
     return p;
   }
+
+  /**
+   * TimedPath will create a string that will display the time estimation of the path in minutes
+   * <p>
+   *    It takes the path, reverse the order and uses the x,y coordinates, stairs and elevators to
+   *    estimate the how long will it take to reach the destination
+   * </p>
+   * @param path - array list of points in reverse order, taken from the pathfinding algorithm
+   * @return String - Describes the amount of the time in a string
+   *          if it is under a minute, it will say that otherwise it will round to the nearest minute
+   */
+  public String TimedPath(ArrayList<Point> path){
+    double pixelToFeet = .20;//483/2242; // ft/pixel
+    double timeWalkConstant = pixelToFeet/4.54; //sec/pixel for walking
+    double timeElev = 1 ; // in sec , assumes average speed is 50 ft/sec - one flight is 10ft
+    double timeStair = 10; // sec assumes climbing up or down ten ft is ten seconds
+
+    double totalmin = 0.0;
+    double totalsec = 0.0;
+
+    ArrayList<Point> correctedPath = new ArrayList<Point>();
+    for (Point end : path){
+      correctedPath.add(0,end); //updates it so always places new things in the beginning
+    }
+    for (int i = 0; i < correctedPath.size(); i++){
+      if(correctedPath.size()-1 == i){
+        //last point, doesnt do anything
+      }
+      else if((correctedPath.get(i) instanceof  ElevatorPoint) && //current and next point are both elevators
+          (correctedPath.get(i+1) instanceof ElevatorPoint)) {
+        totalsec += timeElev; //adds time in elevator
+      }else if((correctedPath.get(i) instanceof  StairPoint) && //current and next point are both stairs
+          (correctedPath.get(i+1) instanceof StairPoint)) {
+        totalsec += timeStair;  //adds time in stairs
+      }else{
+        double pixel = correctedPath.get(i).TimeDistance(correctedPath.get(i+1)); //gets float distance
+        totalsec += timeWalkConstant*pixel;   //times with walk time constant to get time in sec
+      }
+    }
+    totalmin = totalsec / 60; //converts to minutes
+    if (totalmin < 1){
+      return ("The time estimation to arrive at your Destination will take less than a minute.");
+    }
+    int total = (int) totalmin;
+    if(totalmin - total >= .5){
+      total++;
+    }
+    return "The time estimation to arrive at your Destination will take about " + Integer.toString(total)+ " minutes.";
+  }
 }
