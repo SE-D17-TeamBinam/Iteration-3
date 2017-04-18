@@ -59,7 +59,6 @@ public class CentralUIController {
    */
   public void restartUI(Stage primaryStage) throws Exception {
     Parent root = FXMLLoader.load(getClass().getResource("/MainMenu.fxml"));
-    //Parent root = FXMLLoader.load(getClass().getResource("/DirectEdit.fxml"));
     primaryStage.setScene(new Scene(root, x_res, y_res));
     primaryStage.setTitle("Faulkner Hospital Kiosk");
     primaryStage.show();

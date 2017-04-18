@@ -3,8 +3,12 @@ import Definitions.Physician;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
@@ -68,13 +72,46 @@ public class DetailMenuController extends CentralUIController implements Initial
       DocLastNameField.setText(currentPhysician.getLastName());
       DocTitleField.setText(currentPhysician.getTitle());
       for (int i = 0; i < currentPhysician.getLocations().size(); i++){
-        Label loc = new Label();
-        loc.setPrefHeight(50);
-        loc.setFont(Font.font("Times New Roman", 30));
-        loc.setText(currentPhysician.getLocations().get(i).getName());
-        loc.setStyle("-fx-background-color: transparent");
+        String txt = currentPhysician.getLocations().get(i).getName();
+        Pane locPane = new Pane();
+
+        Label ILabel = new Label();
+        ILabel.setPrefHeight(50);
+        ILabel.setMinWidth(50);
+        ILabel.setFont(Font.font("Times New Roman", 30));
+        ILabel.setText(txt);
+        //Platform.runLater(() -> {ILabel.setPrefWidth(ILabel.getWidth() + 15);});
+
+
+        Label Goto = new Label();
+        Goto.setPrefHeight(46);
+        Goto.setPrefWidth(46);
+        Goto.setLayoutY(2);
+        Goto.setStyle("-fx-background-color: #3255bc; -fx-text-fill: white;");
+        Goto.setAlignment(Pos.CENTER);
+        Goto.setFont(Font.font("Times New Roman", 24));
+        Goto.setText("Go");
+        Goto.setVisible(false);
+        Platform.runLater(() -> {Goto.setLayoutX(ILabel.getWidth() + 10);});
+
+        ILabel.setStyle("-fx-background-color: transparent");
+        ILabel.setOnMouseEntered(e -> {
+          ILabel.setStyle("-fx-background-color: f7f7f7");
+        });
+        ILabel.setOnMouseExited(e -> {
+          ILabel.setStyle("-fx-background-color: transparent");
+        });
+        locPane.setOnMouseEntered(e -> {
+          Goto.setVisible(true);
+        });
+        locPane.setOnMouseExited(e -> {
+          Goto.setVisible(false);
+        });
+
+        locPane.getChildren().add(ILabel);
+        locPane.getChildren().add(Goto);
         DocLocations.setPrefHeight(DocLocations.getPrefHeight() + 50);
-        DocLocations.getChildren().add(loc);
+        DocLocations.getChildren().add(locPane);
       }
     } else if (currentPhysician == null && currentPoint != null) {
       DetailDoc.setVisible(false);
@@ -85,14 +122,13 @@ public class DetailMenuController extends CentralUIController implements Initial
       for (Physician doc : docs){
         for (Point room : doc.getLocations()){
           if (room.getId() == currentPoint.getId()){
-            System.out.println(doc.getFirstName());
-            Label loc = new Label();
-            loc.setPrefHeight(50);
-            loc.setFont(Font.font("Times New Roman", 30));
-            loc.setText(doc.getFirstName() + " " + doc.getLastName());
-            loc.setStyle("-fx-background-color: transparent");
+            String txt = doc.getFirstName() + " " + doc.getLastName();
             RoomHPs.setPrefHeight(RoomHPs.getPrefHeight() + 50);
-            RoomHPs.getChildren().add(loc);
+            Label ILabel = new Label();
+            ILabel.setPrefHeight(50);
+            ILabel.setFont(Font.font("Times New Roman", 30));
+            ILabel.setText(txt);
+            RoomHPs.getChildren().add(ILabel);
             break;
           }
         }
@@ -106,6 +142,15 @@ public class DetailMenuController extends CentralUIController implements Initial
   DetailMenuController (Physician doc, Point room) {
     currentPhysician = doc;
     currentPoint = room;
+  }
+
+
+  public Label makeGoto (double LayoutX) {
+    Label Goto = new Label("Go");
+    Goto.setPrefWidth(50);
+    Goto.setPrefHeight(50);
+    Goto.setLayoutX(LayoutX);
+    return Goto;
   }
 
   public void quit () {
@@ -128,15 +173,21 @@ public class DetailMenuController extends CentralUIController implements Initial
     }
   }
 
-  public void gotoMap () {
+  public void gotoMap (Point room) {
+    /*
     Stage primaryStage = (Stage) anchorPane.getScene().getWindow();
-    try {
-      loadScene(primaryStage, "/MapScene.fxml");
-    } catch (Exception e) {
-      System.out.println("Cannot load map view");
-      e.printStackTrace();
+      try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/DetailMenu.fxml"));
+        MapViewController MC = new MapViewController(room);
+        loader.setController(MC);
+        Pane mainPane = (Pane) loader.load();
+        primaryStage.setScene(new Scene(mainPane, x_res, y_res));
+        primaryStage.show();
+      } catch (Exception e) {
+        System.out.println("Cannot load main menu");
+        e.printStackTrace();
+      }
+      */
     }
-  }
-
 }
 
