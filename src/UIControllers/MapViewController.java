@@ -6,14 +6,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -441,9 +437,8 @@ public class MapViewController extends CentralUIController implements Initializa
   @Override
   public void customListenerX() {
     map_x_max = x_res - adminPaneRectangle.getWidth() * (adminPane.isVisible() ? 1 : 0);
-    infoPane.setLayoutX(x_res - infoPaneRectangle.getWidth());
     adminPane.setLayoutX(x_res - adminPaneRectangle.getWidth());
-    typeSelectionPane.setLayoutX(infoPane.getLayoutX());
+    typeSelectionPane.setLayoutX(adminPane.getLayoutX());
     AdminLogOff.setLayoutX(x_res - AdminLogOff.getPrefWidth() - 5);
     fixMapDisplayLocation();
     updateUserPane();
