@@ -214,6 +214,17 @@ public class MapViewController extends CentralUIController implements Initializa
   // Proxies the images for each floor
   private HashMap<Integer, Image> floorImages = new HashMap<Integer, Image>();
 
+  private Point startFocus;
+  public boolean viewAll = true;
+  public MapViewController(Point startFocus){
+    viewAll = false;
+    this.startFocus = startFocus;
+  }
+
+  public MapViewController(){
+
+  }
+
 //  private HashMap<Point, String>
 
   // TODO LIST
@@ -902,8 +913,13 @@ public class MapViewController extends CentralUIController implements Initializa
 
 
   private void getMap() {
-    allPoints = database.getPoints();
-    docs = database.getPhysicians();
+    if(viewAll) {
+      allPoints = database.getPoints();
+      docs = database.getPhysicians();
+    }else{
+      allPoints = new ArrayList<Point>();
+      allPoints.add(startFocus);
+    }
   }
 
   private void updateSelected() {
