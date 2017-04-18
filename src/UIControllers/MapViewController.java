@@ -1,6 +1,7 @@
 package UIControllers;
 
 import Definitions.Coordinate;
+import Definitions.Physician;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +12,8 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -19,6 +22,7 @@ import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -186,7 +190,7 @@ public class MapViewController extends CentralUIController implements Initializa
   private final Color POINT_COLOR = new Color(1, 0, 0, 1);
   private final Color POINT_STROKE = new Color(0, 0, 0, 1);
   private double PATHFINDING_LINE_MULT = 3;
-  private final Color PATH_COLOR = new Color(1,0,0,1);
+  private final Color PATH_COLOR = new Color(1, 0, 0, 1);
 
   // For drawing connections between points
   private final double LINE_FILL = 8;
@@ -206,6 +210,9 @@ public class MapViewController extends CentralUIController implements Initializa
   // The circles and lines that are currently drawn
   private HashMap<Point, Circle> circles = new HashMap<Point, Circle>();
   private HashMap<Connection, Line> lines = new HashMap<Connection, Line>();
+
+  // Proxies the images for each floor
+  private HashMap<Integer, Image> floorImages = new HashMap<Integer, Image>();
 
 //  private HashMap<Point, String>
 
@@ -272,55 +279,68 @@ public class MapViewController extends CentralUIController implements Initializa
   // Initialization //
   ////////////////////
 
-  double userPaneTargetX = 0;
+  private double userPaneTargetX = 0;
+
+  @FXML
+  private Label searchLabel;
 
   @FXML
   public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
-
-
+    initializeSearch();
 
     textDirectionsBox.setVisible(false);
     if (mapViewFlag != 3) { // Todo you know
       helpButton.setVisible(false);
-    }else{
+    } else {
       userPane.setVisible(false);
     }
     helpPane.setVisible(false);
-    initializeLanguageConfigs();
+    if (mapViewFlag < 3) {
+      initializeLanguageConfigs();
+    }
     typeSelection();
     getMap();
     selectionRectangle.setStroke(Color.BLACK);
     selectionRectangle.setFill(SELECTION_RECTANGLE_FILL);
     mapViewPane.getChildren().add(selectionRectangle);
     initializeScene();
-    initializeChoiceBox();
+    initializeFloorChoiceBox();
     initializeMapImage();
     initializeUserPane();
+    initializeSearchChoices();
     // Adds a circle to show where the mouse is on the map
   }
 
-  private void initializeUserPane(){
-//    userPaneTargetX = x_res - userPane.getWidth()*userPaneVisible - (~userPaneVisible&0x1)*tabImageView.getFitWidth();
-    Timeline fiveSecondsWonder = new Timeline(new KeyFrame(Duration.millis(1), new EventHandler<ActionEvent>() {
-      @Override
-      public void handle(ActionEvent event) {
-        double x = userPane.getLayoutX();
-        if(x < userPaneTargetX){
-          userPane.setLayoutX(x + 1);
-          fixMapDisplayLocation();
-          fixZoomPanePos();
-        }else if(x > userPaneTargetX){
-          userPane.setLayoutX(x - 1);
-          fixZoomPanePos();
-        }
-      }
-    }));
+  private void initializeUserPane() {
+    Timeline fiveSecondsWonder = new Timeline(
+        new KeyFrame(Duration.millis(1), new EventHandler<ActionEvent>() {
+          @Override
+          public void handle(ActionEvent event) {
+            double x = userPane.getLayoutX();
+            if (x < userPaneTargetX) {
+              userPane.setLayoutX(x + 1);
+              map_x_max = x + 1 + tabImageView.getFitWidth();
+              fixMapDisplayLocation();
+              fixZoomPanePos();
+            } else if (x > userPaneTargetX) {
+              userPane.setLayoutX(x - 1);
+              map_x_max = x - 1 + tabImageView.getFitWidth();
+              fixZoomPanePos();
+            }
+          }
+        }));
     fiveSecondsWonder.setCycleCount(Timeline.INDEFINITE);
     fiveSecondsWonder.play();
   }
 
   private void initializeLanguageConfigs() {
-        /* apply language configs */
+    /* apply language configs */
+    searchGoButton.setText(dictionary.getString("Go", currSession.getLanguage()));
+    floorSearchLabel.setText(dictionary.getString("Floor", currSession.getLanguage()));
+    hospitalSearchLabel.setText(dictionary.getString("Hospital", currSession.getLanguage()));
+    physicianSearchLabel.setText(dictionary.getString("Physicians", currSession.getLanguage()));
+    searchLabel.setText(dictionary.getString("Search", currSession.getLanguage()) + ":");
+    searchTabLabel.setText(dictionary.getString("Search", currSession.getLanguage()));
     startLabel.setText(dictionary.getString("Start", currSession.getLanguage()));
     endLabel.setText(dictionary.getString("End", currSession.getLanguage()));
     goButton.setText(dictionary.getString("Go", currSession.getLanguage()));
@@ -342,14 +362,6 @@ public class MapViewController extends CentralUIController implements Initializa
   private boolean pathfinding = false;
 
   private void switchFloors(int floor) {
-    // clear primary selection
-    // clear secondary selection
-    // remove circles and lines from scene
-    // clear circles
-    // clear lines
-    // clear floorPoints
-    // load in new points
-    // display new points
     setPointFocus(null);
     clearSecondaryPointFoci();
     mapViewPane.getChildren().clear();
@@ -362,15 +374,13 @@ public class MapViewController extends CentralUIController implements Initializa
     ListPoints lp = new ListPoints(allPoints);
     floorPoints = lp.getFloor(floor).getPoints();
     initializeVisualNodes();
-    String start = (String)startNodeBox.getValue();
-    String end = (String)endNodeBox.getValue();
+    String start = (String) startNodeBox.getValue();
+    String end = (String) endNodeBox.getValue();
     listedPoints.clear();
     listedPoints.put(start, startPoint);
     listedPoints.put(end, endPoint);
     startNodeBox.getItems().clear();
     endNodeBox.getItems().clear();
-//    if(mapViewFlag > 2){
-    // Show all nodes on floor, but show IDs of ones that do not have names
     for (Point p : floorPoints) {
       if (p.getName() == null || p.getName().equals("") || p.getName().equals("null")) {
         if (mapViewFlag > 2) {
@@ -385,7 +395,8 @@ public class MapViewController extends CentralUIController implements Initializa
     endNodeBox.getItems().addAll(listedPoints.keySet());
     startNodeBox.setValue(start);
     endNodeBox.setValue(end);
-//    }
+
+    refreshListView();
   }
 
   private void typeSelection() {
@@ -424,7 +435,7 @@ public class MapViewController extends CentralUIController implements Initializa
   }
 
   @FXML
-  Pane helpPane;
+  private Pane helpPane;
 
   @Override
   public void customListenerY() {
@@ -457,7 +468,7 @@ public class MapViewController extends CentralUIController implements Initializa
   }
 
   // Add values to the floor selector, add a listener, and set its default value
-  private void initializeChoiceBox() {
+  private void initializeFloorChoiceBox() {
     // Add options to change floors
     floorChoiceBox.getItems().add(7);
     floorChoiceBox.getItems().add(6);
@@ -472,12 +483,18 @@ public class MapViewController extends CentralUIController implements Initializa
         new ChangeListener<Number>() {
           public void changed(ObservableValue ov, Number old_value, Number new_value) {
             // Change the image that's being displayed when the input changes
-            Image new_img = new Image(
-                "/floor_plans/" + (floorChoiceBox.getItems().get((int) new_value))
-                    + "floor.png");
+            Image new_img;
+            Image floorImg = floorImages.get(new_value);
+            if (floorImages.get(new_value) == null) {
+              new_img = new Image(
+                  "/floor_plans/" + (floorChoiceBox.getItems().get((int) new_value))
+                      + "floor.png");
+              floorImages.put((Integer) new_value, new_img);
+            } else {
+              new_img = floorImg;
+            }
             mapImage.setImage(new_img);
             switchFloors((int) floorChoiceBox.getItems().get((int) new_value));
-//            setPointFocus(null);
           }
         });
     floorChoiceBox.setValue(1);
@@ -514,7 +531,9 @@ public class MapViewController extends CentralUIController implements Initializa
         if (mapViewFlag > 2 || pathfinding) {
           addVisualConnection(c);
           if (pathfinding) {
-            lines.get(c).setStrokeWidth(LINE_FILL * current_zoom_scale * PATHFINDING_LINE_MULT*(point_radius/POINT_RADIUS_MAX));
+            lines.get(c).setStrokeWidth(
+                LINE_FILL * current_zoom_scale * PATHFINDING_LINE_MULT * (point_radius
+                    / POINT_RADIUS_MAX));
             lines.get(c).setStroke(PATH_COLOR);
           }
         }
@@ -601,7 +620,7 @@ public class MapViewController extends CentralUIController implements Initializa
    */
   private void updateLineForConnection(Connection c) {
     Line l = lines.get(c);
-    if(l != null) {
+    if (l != null) {
       Point start = c.getStart();
       Point end = c.getEnd();
       Coordinate startCoord = pixelToCoordinate(
@@ -614,7 +633,7 @@ public class MapViewController extends CentralUIController implements Initializa
       l.setStrokeWidth(
           LINE_FILL * current_zoom_scale * (pathfinding ? PATHFINDING_LINE_MULT * (point_radius
               / POINT_RADIUS_MAX) : 1));
-    }else{
+    } else {
       // This could be when dragging nodes that are connected to other floors
     }
   }
@@ -822,7 +841,8 @@ public class MapViewController extends CentralUIController implements Initializa
   private void fixZoomPanePos() {
     setZoomPaneY(y_res - zoomPane.getPrefHeight() - ZOOM_PANE_OFFSET_VERTICAL);
     setZoomPaneX(
-        (userPane.isVisible() ? userPane.getLayoutX() + tabImageView.getFitWidth() : x_res) - zoomPane.getPrefWidth() - ZOOM_PANE_OFFSET_HORIZONTAL
+        (userPane.isVisible() ? userPane.getLayoutX() + tabImageView.getFitWidth() : x_res)
+            - zoomPane.getPrefWidth() - ZOOM_PANE_OFFSET_HORIZONTAL
             - adminPaneRectangle.getWidth() * (adminPane.isVisible() ? 1 : 0));
   }
 
@@ -882,16 +902,8 @@ public class MapViewController extends CentralUIController implements Initializa
 
 
   private void getMap() {
-    // Generate names for
     allPoints = database.getPoints();
-
-//    System.out.println("Size of All Points (loading): " + allPoints.size());
-    for (Point p : allPoints) {
-//      System.out.println("Neighbors size (loading): " + p.getNeighbors().size());
-    }
-
-//    System.out.println(allPoints.size());
-
+    docs = database.getPhysicians();
   }
 
   private void updateSelected() {
@@ -1033,6 +1045,51 @@ public class MapViewController extends CentralUIController implements Initializa
   private int userPaneVisible = 0;
 
   @FXML
+  private ImageView choice1;
+  @FXML
+  private ImageView choice2;
+  @FXML
+  private ImageView choice3;
+
+  private Image unselectedImage;
+  private Image selectedImage;
+
+  private void initializeSearchChoices() {
+    unselectedImage = new Image("/icons/unselectedButton.png");
+    selectedImage = new Image("/icons/selectedButton.png");
+    choose1();
+  }
+
+  @FXML
+  private void choose1() {
+    searchType = 1;
+    choice1.setImage(selectedImage);
+    choice2.setImage(unselectedImage);
+    choice3.setImage(unselectedImage);
+    refreshListView();
+  }
+
+  @FXML
+  private void choose2() {
+    // Searching Points
+    searchType = 2;
+    choice1.setImage(unselectedImage);
+    choice2.setImage(selectedImage);
+    choice3.setImage(unselectedImage);
+    refreshListView();
+  }
+
+  @FXML
+  private void choose3() {
+    // Searching Physicians
+    searchType = 3;
+    choice1.setImage(unselectedImage);
+    choice2.setImage(unselectedImage);
+    choice3.setImage(selectedImage);
+    refreshListView();
+  }
+
+  @FXML
   private Pane userPane;
 
   @FXML
@@ -1042,17 +1099,22 @@ public class MapViewController extends CentralUIController implements Initializa
   private Rectangle userPaneRectangle;
 
   @FXML
-  private void toggleUserPane(){
-    userPaneVisible = ~userPaneVisible&0x1; // toggles 1 or 0
+  private void toggleUserPane() {
+    userPaneVisible = ~userPaneVisible & 0x1; // toggles 1 or 0
     tabImageView.setImage(new Image("/icons/tab" + userPaneVisible + ".png"));
-    userPaneTargetX = x_res - userPane.getWidth()*userPaneVisible - (~userPaneVisible&0x1)*tabImageView.getFitWidth();
+    userPaneTargetX =
+        x_res - userPane.getWidth() * userPaneVisible - (~userPaneVisible & 0x1) * tabImageView
+            .getFitWidth();
   }
 
-  private void updateUserPane(){
-    userPaneTargetX = x_res - userPane.getWidth()*userPaneVisible - (~userPaneVisible&0x1)*tabImageView.getFitWidth();
+  private void updateUserPane() {
+    userPaneTargetX =
+        x_res - userPane.getWidth() * userPaneVisible - (~userPaneVisible & 0x1) * tabImageView
+            .getFitWidth();
     userPaneRectangle.setHeight(y_res - bannerView.getImage().getHeight());
     userPane.setLayoutY(bannerView.getImage().getHeight() - 1);
     userPane.setLayoutX(userPaneTargetX);
+    map_x_max = userPaneTargetX + tabImageView.getFitWidth();
     fixZoomPanePos();
   }
 
@@ -1249,14 +1311,140 @@ public class MapViewController extends CentralUIController implements Initializa
   }
 
   @FXML
+  private Label searchTabLabel;
+
+  @FXML
+  private Pane progressPane;
+
+  @FXML
+  private Rectangle progressBar;
+
+  @FXML
+  private TextField searchTextField;
+
+  @FXML
+  private ListView resultsList;
+
+  private int searchType;
+
+  private void initializeSearch() {
+    searchTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+      searchString = newValue.toString();
+      refreshListView();
+    });
+  }
+
+
+  private String searchString = "";
+  private ArrayList<Point> results = new ArrayList<Point>();
+  // allPoints
+  private ArrayList<Physician> docs;
+
+
+  private void refreshListView() {
+    searchPoints.clear();
+    String searching = dictionary.getString(searchType == 1 ? "Floor" : (searchType == 2 ? "Hospital" : "Physicians"), currSession.getLanguage());
+    searchFieldLabel.setText(dictionary.getString("Search", currSession.getLanguage()) + " " + searching);
+    results.clear();
+    ArrayList<Point> resultPoints = new ArrayList<Point>();
+    switch (searchType) {
+      case 1:
+        // Searching Current Floor's Points
+        resultPoints = searchFloorPoints(searchString);
+        break;
+      case 2:
+        // Searching all Points
+        resultPoints = searchAllPoints(searchString);
+        break;
+      case 3:
+        // Searching Physicians' Points
+        resultPoints = searchPhysicians(searchString);
+        break;
+      default:
+        break;
+    }
+
+    resultsList.getItems().setAll(pointsToStrings(resultPoints));
+
+  }
+
+  @FXML
+  private void searchGoButtonClicked(){
+    Point selected = searchPoints.get(resultsList.getSelectionModel().getSelectedItem());
+    if(selected != null) {
+      floorChoiceBox.setValue(selected.getFloor());
+      setPointFocus(selected);
+    }
+  }
+
+  @FXML
+  private Label floorSearchLabel;
+
+  @FXML
+  private Label searchFieldLabel;
+
+  @FXML
+  private Label hospitalSearchLabel;
+
+  @FXML
+  private Label physicianSearchLabel;
+
+  @FXML
+  private Button searchGoButton;
+
+  private HashMap<String, Point> searchPoints = new HashMap<String, Point>();
+
+  private ArrayList<String> pointsToStrings(ArrayList<Point> points){
+    ArrayList<String> out = new ArrayList<String>();
+    for(Point p : points){
+      int floor = p.getFloor()%10;
+      String post = (floor == 1 ? "st" : (floor == 2 ? "nd" : (floor == 3 ? "rd" : "th")));
+      String thisName = (p.getName() + " " + p.getFloor() + post + " " + dictionary.getString("Floor", currSession.getLanguage()));
+      out.add(thisName);
+      searchPoints.put(thisName, p);
+    }
+    return out;
+  }
+
+  private ArrayList<Point> searchPointList(String search, ArrayList<Point> points){
+    ArrayList<Point> out = new ArrayList<Point>();
+    for(Point p : points){
+      if(p.getName() != null && !p.getName().equals("null") && !p.getName().equals("") && !p.getName().equals("ELEVATOR") && p.getName().contains(search)){
+        out.add(p);
+      }
+    }
+    return out;
+  }
+
+  private ArrayList<Point> searchAllPoints(String search) {
+    return searchPointList(search, allPoints);
+  }
+
+  private ArrayList<Point> searchFloorPoints(String search){
+    return searchPointList(search, floorPoints);
+  }
+
+  private ArrayList<Point> searchPhysicians(String search){
+    ArrayList<Point> out = new ArrayList<Point>();
+    for(Physician p : docs){
+      if(p.getFirstName().contains(search) || p.getLastName().contains(search) || p.getTitle().contains(search)){
+        out.addAll(p.getLocations());
+      }
+    }
+    return out;
+  }
+
+  @FXML
   private void saveMapButtonClicked() {
+    saveButton.setDisable(true);
+    progressPane.setVisible(true);
     int i = 0;
-//    System.out.println("Size of All Points (saving): " + allPoints.size());
     for (Point p : allPoints) {
       p.setID(i++);
-//      System.out.println("Neighbors size (saving): " + p.getNeighbors().size());
     }
     database.setPoints(allPoints);
+    saveButton.setDisable(false);
+    progressPane.setVisible(false);
   }
 
   ///////////////////
@@ -1395,7 +1583,7 @@ public class MapViewController extends CentralUIController implements Initializa
     }
   }
 
-  private void mapMouseClickNoDrag(MouseEvent e){
+  private void mapMouseClickNoDrag(MouseEvent e) {
     String buttonUsed = e.getButton().name();
     if (buttonUsed.equals("SECONDARY")) {
       mapMouseRightClick(e);
@@ -1404,7 +1592,7 @@ public class MapViewController extends CentralUIController implements Initializa
     }
   }
 
-  private void mapMouseRightClick(MouseEvent e){
+  private void mapMouseRightClick(MouseEvent e) {
     if (mapViewFlag > 2) {
       if (e.isShiftDown()) {
         if (!pointFocus.getNeighbors().containsAll(secondaryPointFoci)) {
@@ -1423,7 +1611,7 @@ public class MapViewController extends CentralUIController implements Initializa
     }
   }
 
-  private void mapMouseLeftClick(MouseEvent e){
+  private void mapMouseLeftClick(MouseEvent e) {
     setPointFocus(null);
     if (mapViewFlag == 3) {
       if (e.isShiftDown()) {
@@ -1546,7 +1734,7 @@ public class MapViewController extends CentralUIController implements Initializa
     }
   }
 
-  private void circleMouseClickNoDrag(MouseEvent e, Point p, Circle c){
+  private void circleMouseClickNoDrag(MouseEvent e, Point p, Circle c) {
     String button = e.getButton().toString();
     if (button.equals("PRIMARY")) {
       circleMouseLeftClick(e, p, c);
@@ -1555,7 +1743,7 @@ public class MapViewController extends CentralUIController implements Initializa
     }
   }
 
-  private void circleMouseLeftClick(MouseEvent e, Point p, Circle c){
+  private void circleMouseLeftClick(MouseEvent e, Point p, Circle c) {
     if (mapViewFlag > 2) {
       if (e.isControlDown()) {
         togglePointToSecondarySelection(p);
@@ -1567,12 +1755,12 @@ public class MapViewController extends CentralUIController implements Initializa
 
       } else {
         setPointFocus(p);
-        startPoint = p;
+//        startPoint = p;
       }
     }
   }
 
-  private void circleMouseRightClick(MouseEvent e, Point p, Circle c){
+  private void circleMouseRightClick(MouseEvent e, Point p, Circle c) {
     if (e.isShiftDown()) {
       if (mapViewFlag > 2) {
         adminCircleMouseRightClick(e, p, c);
@@ -1582,12 +1770,12 @@ public class MapViewController extends CentralUIController implements Initializa
       if (mapViewFlag > 2) {
 
       } else {
-        endPoint = p;
+//        endPoint = p;
       }
     }
   }
 
-  private void adminCircleMouseRightClick(MouseEvent e, Point p, Circle c){
+  private void adminCircleMouseRightClick(MouseEvent e, Point p, Circle c) {
     // Ensure that it does not get connected to itself or a repeat connection
     if (!p.equals(pointFocus) && pointFocus != null) {
       if (p.getNeighbors().contains(pointFocus)) {

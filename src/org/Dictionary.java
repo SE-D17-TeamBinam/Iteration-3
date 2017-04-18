@@ -30,6 +30,20 @@ public class Dictionary {
     Entry username = new Entry(usernameLabel);
     this.addEntry("Username", username);
 
+    HashMap<Language, String> hospitalLabel = new HashMap<Language, String>();
+    hospitalLabel.put(Language.SPANISH, "Hospital");
+    hospitalLabel.put(Language.ENGLISH, "Hospital");
+    hospitalLabel.put(Language.PORTUGESE, "Hospital");
+    Entry hospital = new Entry(hospitalLabel);
+    this.addEntry("Hospital", hospital);
+
+    HashMap<Language, String> physiciansLabel = new HashMap<Language, String>();
+    physiciansLabel.put(Language.SPANISH, "Médicos");
+    physiciansLabel.put(Language.ENGLISH, "Physicians");
+    physiciansLabel.put(Language.PORTUGESE, "Médicos");
+    Entry physicians = new Entry(physiciansLabel);
+    this.addEntry("Physicians", physicians);
+
     HashMap<Language, String> passwordLabel = new HashMap<Language, String>();
     passwordLabel.put(Language.SPANISH, "Contraseña");
     passwordLabel.put(Language.ENGLISH, "Password");
