@@ -53,12 +53,12 @@
             <ChoiceBox fx:id="langBox" layoutX="32.0" layoutY="690.0" prefWidth="150.0" />
             <Label fx:id="SearchLabel" alignment="TOP_CENTER" layoutX="307.0" layoutY="509.0" mouseTransparent="true" prefHeight="53.0" prefWidth="190.0" text="Search">
                <font>
-                  <Font size="36.0" />
+                  <Font name="Times New Roman" size="36.0" />
                </font>
             </Label>
             <Label fx:id="MapLabel" alignment="CENTER" layoutX="807.0" layoutY="509.0" mouseTransparent="true" prefHeight="53.0" prefWidth="190.0" text="Map">
                <font>
-                  <Font size="36.0" />
+                  <Font name="Times New Roman" size="36.0" />
                </font>
             </Label>
          </children>

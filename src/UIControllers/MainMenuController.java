@@ -52,19 +52,19 @@ public class MainMenuController extends CentralUIController implements Initializ
 
   @Override
   public void customListenerX () {
-    MapLabel.setLayoutX(5*(x_res/7) - 95);
-    MapButton.setLayoutX(5*(x_res/7) - 175);
-    SearchButton.setLayoutX(2*(x_res/7) - 175);
-    MainKey.setLayoutX(x_res - MainKey.getFitWidth());
-    SearchLabel.setLayoutX(2*(x_res/7) - 95);
+    MapLabel.setLayoutX(5*(x_res/7) - MapLabel.getPrefWidth()/2);
+    MapButton.setLayoutX(5*(x_res/7) - MapButton.getPrefWidth()/2);
+    SearchButton.setLayoutX(2*(x_res/7) - SearchButton.getPrefWidth()/2);
+    MainKey.setLayoutX(x_res - MainKey.getFitWidth() - 10);
+    SearchLabel.setLayoutX(2*(x_res/7) - SearchLabel.getPrefWidth()/2);
   }
 
   @Override
   public void customListenerY () {
-    MainKey.setLayoutY(y_res - MainKey.getFitHeight());
-    MapButton.setLayoutY(6*(y_res/11) - 160);
+    MainKey.setLayoutY(y_res - MainKey.getFitHeight() - 10);
+    MapButton.setLayoutY(6*(y_res/11) - MapButton.getPrefHeight()/2);
     MapLabel.setLayoutY(6*(y_res/11) + 100);
-    SearchButton.setLayoutY(6*(y_res/11) - 160);
+    SearchButton.setLayoutY(6*(y_res/11) - SearchButton.getPrefHeight()/2);
     SearchLabel.setLayoutY(6*(y_res/11) + 100);
     langBox.setLayoutY(y_res - 50);
   }
