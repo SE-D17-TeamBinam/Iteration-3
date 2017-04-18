@@ -5,8 +5,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
@@ -30,6 +36,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.ElevatorPoint;
 import org.FindDirections;
 import org.ListPoints;
@@ -265,11 +272,18 @@ public class MapViewController extends CentralUIController implements Initializa
   // Initialization //
   ////////////////////
 
+  double userPaneTargetX = 0;
+
   @FXML
   public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
+
+
+
     textDirectionsBox.setVisible(false);
     if (mapViewFlag != 3) { // Todo you know
       helpButton.setVisible(false);
+    }else{
+      userPane.setVisible(false);
     }
     helpPane.setVisible(false);
     initializeLanguageConfigs();
@@ -281,8 +295,28 @@ public class MapViewController extends CentralUIController implements Initializa
     initializeScene();
     initializeChoiceBox();
     initializeMapImage();
-
+    initializeUserPane();
     // Adds a circle to show where the mouse is on the map
+  }
+
+  private void initializeUserPane(){
+//    userPaneTargetX = x_res - userPane.getWidth()*userPaneVisible - (~userPaneVisible&0x1)*tabImageView.getFitWidth();
+    Timeline fiveSecondsWonder = new Timeline(new KeyFrame(Duration.millis(1), new EventHandler<ActionEvent>() {
+      @Override
+      public void handle(ActionEvent event) {
+        double x = userPane.getLayoutX();
+        if(x < userPaneTargetX){
+          userPane.setLayoutX(x + 1);
+          fixMapDisplayLocation();
+          fixZoomPanePos();
+        }else if(x > userPaneTargetX){
+          userPane.setLayoutX(x - 1);
+          fixZoomPanePos();
+        }
+      }
+    }));
+    fiveSecondsWonder.setCycleCount(Timeline.INDEFINITE);
+    fiveSecondsWonder.play();
   }
 
   private void initializeLanguageConfigs() {
@@ -380,7 +414,7 @@ public class MapViewController extends CentralUIController implements Initializa
     adminPane.setLayoutX(x_res - adminPaneRectangle.getWidth());
     typeSelectionPane.setLayoutX(adminPane.getLayoutX());
     fixMapDisplayLocation();
-    fixZoomPanePos();
+    updateUserPane();
   }
 
   @FXML
@@ -396,7 +430,7 @@ public class MapViewController extends CentralUIController implements Initializa
     typeSelectionPane.setLayoutY(adminPane.getLayoutY() + adminPaneRectangle.getHeight());
     typeSelectionPaneRectangle.setHeight(adminPaneRectangle.getHeight());
     fixMapDisplayLocation();
-    fixZoomPanePos();
+    updateUserPane();
     textDirectionsBox.setLayoutY(y_res - 180); // TODO Not constant height
     helpButton.setLayoutY(y_res - 60);
     helpPane.setLayoutY(y_res - 540);
@@ -780,10 +814,9 @@ public class MapViewController extends CentralUIController implements Initializa
 
   // Fixes the location of the zoom buttons and label, vertically and horizontally
   private void fixZoomPanePos() {
-    setZoomPaneY(
-        anchorPane.getHeight() - zoomPane.getPrefHeight() - ZOOM_PANE_OFFSET_VERTICAL);
+    setZoomPaneY(y_res - zoomPane.getPrefHeight() - ZOOM_PANE_OFFSET_VERTICAL);
     setZoomPaneX(
-        anchorPane.getWidth() - zoomPane.getPrefWidth() - ZOOM_PANE_OFFSET_HORIZONTAL
+        (userPane.isVisible() ? userPane.getLayoutX() + tabImageView.getFitWidth() : x_res) - zoomPane.getPrefWidth() - ZOOM_PANE_OFFSET_HORIZONTAL
             - adminPaneRectangle.getWidth() * (adminPane.isVisible() ? 1 : 0));
   }
 
@@ -981,6 +1014,7 @@ public class MapViewController extends CentralUIController implements Initializa
     moveMapImage(mapViewPane.getLayoutX() + target.getX() - pixel.getX(),
         mapViewPane.getLayoutY() + target.getY() - pixel.getY());
   }
+
   //-----///////////////-----//
   //-----// Listeners //-----//
   //-----///////////////-----//
@@ -988,6 +1022,33 @@ public class MapViewController extends CentralUIController implements Initializa
   ///////////////////////
   // Control Listeners //
   ///////////////////////
+
+
+  private int userPaneVisible = 0;
+
+  @FXML
+  private Pane userPane;
+
+  @FXML
+  private ImageView tabImageView;
+
+  @FXML
+  private Rectangle userPaneRectangle;
+
+  @FXML
+  private void toggleUserPane(){
+    userPaneVisible = ~userPaneVisible&0x1; // toggles 1 or 0
+    tabImageView.setImage(new Image("/icons/tab" + userPaneVisible + ".png"));
+    userPaneTargetX = x_res - userPane.getWidth()*userPaneVisible - (~userPaneVisible&0x1)*tabImageView.getFitWidth();
+  }
+
+  private void updateUserPane(){
+    userPaneTargetX = x_res - userPane.getWidth()*userPaneVisible - (~userPaneVisible&0x1)*tabImageView.getFitWidth();
+    userPaneRectangle.setHeight(y_res - bannerView.getImage().getHeight());
+    userPane.setLayoutY(bannerView.getImage().getHeight() - 1);
+    userPane.setLayoutX(userPaneTargetX);
+    fixZoomPanePos();
+  }
 
   @FXML
   private void increaseFloorButtonClicked() {
