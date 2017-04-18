@@ -792,7 +792,7 @@ public class MapViewController extends CentralUIController implements Initializa
     String yText = "";
     String floorText = "";
     String nameText = "";
-    if (newFocus != null) {
+    if (newFocus != null && circles.get(newFocus) != null) {
       circles.get(newFocus).setStroke(PRIMARY_POINT_FOCUS_COLOR);
       xText = "" + pointFocus.getXCoord();
       yText = "" + pointFocus.getYCoord();
@@ -1373,6 +1373,7 @@ public class MapViewController extends CentralUIController implements Initializa
     Point selected = searchPoints.get(resultsList.getSelectionModel().getSelectedItem());
     if(selected != null) {
       floorChoiceBox.setValue(selected.getFloor());
+      System.out.println(selected.getNeighbors());
       setPointFocus(selected);
     }
   }
