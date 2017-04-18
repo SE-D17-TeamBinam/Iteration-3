@@ -4,6 +4,7 @@ import Database.FakePhysician;
 import Database.FakePoint;
 import Definitions.Physician;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * @author ajanagal and aramirez2
@@ -44,6 +45,18 @@ public class Point {
     this.xCoord = xCoord;
     this.yCoord = yCoord;
     this.names = names;
+    this.id = id;
+    this.parent = null;
+    this.neighbors = new_neighbors;
+    this.cost = 0;
+    this.floor = floor;
+  }
+
+  public Point(int xCoord, int yCoord, String name, int id, ArrayList<Point> new_neighbors,
+      int floor) {
+    this.xCoord = xCoord;
+    this.yCoord = yCoord;
+    this.names = new ArrayList<String>(Arrays.asList(name));
     this.id = id;
     this.parent = null;
     this.neighbors = new_neighbors;

@@ -49,7 +49,7 @@ public class FakePoint {
     this.xCoord = equivalent.getXCoord();
     this.yCoord = equivalent.getYCoord();
     this.name = "";
-    for (String n : equivalent.getNames()){
+    for (String n : equivalent.getNames()) {
       this.name += n + ";";
     }
     this.id = equivalent.getId();
@@ -60,7 +60,7 @@ public class FakePoint {
     }
     this.cost = equivalent.getCost();
     this.floor = equivalent.getFloor();
-    for (int i = 0; i < equivalent.neighbors.size(); i ++){
+    for (int i = 0; i < equivalent.neighbors.size(); i++) {
       this.neighbors.add(equivalent.neighbors.get(i).getId());
     }
   }

@@ -1,6 +1,5 @@
 package Database;
 
-import java.lang.reflect.Array;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.language.Soundex;
 import java.sql.ResultSet;
@@ -76,16 +75,16 @@ public class DatabaseController implements DatabaseInterface {
     //new_physicians.add(real_ph);
     //setPhysicians(new_physicians);
     //localPhysicians.add(real_ph);
-    if(check(localPhysicians,real_ph)){
+    if (check(localPhysicians, real_ph)) {
       localPhysicians.add(real_ph);
     }
     return true;
   }
 
-  private boolean check(ArrayList<Physician> ap, Physician p){
+  private boolean check(ArrayList<Physician> ap, Physician p) {
     long id = p.getID();
-    for(int i = 0;i < ap.size();i++){
-      if(id == ap.get(i).getID()){
+    for (int i = 0; i < ap.size(); i++) {
+      if (id == ap.get(i).getID()) {
         return false;
       }
     }
@@ -183,15 +182,18 @@ public class DatabaseController implements DatabaseInterface {
   public ArrayList<Physician> getAllPhysicians() throws SQLException {
     ArrayList<FakePhysician> fphysicians = new ArrayList<FakePhysician>();
     ResultSet res = dbc.send_Command("select pid from physician").get(0);
+    progressBarPercentage = .6;
     while (res.next()) {
       int pid = res.getInt("PID");
 
       FakePhysician p = get_physician(pid);
       fphysicians.add(p);
     }
+    progressBarPercentage = .7;
     ArrayList<Physician> physicians = new ArrayList<Physician>();
     for (int i = 0; i < fphysicians.size(); i++) {
       physicians.add(fphysicians.get(i).toRealPhysician());
+      progressBarPercentage = .7 + .05 * i / fphysicians.size();
     }
     for (int i = 0; i < physicians.size(); i++) {
       ArrayList<Integer> currentLocations = findFakePhysician(physicians.get(i), fphysicians)
@@ -201,6 +203,7 @@ public class DatabaseController implements DatabaseInterface {
         locations.add(findRealPoint(currentLocations.get(j), localPoints));
       }
       physicians.get(i).setLocations(locations);
+      progressBarPercentage = .75 + .25 * (i / (physicians.size() - 1));
     }
     return physicians;
 
@@ -431,6 +434,7 @@ public class DatabaseController implements DatabaseInterface {
       for (int j = 0; j < currentNeighbors.size(); j++) {
         ret.get(i).neighbors.add(findRealPoint(currentNeighbors.get(j), ret));
       }
+      progressBarPercentage = .25 + .25 * i / ret.size();
     }
     return ret;
   }
@@ -573,6 +577,7 @@ public class DatabaseController implements DatabaseInterface {
     System.out.println("loading physicians and points from DB to local copies ");
     localPoints = getAllPoints();
     localPhysicians = getAllPhysicians();
+    progressBarPercentage = 1;
   }
 
   @Override
@@ -597,7 +602,7 @@ public class DatabaseController implements DatabaseInterface {
       System.out
           .println("failed to transfer local physicians copy to DB; Error: " + e.getMessage());
     }
-
+    progressBarPercentage = 1;
   }
 
   @Override
