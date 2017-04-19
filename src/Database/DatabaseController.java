@@ -15,6 +15,7 @@ import java.util.TreeMap;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import org.ListPoints;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.language.Soundex;
 import java.sql.ResultSet;
@@ -825,7 +826,10 @@ public class DatabaseController implements DatabaseInterface {
         //do stuff, if neccesary, else, delete
       }
     }
-    return localPoints;
+    ListPoints lp = new ListPoints(localPoints);
+    ListPoints lp2 = lp.deepClone();
+
+    return lp2.getPoints();
   }
 
   @Override

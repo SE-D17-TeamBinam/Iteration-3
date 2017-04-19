@@ -262,6 +262,11 @@ public class Point {
     return false;
   }
 
+
+  @Override
+  public Object clone()  {
+    return new Point(xCoord,yCoord,names,id,neighbors, floor);
+  }
 }
 
 //  int xCoord;    //X coordinate
