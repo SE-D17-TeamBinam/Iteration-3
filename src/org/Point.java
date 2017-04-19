@@ -67,13 +67,13 @@ public class Point {
 
   //Methods
   public void connectTo(Point node) {
-    node.getNeighbors().add(this);
+    node.neighbors.add(this);
     this.neighbors.add(node);
   }
 
   public void severFrom(Point point) {
     if (this.neighbors.contains(point)) {
-      point.getNeighbors().remove(this);
+      point.neighbors.remove(this);
       this.neighbors.remove(point);
     }
   }
