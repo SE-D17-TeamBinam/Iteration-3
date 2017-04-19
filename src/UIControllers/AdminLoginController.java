@@ -30,13 +30,13 @@ public class AdminLoginController extends CentralUIController implements Initial
 
   /* language fields */
   @FXML
-  private Button AdminBack;
+  private Label AdminBack;
   @FXML
   private Label AdminNameLabel;
   @FXML
   private Label AdminPassLabel;
   @FXML
-  private Button AdminLoginButton;
+  private Label AdminLoginButton;
   @FXML
   private Label LoginError;
 
@@ -58,10 +58,10 @@ public class AdminLoginController extends CentralUIController implements Initial
   public void customListenerX () {
     AdminNameLabel.setLayoutX(x_res/2 - 540);
     AdminPassLabel.setLayoutX(x_res/2 - 540);
-    AdminLoginButton.setLayoutX(x_res/2 - 57.5);
+    AdminLoginButton.setLayoutX(x_res/2 - AdminLoginButton.getPrefWidth()/2);
     AdminNameField.setLayoutX(x_res/2 - 20);
     AdminPassField.setLayoutX(x_res/2 - 20);
-    LoginError.setLayoutX(x_res/2 - 170);
+    LoginError.setLayoutX(x_res/2 - LoginError.getPrefWidth()/2);
   }
   @Override
   public void customListenerY () {
@@ -94,9 +94,9 @@ public class AdminLoginController extends CentralUIController implements Initial
     if (credentialManager.userIsAdmin(enteredName, enteredPass))  {
       LoginError.setVisible(false);
       try {
-        loadScene(primaryStage, "/DirectEdit.fxml");
+        loadScene(primaryStage, "/AdminMenu.fxml");
       } catch (Exception e) {
-        System.out.println("Cannot load directory editor");
+        System.out.println("Cannot load Admin Menu");
         e.printStackTrace();
       }
     } else {
