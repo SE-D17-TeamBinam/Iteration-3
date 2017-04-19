@@ -1,5 +1,6 @@
 package UIControllers;
 
+import Database.DatabaseController;
 import Definitions.Coordinate;
 import Definitions.Physician;
 import java.net.URL;
@@ -19,6 +20,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -312,11 +314,27 @@ public class MapViewController extends CentralUIController implements Initializa
     // Adds a circle to show where the mouse is on the map
   }
 
+  private boolean saving = false;
+
   private void initializeUserPane() {
     Timeline fiveSecondsWonder = new Timeline(
         new KeyFrame(Duration.millis(1), new EventHandler<ActionEvent>() {
           @Override
           public void handle(ActionEvent event) {
+            if(saving) {
+              progressBar.setProgress(((DatabaseController) database).progressBarPercentage);
+              if(((DatabaseController) database).progressBarPercentage < 1){
+              }else{
+                //TODO
+                //TODO
+                //TODO MAKE SURE RACE CONDITION IS FIXED
+                //TODO
+                //TODO
+                saving = false;
+                progressPane.setVisible(false);
+                saveButton.setDisable(false);
+              }
+            }
 
             resultsList.setPrefHeight(userPaneRectangle.getHeight() - searchPaneVBox.getLayoutY() - resultsList.getLayoutY() - searchGoButton.getHeight() - 5);
             double x = userPane.getLayoutX();
@@ -897,11 +915,17 @@ public class MapViewController extends CentralUIController implements Initializa
   @FXML
   private void setEndButtonClicked() {
     endPoint = listedPoints.get((String) endNodeBox.getValue());
+    if(endPoint == null && pointFocus != null){
+      endPoint = pointFocus;
+    }
   }
 
   @FXML
   private void setStartButtonClicked() {
     startPoint = listedPoints.get((String) startNodeBox.getValue());
+    if(startPoint == null && pointFocus != null){
+      startPoint = pointFocus;
+    }
   }
 
 
@@ -1153,9 +1177,6 @@ public class MapViewController extends CentralUIController implements Initializa
       goButton.setDisable(true);
       ListPoints lp = new ListPoints(allPoints);
       ArrayList<Point> lp2 = lp.executeStrategy(startPoint, endPoint);
-      //ArrayList<Point> lp2 = lp.Astar(startPoint, endPoint);
-//      System.out.println("Path size: " + lp2.size());
-//      System.out.println("Total Points (Neighbors included): " + checked.size());
       allPoints.clear();
       allPoints.addAll(lp2);
       switchFloors((int) floorChoiceBox.getValue());
@@ -1329,7 +1350,7 @@ public class MapViewController extends CentralUIController implements Initializa
   private Pane progressPane;
 
   @FXML
-  private Rectangle progressBar;
+  private ProgressBar progressBar;
 
   @FXML
   private TextField searchTextField;
@@ -1451,13 +1472,12 @@ public class MapViewController extends CentralUIController implements Initializa
   private void saveMapButtonClicked() {
     saveButton.setDisable(true);
     progressPane.setVisible(true);
+    saving = true;
     int i = 0;
     for (Point p : allPoints) {
       p.setID(i++);
     }
     database.setPoints(allPoints);
-    saveButton.setDisable(false);
-    progressPane.setVisible(false);
   }
 
   ///////////////////
