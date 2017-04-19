@@ -76,11 +76,6 @@ public class DatabaseDriver {
             stmt.execute(command);
           } catch (SQLException e2) {
             System.out.println(e2.getMessage());
-            Alert alert = new Alert(AlertType.ERROR, "Message. Bad Things Happened! : " + "DB ERROR: probably a misformed sql command"); //can add buttons if you want, or change to different popup types
-            alert.showAndWait(); //this puts it in focus
-            if (alert.getResult() == ButtonType.YES) {
-              //do stuff, if neccesary, else, delete
-            }
           }
         }
       }
