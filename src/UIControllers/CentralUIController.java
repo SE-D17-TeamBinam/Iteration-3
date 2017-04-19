@@ -14,6 +14,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.Dictionary;
+import org.Point;
 import org.Session;
 
 
@@ -40,6 +41,8 @@ public class CentralUIController {
   protected static ImageView logoView = new ImageView();
   /* database object */
   protected static DatabaseInterface database;
+  /* */
+  protected static Point searchingPoint;
 
 
   public void setSession (Session s, DatabaseInterface dbe) {

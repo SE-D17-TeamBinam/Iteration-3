@@ -4,7 +4,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -46,10 +45,10 @@ public class AdminLoginController extends CentralUIController implements Initial
   @Override
   public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
     /* apply language configs */
-    AdminBack.setText(dictionary.getString("Back", currSession.getLanguage()));
-    AdminNameLabel.setText(dictionary.getString("Username", currSession.getLanguage()));
-    AdminPassLabel.setText(dictionary.getString("Password", currSession.getLanguage()));
-    AdminLoginButton.setText(dictionary.getString("Login", currSession.getLanguage()));
+    //AdminBack.setText(dictionary.getString("Back", currSession.getLanguage()));
+    //AdminNameLabel.setText(dictionary.getString("Username", currSession.getLanguage()));
+    //AdminPassLabel.setText(dictionary.getString("Password", currSession.getLanguage()));
+    //AdminLoginButton.setText(dictionary.getString("Login", currSession.getLanguage()));
     addResolutionListener(anchorPane);
     setBackground(anchorPane);
   }

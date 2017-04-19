@@ -59,9 +59,9 @@ public class Dictionary {
     this.addEntry("Map", map);
 
     HashMap<Language, String> loginLabel = new HashMap<Language, String>();
-    loginLabel.put(Language.SPANISH, "iniciar sesión");
+    loginLabel.put(Language.SPANISH, "Iniciar sesión");
     loginLabel.put(Language.ENGLISH, "Login");
-    loginLabel.put(Language.PORTUGESE, "iniciar sessão");
+    loginLabel.put(Language.PORTUGESE, "Iniciar sessão");
     Entry login = new Entry(loginLabel);
     this.addEntry("Login", login);
 
