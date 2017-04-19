@@ -700,6 +700,7 @@ public class DatabaseController implements DatabaseInterface {
     progressBarPercentage = 1;
   }
 
+  //TODO Filter special nodes like ELEVATOR or STAIRS etc.
   @Override
   public ArrayList<Point> getNamedPoints() {
     while (saveThread.running || loadThread.running) {
