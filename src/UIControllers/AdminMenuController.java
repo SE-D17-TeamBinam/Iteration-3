@@ -28,7 +28,7 @@ public class AdminMenuController extends CentralUIController implements Initiali
   @FXML
   private Label DirectEditLabel;
   @FXML
-  private Button LogOffButton;
+  private Label LogOffButton;
 
   @Override
   public void customListenerX () {

@@ -25,7 +25,7 @@ public class AboutPageController extends CentralUIController implements Initiali
   @FXML
   private Label MainLabel;
   @FXML
-  private Button AboutBack;
+  private Label AboutBack;
   @FXML
   private Label EndLabel;
 

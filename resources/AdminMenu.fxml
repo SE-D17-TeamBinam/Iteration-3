@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1300.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UIControllers.AdminMenuController">
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1300.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UIControllers.AdminMenuController">
    <children>
       <Pane fx:id="AdminMenu" prefHeight="750.0" prefWidth="1300.0">
          <children>
@@ -44,21 +44,21 @@
                   <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
                </padding>
             </Button>
-            <Label fx:id="DirectEditLabel" alignment="TOP_CENTER" layoutX="293.0" layoutY="523.0" mouseTransparent="true" prefHeight="47.0" prefWidth="221.0" text="Edit Directory">
+            <Label fx:id="DirectEditLabel" alignment="CENTER" layoutX="293.0" layoutY="523.0" mouseTransparent="true" prefHeight="47.0" prefWidth="221.0" text="Edit Directory">
                <font>
-                  <Font size="30.0" />
+                  <Font name="Times New Roman" size="30.0" />
                </font>
             </Label>
             <Label fx:id="MapLabel" alignment="CENTER" layoutX="807.0" layoutY="523.0" mouseTransparent="true" prefHeight="53.0" prefWidth="190.0" text="Edit Map">
                <font>
-                  <Font size="30.0" />
+                  <Font name="Times New Roman" size="30.0" />
                </font>
             </Label>
-            <Button fx:id="LogOffButton" layoutX="1145.0" layoutY="5.0" mnemonicParsing="false" onMouseClicked="#logoff" prefHeight="75.0" prefWidth="150.0" text="Log off">
+            <Label fx:id="LogOffButton" alignment="CENTER" layoutX="1154.0" layoutY="12.0" mnemonicParsing="false" onMouseClicked="#logoff" prefHeight="60.0" prefWidth="134.0" style="-fx-background-color: #3255bc;" text="Log off" textFill="WHITE">
                <font>
-                  <Font size="26.0" />
+                  <Font name="Times New Roman" size="26.0" />
                </font>
-            </Button>
+            </Label>
          </children>
       </Pane>
    </children>
