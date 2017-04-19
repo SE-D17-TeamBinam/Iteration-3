@@ -857,6 +857,7 @@ public class DatabaseController implements DatabaseInterface {
     //save_and_verify();
 //    saveThread.start();
     save();
+    progressBarPercentage = 1;
   }
 
 
@@ -915,6 +916,7 @@ public class DatabaseController implements DatabaseInterface {
     //save_and_verify();
 //    saveThread.start();
     save();
+    progressBarPercentage = 1;
   }
 
   ElevatorPoint toElevatorPoint(Point p) {
