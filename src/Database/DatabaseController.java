@@ -790,9 +790,9 @@ public class DatabaseController implements DatabaseInterface {
     ArrayList<Physician> candidates = new ArrayList<Physician>();
     LinkedHashMap<Physician,Integer> my_map = new LinkedHashMap<Physician,Integer>();
 //    Soundex soundex = new Soundex();
-    System.out.println("here");
+//    System.out.println("here");
     for (Physician p : localPhysicians) {
-      System.out.println("here");
+//      System.out.println("here");
       if(StringUtils.containsAny(p.getFirstName(),searchTerm) ||
             StringUtils.containsAny(p.getLastName(),searchTerm)/*||
             StringUtils.containsAny(p.getTitle(),searchTerm)*/){
