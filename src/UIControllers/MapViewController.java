@@ -877,11 +877,9 @@ public class MapViewController extends CentralUIController implements Initializa
         nameField.requestFocus();
       }
     }
-    selectedNameLabel
-        .setText(dictionary.getString("Name", currSession.getLanguage()) + ": " + nameText);
-    floorSelectLabel
-        .setText(dictionary.getString("Floor", currSession.getLanguage()) + ":");
-    nameLabel.setText(dictionary.getString("Name", currSession.getLanguage()) + ":");
+    selectedNameLabel.setText(dictionary.getString("Name", currSession.getLanguage()) + ": " + nameText);
+    floorSelectLabel.setText("Floor:");
+    nameLabel.setText("Name:");
   }
 
 

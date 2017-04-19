@@ -51,6 +51,7 @@ public class MainMenuController extends CentralUIController implements Initializ
     applyLanguageConfig();
   }
 
+
   public void applyLanguageConfig(){
     SearchLabel.setText(dictionary.getString("Search", currSession.getLanguage()));
     MapLabel.setText(dictionary.getString("Map", currSession.getLanguage()));
