@@ -167,6 +167,24 @@ public class ListPoints {
   }
 
   /**
+   * Checks if a node is unreachable from the ListPoint object
+   *
+   * @throws DisconnectedNodeException
+   */
+  public void verifyNodeConnections(Point p) throws DisconnectedNodeException{
+    if(p.getNeighbors().size() == 0){
+      throw new DisconnectedNodeException(p);
+    }
+    try{
+      for(Point goal : this.points){
+        executeStrategy(p, goal);
+      }
+    } catch (NoPathException e){
+      throw new DisconnectedNodeException(p);
+    }
+  }
+
+  /**
    * TimedPath will create a string that will display the time estimation of the path in minutes
    * <p>
    *    It takes the path, reverse the order and uses the x,y coordinates, stairs and elevators to
