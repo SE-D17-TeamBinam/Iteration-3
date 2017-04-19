@@ -403,7 +403,7 @@ public class MapViewController extends CentralUIController implements Initializa
     startNodeBox.getItems().clear();
     endNodeBox.getItems().clear();
     for (Point p : floorPoints) {
-      if (p.getName() == null || p.getName().equals("") || p.getName().equals("null")) {
+      if (p.getName() == null || p.getName().equals("") || p.getName().equals("null") || p.getName().equals("ELEVATOR")) {
         if (mapViewFlag > 2) {
           String s = "" + p.getId();
           listedPoints.put(s, p);
