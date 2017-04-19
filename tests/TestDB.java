@@ -26,10 +26,14 @@ public class TestDB {
 
     dbc = new DatabaseController(dbd);
     dbc.load();
-    ArrayList<Physician> s = dbc.fuzzySearchPhysicians("mitch");
-    for(Physician p:s){
+    ArrayList<Physician> s = dbc.fuzzySearchPhysicians("m");
+    ArrayList<Physician> s1 = dbc.fuzzySearchPhysicians("mi");
+    ArrayList<Point> s2 = dbc.fuzzySearchPoints("a");
+    ArrayList<Point> s3 = dbc.fuzzySearchPoints("ab");
+
+    /*for(Physician p:s){
       System.out.println(p.getFirstName() + " " + p.getLastName() + " " + p.getTitle());
-    }
+    }*/
   }
 
 }
