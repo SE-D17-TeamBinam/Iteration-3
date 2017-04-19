@@ -1,5 +1,7 @@
 package Database;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -365,6 +367,10 @@ public class DatabaseController implements DatabaseInterface {
   public boolean editPoint(
       Point real_po
   ) {
+    removePoint(real_po.getId());
+    addPoint(real_po);
+
+    /*
     //FakePhysician fake_ph = new FakePhysician(real_ph);
     long PID = real_po.getId();
     String name = real_po.getName(); //real_po.getFirstName().replace(';','_');
@@ -397,7 +403,7 @@ public class DatabaseController implements DatabaseInterface {
     localPoints.remove(old_point);
     localPoints.add(real_po);
     //setPhysicians(new_physicians);
-
+*/
     return true;
   }
 
@@ -791,13 +797,20 @@ public class DatabaseController implements DatabaseInterface {
 
   public ArrayList<Physician> fuzzySearchPhysicians(String searchTerm) {
     ArrayList<Physician> candidates = new ArrayList<Physician>();
+    if(searchTerm.replaceAll("\\s","") == "" || searchTerm == null){
+      candidates = localPhysicians;
+      return candidates;
+    }
     LinkedHashMap<Physician,Integer> my_map = new LinkedHashMap<Physician,Integer>();
 //    Soundex soundex = new Soundex();
 //    System.out.println("here");
+    searchTerm = searchTerm.toLowerCase();
     for (Physician p : localPhysicians) {
 //      System.out.println("here");
-      if(StringUtils.containsAny(p.getFirstName(),searchTerm) ||
-            StringUtils.containsAny(p.getLastName(),searchTerm)/*||
+      String first_name = p.getFirstName().toLowerCase();
+      String last_name = p.getLastName().toLowerCase();
+      if(StringUtils.containsAny(first_name,searchTerm) ||
+            StringUtils.containsAny(last_name,searchTerm)/*||
             StringUtils.containsAny(p.getTitle(),searchTerm)*/){
           //candidates.add(p);
           int fn = StringUtils.getLevenshteinDistance(p.getFirstName(),searchTerm);
@@ -809,7 +822,7 @@ public class DatabaseController implements DatabaseInterface {
 
         }
 
-      }
+    }
       LinkedHashMap sortedMap = sortByValues(my_map);
       //Map<Integer,Physician> sortedMap = new TreeMap<Integer,Physician>(map);
       ArrayList list2 = new ArrayList(sortedMap.entrySet());
@@ -826,15 +839,6 @@ public class DatabaseController implements DatabaseInterface {
         System.out.println("key, value : " + my_entry.getKey() + " " + my_entry.getValue());
       }
 
-
-/*      while(iterator.hasNext() && counter < fuzzySearchLimit) {
-        counter++;
-        Map.Entry my_entry = (Map.Entry)iterator.next();
-        //candidates.add((Physician) my_entry.getKey());
-        candidates.add(counter,(Physician) my_entry.getKey());
-        System.out.println("key, value : " + my_entry.getKey() + " " + my_entry.getValue());
-        iterator.remove();
-      }*/
       System.out.println("size : " + candidates.size());
 
     return candidates;
@@ -842,22 +846,6 @@ public class DatabaseController implements DatabaseInterface {
 
   private  LinkedHashMap sortByValues(Map map) {
 
-    /*
-    Set<Entry<Physician, Integer>> set = map.entrySet();
-    List<Entry<Physician, Integer>> list = new ArrayList<Entry<Physician, Integer>>(set);
-    Collections.sort( list, new Comparator<Map.Entry<Physician, Integer>>()
-    {
-      public int compare( Map.Entry<Physician, Integer> o1, Map.Entry<Physician, Integer> o2 )
-      {
-        return (o2.getValue()).compareTo( o1.getValue() );
-      }
-    } );
-    HashMap sortedHashMap = new HashMap();
-    for (Iterator it = list.iterator(); it.hasNext();) {
-      Map.Entry entry = (Map.Entry) it.next();
-      sortedHashMap.put(entry.getKey(),entry.getValue());
-    }
-*/
     ArrayList list = new ArrayList(map.entrySet());
 
     // Define comparator
@@ -879,19 +867,58 @@ public class DatabaseController implements DatabaseInterface {
 
 
   public ArrayList<Point> fuzzySearchPoints(String searchTerm) {
-    ArrayList<Point> ret = new ArrayList<Point>();
-    Soundex soundex = new Soundex();
-    try {
-      for (Point p : getNamedPoints()) {
-        if (soundex.difference(searchTerm, p.getName()) > fuzzySearchThreshold) {
-          ret.add(p);
+    ArrayList<Point> candidates = new ArrayList<Point>();
+    LinkedHashMap<Point,Integer> my_map = new LinkedHashMap<Point,Integer>();
+    ArrayList<Point> named_points = getNamedPoints();
+//    Soundex soundex = new Soundex();
+//    System.out.println("here");
+
+    searchTerm = searchTerm.toLowerCase();
+    for (Point p : named_points) {
+      boolean worthit = false;
+//      System.out.println("here");
+      ArrayList<String> names = p.getNames();
+      ArrayList<String> lc_names = new ArrayList<String>();
+      ArrayList<Integer> distances = new ArrayList<Integer>();
+      for(int i = 0;i < names.size();i++){
+        lc_names.add(names.get(i).toLowerCase());
+        if(StringUtils.containsAny(lc_names.get(i),searchTerm)){
+          worthit = true;
+          distances.add(StringUtils.getLevenshteinDistance(lc_names.get(i),searchTerm));
         }
       }
-    } catch (EncoderException e) {
-      e.printStackTrace();
-      System.out.println("There was a problem encoding one of the strings");
+      if (worthit) {
+        int value = distances.get(0);
+        for(int i = 0;i < distances.size();i++){
+          if(distances.get(i) < value){
+            value = distances.get(i);
+          }
+        }
+        my_map.put(p,value);
+        System.out.println("here, value, id: " + value + " " + p.getId());
+
+      }
+
     }
-    return ret;
+    LinkedHashMap sortedMap = sortByValues(my_map);
+    //Map<Integer,Physician> sortedMap = new TreeMap<Integer,Physician>(map);
+    ArrayList list2 = new ArrayList(sortedMap.entrySet());
+
+    int counter = -1;
+    //Set set = sortedMap.entrySet();
+    //Iterator iterator = set.iterator();
+    //HashMap sortedHashMap = new HashMap();
+    for (Iterator it2 = list2.iterator(); it2.hasNext() && counter < fuzzySearchLimit;) {
+      counter++;
+      Entry my_entry = (Map.Entry) it2.next();
+      //sortedHashMap.put(entry.getKey(),entry.getValue());
+      candidates.add(counter,(Point) my_entry.getKey());
+      System.out.println("key, value : " + my_entry.getKey() + " " + my_entry.getValue());
+    }
+
+    System.out.println("size : " + candidates.size());
+
+    return candidates;
   }
 
 
