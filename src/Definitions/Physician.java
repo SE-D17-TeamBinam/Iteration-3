@@ -83,17 +83,31 @@ public class Physician {
 
   @Override
   public boolean equals(Object obj) {
-    if (obj.getClass() != this.getClass())
+    if (obj == null)
+      return false;
+    if (obj != null && obj.getClass() != this.getClass()) {
       return super.equals(obj);
+    }
     Physician pobj = (Physician) obj;
-    if (this.firstName.equals(pobj.firstName) && this.lastName.equals(pobj.lastName) && this.title.equals(pobj.title) && this.PID == pobj.PID && this.getLocations().size() == pobj.getLocations().size()){
-      for(Point p : this.locations) {
-        if (!pobj.locations.contains(p))
+//    System.out.println("Comparing " + this.firstName + " -> " + pobj.firstName);
+    if (this.firstName.equals(pobj.firstName) && this.lastName.equals(pobj.lastName) && this.title
+        .equals(pobj.title) && this.PID == pobj.PID ) {
+      if (this.locations != null && pobj.locations != null && this.locations.size() != pobj.locations.size())
+        return false;
+
+      for (Point p : this.locations) {
+        if (!pobj.locations.contains(p)) {
           return false;
+        }
       }
       return true;
     }
     return false;
   }
 
+
+  @Override
+  public Object clone() {
+    return new Physician(firstName, lastName, title, PID, locations);
+  }
 }

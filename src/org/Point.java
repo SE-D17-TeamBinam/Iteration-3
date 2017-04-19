@@ -231,9 +231,14 @@ public class Point {
       return super.equals(obj);
     Point pobj = (Point) obj;
     if (this.xCoord == pobj.xCoord && this.yCoord == pobj.yCoord && this.id == pobj.id && this.floor == pobj.floor && this.neighbors.size() == pobj.neighbors.size()){
-      for(String s : this.names){
-        if (!pobj.names.contains(s))
-          return false;
+      if (this.names != null) {
+        for (String s : this.names) {
+          if (!pobj.names.contains(s))
+            return false;
+        }
+      }
+      else if (this.names != pobj.names){
+        return false;
       }
       ArrayList<Integer> ourNeighbors = new ArrayList<Integer>();
       ArrayList<Integer> theirNeighbors = new ArrayList<Integer>();
@@ -241,6 +246,7 @@ public class Point {
         ourNeighbors.add(p.id);
       for (Point p : pobj.neighbors)
         theirNeighbors.add(p.id);
+      System.out.println("ID: " + this.id + " -> " + pobj.id + ".  " + ourNeighbors + "  :  " + theirNeighbors);
 
       for (int i : ourNeighbors){
         if (!theirNeighbors.contains(i)){

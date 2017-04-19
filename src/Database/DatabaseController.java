@@ -1,5 +1,6 @@
 package Database;
 
+import java.sql.Array;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -33,6 +34,11 @@ public class DatabaseController implements DatabaseInterface {
   public double progressBarPercentage = 0;
   ArrayList<Point> localPoints;
   ArrayList<Physician> localPhysicians;
+
+  ArrayList<Point> diffPoints = null;
+  ArrayList<Physician> diffPhysicians = null;
+  ArrayList<Point> remPoints = null;
+  ArrayList<Physician> remPhysicians = null;
 
 
   DatabaseDriver dbc = null;
@@ -330,6 +336,25 @@ public class DatabaseController implements DatabaseInterface {
 
     return true;
   }
+  public boolean addPointWithoutNeighbors(Point realpoint) {
+    FakePoint point = new FakePoint(realpoint);
+    int cost = point.getCost();
+    int x = point.getXCoord();
+    int y = point.getYCoord();
+    int id = point.getId();
+    int floor = point.getFloor();
+    String name = point.getName().replace(';','_');
+    ArrayList<Integer> neighbors = point.getNeighbors();
+
+    dbc.send_Command(
+        "insert into Point (x,y,cost,pid,floor,name) values (" + x + ","
+            + y + "," + cost + "," + id + "," + floor + ",'" + name + "'); \n");
+
+    if(check_points(localPoints,realpoint)){
+      localPoints.add(realpoint);
+    }
+    return true;
+  }
 
   //PREFERABLY NOT USE FOR SINGLE ADDING, BECAUSE IT CANNNOT ADD THE POIN TO THE LOCAL COPY
   public boolean addPoint(FakePoint point) {
@@ -361,6 +386,9 @@ public class DatabaseController implements DatabaseInterface {
 
     return true;
   }
+
+
+
 
   public boolean editPoint(
       Point real_po
@@ -670,6 +698,7 @@ public class DatabaseController implements DatabaseInterface {
   @Override
   public void load() throws SQLException {
 //    loadThread.start();
+    progressBarPercentage = 0;
     localPoints = getAllPoints();
     localPhysicians = getAllPhysicians();
     progressBarPercentage = 1;
@@ -677,27 +706,45 @@ public class DatabaseController implements DatabaseInterface {
 
   @Override
   public void save() {
-    System.out.println("trying to transfer local copies of physicians and points to DB");
-    for (Physician p : localPhysicians) {
-      ArrayList<Point> locations = p.getLocations();
-      for (int i = 0; i < locations.size(); i++) {
-        if (locations.get(i) == null) {
-          locations.remove(i);
+    if (remPoints != null){
+      for (Point p : remPoints){
+        System.out.println("Rem point " + p.getId());
+        this.removePoint(p.getId());
+      }
+      remPoints = null;
+    }
+    if (diffPoints != null){
+      for (Point p : diffPoints){
+        System.out.println("Diff point updating " + p.getId());
+        this.removePoint(p.getId());
+        this.addPointWithoutNeighbors(p);
+      }
+      for(Point p : diffPoints){
+        for (int i = 0; i < p.neighbors.size(); i++){
+          System.out.println("Diff neighbor point updating " + p.getId() + " -> "  + p.neighbors.get(i).getId());
+          this.addNeighbor(p.getId(), p.neighbors.get(i).getId());
         }
       }
-      p.setLocations(locations);
+
+      diffPoints = null;
     }
-    update_points(localPoints);
-    System.out.println("transferred local points copy");
-    try {
-      updatePhysicians(localPhysicians);
-      System.out.println("transferred local physicians copy");
-    } catch (SQLException e) {
-      //e.printStackTrace();
-      System.out
-          .println("failed to transfer local physicians copy to DB; Error: " + e.getMessage());
+
+
+    if (remPhysicians != null){
+      for (Physician p : remPhysicians){
+        System.out.println("Rem Physician " + p.getID());
+        this.removePoint(p.getID());
+      }
+      remPhysicians = null;
     }
-    progressBarPercentage = 1;
+    if (diffPhysicians != null){
+      for(Physician p : diffPhysicians){
+        System.out.println("Diff Physician updating " + p.getID());
+        this.removePhysician(p.getID());
+        this.addPhysician(p);
+      }
+      diffPhysicians = null;
+    }
   }
 
   @Override
@@ -748,10 +795,30 @@ public class DatabaseController implements DatabaseInterface {
     }
     progressBarPercentage = 0;
     System.out.println("Setting the DB local points copy");
-    localPoints = points;
+    diffPoints = new ArrayList<Point>(points);
+    System.out.println("" + diffPoints + "  :  " + localPoints);
+
+    for (int i = 0; i < diffPoints.size(); i++){
+      if (localPoints.contains(diffPoints.get(i))){
+        System.out.println("Removing " + diffPoints.get(i).getId() + " from diff");
+        diffPoints.remove(i);
+        i--;
+      }
+    }
+    remPoints = new ArrayList<Point>(localPoints);
+    for (int i = 0; i < remPoints.size(); i++){
+      if (points.contains(remPoints.get(i)) || diffPoints.contains(remPoints.get(i))){
+        remPoints.remove(i);
+        i--;
+      }
+    }
+
+    localPoints = (ArrayList<Point>) points.clone();
     //save_and_verify();
-    saveThread.start();
+//    saveThread.start();
+    save();
   }
+
 
   @Override
   public ArrayList<Physician> getPhysicians() {
@@ -767,7 +834,11 @@ public class DatabaseController implements DatabaseInterface {
               + e.getMessage());
       //e.printStackTrace();
     }
-    return localPhysicians;
+    ArrayList<Physician> copyOfPhysicians = new ArrayList<Physician>();
+    for (Physician p : localPhysicians)
+      copyOfPhysicians.add((Physician) p.clone());
+
+    return copyOfPhysicians;
   }
 
   @Override
@@ -776,10 +847,27 @@ public class DatabaseController implements DatabaseInterface {
       ;
     }
     progressBarPercentage = 0;
+    diffPhysicians = new ArrayList<Physician>(physicians);
+    for (int i = 0; i < diffPhysicians.size(); i++){
+      if (localPhysicians.contains(diffPhysicians.get(i))){
+        diffPhysicians.remove(i);
+        i--;
+      }
+    }
+    System.out.println(diffPhysicians);
+    remPhysicians = new ArrayList<Physician>(localPhysicians);
+    for (int i = 0; i < remPhysicians.size(); i++){
+      if (physicians.contains(remPhysicians.get(i)) || diffPhysicians.contains(remPhysicians.get(i))){
+        remPhysicians.remove(i);
+        i--;
+      }
+    }
     System.out.println("Setting the DB local physicians copy");
-    localPhysicians = physicians;
+    localPhysicians = (ArrayList<Physician>) physicians.clone();
+
     //save_and_verify();
-    saveThread.start();
+//    saveThread.start();
+    save();
   }
 
   ElevatorPoint toElevatorPoint(Point p) {
