@@ -746,6 +746,7 @@ public class DatabaseController implements DatabaseInterface {
     while (saveThread.running || loadThread.running) {
       ;
     }
+    progressBarPercentage = 0;
     System.out.println("Setting the DB local points copy");
     localPoints = points;
     //save_and_verify();
@@ -774,6 +775,7 @@ public class DatabaseController implements DatabaseInterface {
     while (saveThread.running || loadThread.running) {
       ;
     }
+    progressBarPercentage = 0;
     System.out.println("Setting the DB local physicians copy");
     localPhysicians = physicians;
     //save_and_verify();
@@ -802,7 +804,7 @@ public class DatabaseController implements DatabaseInterface {
           int t = StringUtils.getLevenshteinDistance(p.getTitle(),searchTerm);
           int value = Math.min(fn,ln);//,t);
           my_map.put(p,value);
-          System.out.println("here, value, id: " + value + " " + p.getID());
+//          System.out.println("here, value, id: " + value + " " + p.getID());
 
         }
 
@@ -820,7 +822,7 @@ public class DatabaseController implements DatabaseInterface {
         Entry my_entry = (Map.Entry) it2.next();
         //sortedHashMap.put(entry.getKey(),entry.getValue());
         candidates.add(counter,(Physician) my_entry.getKey());
-        System.out.println("key, value : " + my_entry.getKey() + " " + my_entry.getValue());
+//        System.out.println("key, value : " + my_entry.getKey() + " " + my_entry.getValue());
       }
 
 
@@ -832,7 +834,7 @@ public class DatabaseController implements DatabaseInterface {
         System.out.println("key, value : " + my_entry.getKey() + " " + my_entry.getValue());
         iterator.remove();
       }*/
-      System.out.println("size : " + candidates.size());
+//      System.out.println("size : " + candidates.size());
 
     return candidates;
   }
@@ -869,7 +871,7 @@ public class DatabaseController implements DatabaseInterface {
     for (Iterator it = list.iterator(); it.hasNext();) {
       Map.Entry entry = (Map.Entry) it.next();
       sortedHashMap.put(entry.getKey(),entry.getValue());
-      System.out.println("in comaprator : " + entry.getValue());
+//      System.out.println("in comaprator : " + entry.getValue());
     }
     return sortedHashMap;
   }
