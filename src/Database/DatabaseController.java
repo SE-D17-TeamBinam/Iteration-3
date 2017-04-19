@@ -752,6 +752,7 @@ public class DatabaseController implements DatabaseInterface {
     while (saveThread.running || loadThread.running) {
       ;
     }
+    progressBarPercentage = 0;
     System.out.println("Setting the DB local points copy");
     localPoints = points;
     //save_and_verify();
@@ -780,6 +781,7 @@ public class DatabaseController implements DatabaseInterface {
     while (saveThread.running || loadThread.running) {
       ;
     }
+    progressBarPercentage = 0;
     System.out.println("Setting the DB local physicians copy");
     localPhysicians = physicians;
     //save_and_verify();
