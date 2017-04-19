@@ -78,15 +78,15 @@
                </font>
             </Text>
             <Button fx:id="saveButton" layoutX="31.0" layoutY="237.0" mnemonicParsing="false" onMouseClicked="#saveMapButtonClicked" prefHeight="31.0" prefWidth="168.0" text="Save Map" />
-            <Pane fx:id="progressPane1" layoutX="15.0" layoutY="272.0" prefHeight="19.0" prefWidth="200.0" visible="false">
+            <Pane fx:id="progressPane" layoutX="15.0" layoutY="272.0" prefHeight="19.0" prefWidth="200.0" visible="false">
                <children>
-                  <ProgressBar layoutY="-2.0" prefWidth="200.0" progress="0.0" />
+                  <ProgressBar fx:id="progressBar" layoutY="-2.0" prefWidth="200.0" progress="0.0" />
                   <Text layoutX="3.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Saving..." />
                </children>
             </Pane>
          </children>
       </Pane>
-      <Pane fx:id="typeSelectionPane" layoutX="10.0" layoutY="260.0" prefHeight="451.0" prefWidth="130.0">
+      <Pane fx:id="typeSelectionPane1" layoutX="10.0" layoutY="260.0" prefHeight="451.0" prefWidth="130.0">
          <children>
             <Button fx:id="goButton" layoutX="19.0" layoutY="272.0" mnemonicParsing="false" onMouseClicked="#drawPathButtonClicked" prefHeight="65.0" prefWidth="93.0" text="Go">
                <font>

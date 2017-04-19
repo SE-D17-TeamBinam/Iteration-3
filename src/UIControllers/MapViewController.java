@@ -19,6 +19,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -1336,7 +1337,7 @@ public class MapViewController extends CentralUIController implements Initializa
   private Pane progressPane;
 
   @FXML
-  private Rectangle progressBar;
+  private ProgressBar progressBar;
 
   @FXML
   private TextField searchTextField;
