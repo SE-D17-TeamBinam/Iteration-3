@@ -67,8 +67,10 @@ public class Point {
 
   //Methods
   public void connectTo(Point node) {
-    node.getNeighbors().add(this);
-    this.neighbors.add(node);
+    if (!node.getNeighbors().contains(this))
+      node.getNeighbors().add(this);
+    if (!this.getNeighbors().contains(node))
+      this.neighbors.add(node);
   }
 
   public void severFrom(Point point) {
@@ -227,6 +229,8 @@ public class Point {
 
   @Override
   public boolean equals(Object obj) {
+    if (obj == null)
+      return false;
     if (obj.getClass() != this.getClass())
       return super.equals(obj);
     Point pobj = (Point) obj;

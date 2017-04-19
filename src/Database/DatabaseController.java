@@ -573,7 +573,7 @@ public class DatabaseController implements DatabaseInterface {
     for (int i = 0; i < ret.size(); i++) {
       ArrayList<Integer> currentNeighbors = findFakePoint(ret.get(i), fakepoints).getNeighbors();
       for (int j = 0; j < currentNeighbors.size(); j++) {
-        ret.get(i).neighbors.add(findRealPoint(currentNeighbors.get(j), ret));
+        ret.get(i).connectTo(findRealPoint(currentNeighbors.get(j), ret));
       }
       progressBarPercentage = .25 + .25 * i / ret.size();
     }
@@ -761,7 +761,7 @@ public class DatabaseController implements DatabaseInterface {
     if (remPhysicians != null){
       for (Physician p : remPhysicians){
         System.out.println("Rem Physician " + p.getID());
-        this.removePoint(p.getID());
+        this.removePhysician(p.getID());
       }
       remPhysicians = null;
     }
