@@ -11,6 +11,7 @@ import org.Point;
  */
 public interface DatabaseInterface {
 
+  public double progressBarPercentage = 0;
 
   /**
    * Pulls data from the datababse and populates the local copies of the data
@@ -126,7 +127,7 @@ public interface DatabaseInterface {
 
 
   //TODO Javadoc
-  public ArrayList<Point> fuzzySearchPoints(String searchTerm);
+  //public ArrayList<Point> fuzzySearchPoints(String searchTerm);
 
 
 }

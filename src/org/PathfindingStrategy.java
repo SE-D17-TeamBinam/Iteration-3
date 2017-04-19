@@ -1,5 +1,6 @@
 package org;
 
+import java.util.Collections;
 import org.NoPathException;
 import org.Point;
 
@@ -44,5 +45,33 @@ public abstract class PathfindingStrategy {
     }
     order.add(destination);  //add "start" to listpath
     return order;
+  }
+
+  /**
+   * Helper function that iterates through Points using parents. Starts
+   * at the goal and moves to the starting Point. Reverses this order when
+   * complete.
+   * @param start: starting Point
+   * @param goal: ending Point
+   * @return the path from the starting Point to the ending Point
+   */
+  public ArrayList<Point> findPath(Point start, Point goal){
+
+    // Initializes the path to be returned
+    ArrayList<Point> path = new ArrayList<Point>();
+    path.add(goal);
+    // Sets the current Point to iterate through.
+    Point currPoint = goal;
+
+    // Runs though the path by starting at the end and using parents to
+    // find the next position up.
+    while(currPoint != start){
+      path.add(currPoint.parent);
+      currPoint = currPoint.getParent();
+    }
+
+    // Reverses the path so it moves from start to end instead of end to start
+    Collections.reverse(path);
+    return path;
   }
 }
