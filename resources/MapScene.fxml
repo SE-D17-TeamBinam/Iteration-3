@@ -21,7 +21,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UIControllers.MapViewController">
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UIControllers.MapViewController">
    <children>
       <Pane fx:id="mapViewPane" layoutX="138.0" layoutY="139.0" onKeyPressed="#mapKeyPressed" prefHeight="200.0" prefWidth="200.0">
          <children>
@@ -40,7 +40,7 @@
             <Font name="Times New Roman" size="20.0" />
          </font>
       </Button>
-      <Pane fx:id="zoomPane" layoutX="564.0" layoutY="531.0" prefHeight="205.0" prefWidth="93.0">
+      <Pane fx:id="zoomPane" layoutX="815.0" layoutY="28.0" prefHeight="205.0" prefWidth="93.0">
          <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff4c" height="75.0" layoutX="9.0" layoutY="10.0" stroke="#a3a3a380" strokeType="INSIDE" width="75.0" />
             <Button layoutX="9.0" layoutY="43.0" mnemonicParsing="false" onMouseClicked="#zoomIn" prefHeight="75.0" prefWidth="75.0" style="-fx-background-color: #3255bc;" text="+" textFill="WHITE">
@@ -186,7 +186,6 @@
             <Image url="@icons/question_mark.png" />
          </image>
       </ImageView>
-      <TextArea fx:id="textDirectionsBox" editable="false" layoutX="150.0" layoutY="566.0" prefHeight="180.0" prefWidth="252.0" wrapText="true" />
       <Pane fx:id="helpPane" layoutX="150.0" layoutY="206.0" prefHeight="540.0" prefWidth="252.0" visible="false">
          <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="540.0" stroke="BLACK" strokeType="INSIDE" width="252.0" />
@@ -651,6 +650,16 @@
             </VBox>
             <Line endX="-100.0" endY="60.0" layoutX="208.0" layoutY="53.0" startX="-100.0" />
             <Line endX="-100.0" endY="60.0" layoutX="272.0" layoutY="53.0" startX="-100.0" />
+         </children>
+      </Pane>
+      <Pane fx:id="directionsPane" layoutX="150.0" layoutY="570.0" prefHeight="180.0" prefWidth="504.0" style="-fx-background-color: white;">
+         <children>
+            <TextArea fx:id="textDirectionsBox" editable="false" layoutY="-1.0" prefHeight="180.0" prefWidth="252.0" wrapText="true" />
+            <RadioButton fx:id="emailButton" layoutX="283.0" layoutY="31.0" mnemonicParsing="false" text="Email" />
+            <RadioButton fx:id="textButton" layoutX="283.0" layoutY="5.0" mnemonicParsing="false" text="Text" />
+            <TextField fx:id="detailEntry" layoutX="283.0" layoutY="103.0" prefHeight="31.0" prefWidth="184.0" />
+            <ChoiceBox fx:id="carrierBox" layoutX="283.0" layoutY="62.0" prefHeight="31.0" prefWidth="184.0" />
+            <Button fx:id="sendButton" layoutX="343.0" layoutY="144.0" mnemonicParsing="false" onMouseClicked="#sendDirections" text="Send" />
          </children>
       </Pane>
    </children>

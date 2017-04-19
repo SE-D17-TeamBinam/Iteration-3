@@ -3,6 +3,8 @@ package UIControllers;
 import Database.DatabaseController;
 import Definitions.Coordinate;
 import Definitions.Physician;
+import Networking.Carrier;
+import Networking.Emailer;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,6 +26,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -125,6 +128,22 @@ public class MapViewController extends CentralUIController implements Initializa
   private RadioButton stairButton;
 
   final ToggleGroup typeSelect = new ToggleGroup();
+
+  // The pane for text directions
+  @FXML
+  private Pane directionsPane;
+  @FXML
+  private RadioButton emailButton;
+  @FXML
+  private RadioButton textButton;
+  @FXML
+  private TextField detailEntry;
+  @FXML
+  private ChoiceBox carrierBox;
+  @FXML
+  private Button sendButton;
+
+  final ToggleGroup directionSelect = new ToggleGroup();
 
   // The pane with the + and - on it
   @FXML
@@ -289,7 +308,7 @@ public class MapViewController extends CentralUIController implements Initializa
   @FXML
   public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
     initializeSearch();
-    textDirectionsBox.setVisible(false);
+    directionsPane.setVisible(false);
     
     //mapViewFlag = 3;
     if(mapViewFlag != 3){ // Todo you know
@@ -310,6 +329,7 @@ public class MapViewController extends CentralUIController implements Initializa
     initializeMapImage();
     initializeUserPane();
     initializeSearchChoices();
+    setDirectionsOptions();
     resultsList.setPrefHeight(userPaneRectangle.getHeight() - searchPaneVBox.getLayoutY() - resultsList.getLayoutY() - searchGoButton.getPrefHeight() - 5);
     // Adds a circle to show where the mouse is on the map
   }
@@ -470,7 +490,7 @@ public class MapViewController extends CentralUIController implements Initializa
     typeSelectionPaneRectangle.setHeight(adminPaneRectangle.getHeight());
     fixMapDisplayLocation();
     updateUserPane();
-    textDirectionsBox.setLayoutY(y_res - 180); // TODO Not constant height
+    directionsPane.setLayoutY(y_res - 180); // TODO Not constant height
     helpButton.setLayoutY(y_res - 60);
     helpPane.setLayoutY(y_res - 540);
     resultsList.setPrefHeight(userPaneRectangle.getHeight() - searchPaneVBox.getLayoutY() - resultsList.getLayoutY() - searchGoButton.getHeight() - 5);
@@ -902,7 +922,7 @@ public class MapViewController extends CentralUIController implements Initializa
 
   @FXML
   private void clearButtonClicked() {
-    textDirectionsBox.setVisible(false);
+    directionsPane.setVisible(false);
     pathfinding = false;
     startPoint = null;
     endPoint = null;
@@ -1186,8 +1206,8 @@ public class MapViewController extends CentralUIController implements Initializa
       for (String s : directions) {
         out += s + ", ";
       }
+      directionsPane.setVisible(true);
       textDirectionsBox.setText(out.substring(0, out.length()-2));
-      textDirectionsBox.setVisible(true);
     }
   }
 
@@ -1920,4 +1940,38 @@ public class MapViewController extends CentralUIController implements Initializa
     mouseDragged = false;
   }
 
+  public void setDirectionsOptions(){
+    textButton.setToggleGroup(directionSelect);
+    emailButton.setToggleGroup(directionSelect);
+    textButton.setSelected(true);
+    emailButton.setUserData("email");
+    textButton.setUserData("text");
+    carrierBox.getItems().add(Carrier.att);
+    carrierBox.getItems().add(Carrier.tmobile);
+    carrierBox.getItems().add(Carrier.sprint);
+    carrierBox.getItems().add(Carrier.verizon);
+
+    directionSelect.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+      @Override
+      public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue,
+          Toggle newValue) {
+        if (directionSelect.getSelectedToggle().getUserData().equals(emailButton.getUserData())){
+          carrierBox.setDisable(true);
+        }
+        else {
+          carrierBox.setDisable(false);
+        }
+      }
+    });
+  }
+
+  public void sendDirections() {
+    Emailer e = new Emailer();
+    if (directionSelect.getSelectedToggle().getUserData().toString().equals("email")){
+      e.email(detailEntry.getText(), textDirectionsBox.getText());
+    }
+    else {
+      e.text(detailEntry.getText(),(Carrier) carrierBox.getSelectionModel().getSelectedItem(), textDirectionsBox.getText());
+    }
+  }
 }
