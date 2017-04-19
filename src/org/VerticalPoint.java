@@ -13,5 +13,9 @@ public abstract class VerticalPoint extends Point{
     super(xCoord, yCoord, name, id, new_neighbors, floor);
   }
 
+  VerticalPoint(int xCoord, int yCoord, int floor){
+    super(xCoord, yCoord, floor);
+  }
+
 
 }
