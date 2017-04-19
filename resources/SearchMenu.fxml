@@ -19,7 +19,7 @@
                   <Font name="Times New Roman" size="16.0" />
                </font>
             </Label>
-            <Label fx:id="SearchMap" alignment="CENTER" layoutX="657.0" layoutY="666.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="157.0" style="-fx-background-color: #3255bc;" text="Show on Map" textFill="WHITE" visible="false">
+            <Label fx:id="SearchMap" alignment="CENTER" layoutX="657.0" layoutY="666.0" mnemonicParsing="false" onMouseClicked="#viewMap" prefHeight="50.0" prefWidth="157.0" style="-fx-background-color: #3255bc;" text="Show on Map" textFill="WHITE" visible="false">
                <font>
                   <Font name="Times New Roman" size="16.0" />
                </font>

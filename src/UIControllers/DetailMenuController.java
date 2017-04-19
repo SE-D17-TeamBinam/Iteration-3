@@ -71,8 +71,8 @@ public class DetailMenuController extends CentralUIController implements Initial
       DocFirstNameField.setText(currentPhysician.getFirstName());
       DocLastNameField.setText(currentPhysician.getLastName());
       DocTitleField.setText(currentPhysician.getTitle());
-      for (int i = 0; i < currentPhysician.getLocations().size(); i++){
-        String txt = currentPhysician.getLocations().get(i).getName();
+      for (Point room : currentPhysician.getLocations()){
+        String txt = room.getName();
         Pane locPane = new Pane();
 
         Label ILabel = new Label();
@@ -106,6 +106,9 @@ public class DetailMenuController extends CentralUIController implements Initial
         });
         locPane.setOnMouseExited(e -> {
           Goto.setVisible(false);
+        });
+        Goto.setOnMouseClicked(e -> {
+          gotoMap(room);
         });
 
         locPane.getChildren().add(ILabel);
@@ -174,20 +177,14 @@ public class DetailMenuController extends CentralUIController implements Initial
   }
 
   public void gotoMap (Point room) {
-    /*
     Stage primaryStage = (Stage) anchorPane.getScene().getWindow();
-      try {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/DetailMenu.fxml"));
-        MapViewController MC = new MapViewController(room);
-        loader.setController(MC);
-        Pane mainPane = (Pane) loader.load();
-        primaryStage.setScene(new Scene(mainPane, x_res, y_res));
-        primaryStage.show();
-      } catch (Exception e) {
-        System.out.println("Cannot load main menu");
-        e.printStackTrace();
-      }
-      */
+    try {
+      searchingPoint = room;
+      loadScene(primaryStage, "/MapScene.fxml");
+    } catch (Exception e) {
+      System.out.println("Cannot load main menu");
+      e.printStackTrace();
     }
+  }
 }
 
