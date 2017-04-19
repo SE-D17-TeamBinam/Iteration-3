@@ -95,17 +95,13 @@ public class DetailMenuController extends CentralUIController implements Initial
         Platform.runLater(() -> {Goto.setLayoutX(ILabel.getWidth() + 10);});
 
         ILabel.setStyle("-fx-background-color: transparent");
-        ILabel.setOnMouseEntered(e -> {
-          ILabel.setStyle("-fx-background-color: f7f7f7");
-        });
-        ILabel.setOnMouseExited(e -> {
-          ILabel.setStyle("-fx-background-color: transparent");
-        });
         locPane.setOnMouseEntered(e -> {
           Goto.setVisible(true);
+          ILabel.setStyle("-fx-background-color: f7f7f7");
         });
         locPane.setOnMouseExited(e -> {
           Goto.setVisible(false);
+          ILabel.setStyle("-fx-background-color: transparent");
         });
         Goto.setOnMouseClicked(e -> {
           gotoMap(room);
