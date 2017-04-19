@@ -11,6 +11,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -44,25 +45,71 @@ public class DetailMenuController extends CentralUIController implements Initial
   @FXML
   private VBox RoomHPs;
   @FXML
+  private Label DetailDone;
+  @FXML
+  private Label DocInfoLabel;
+  @FXML
+  private Label RoomDetailLabel;
+  @FXML
   private Label DocFirstNameField;
   @FXML
   private Label DocLastNameField;
   @FXML
   private Label DocTitleField;
   @FXML
+  private Label DocFirstNameLabel;
+  @FXML
+  private Label DocLastNameLabel;
+  @FXML
+  private Label DocTitleLabel;
+  @FXML
+  private Label DocLocationsLabel;
+  @FXML
   private Label RoomNameField;
   @FXML
   private Label RoomFloorField;
+  @FXML
+  private Label RoomNameLabel;
+  @FXML
+  private Label RoomHPLabel;
+  @FXML
+  private Label RoomFloorLabel;
+
+  @Override
+  public void customListenerX () {
+    DetailDone.setLayoutX(x_res - DetailDone.getPrefWidth() - 12);
+    DetailRoom.setPrefWidth(x_res);
+    double roomFieldX = x_res * 0.58 - RoomPane.getPrefWidth()/2;
+    RoomPane.setLayoutY(roomFieldX);
+    RoomFloorField.setLayoutY(roomFieldX);
+    RoomNameField.setLayoutY(roomFieldX);
+    double roomLabelX = x_res * 0.22 - RoomNameField.getPrefWidth()/2;
+    RoomNameLabel.setLayoutY(roomLabelX);
+    RoomFloorLabel.setLayoutY(roomLabelX);
+    RoomHPLabel.setLayoutY(roomLabelX);
+    DetailDoc.setPrefWidth(x_res);
+    double docLabelX = x_res * 0.22 - DocFirstNameLabel.getPrefWidth()/2;
+    DocFirstNameLabel.setLayoutX(docLabelX);
+    DocLastNameLabel.setLayoutX(docLabelX);
+    DocTitleLabel.setLayoutX(docLabelX);
+    DocLocationsLabel.setLayoutX(docLabelX);
+    double docFieldX = x_res * 0.58 - DocPane.getPrefWidth()/2;
+    DocPane.setLayoutX(docFieldX);
+    DocFirstNameField.setLayoutX(docFieldX);
+    DocLastNameField.setLayoutX(docFieldX);
+    DocTitleField.setLayoutX(docFieldX);
+    DocInfoLabel.setLayoutX(x_res/2 - DocInfoLabel.getWidth()/2);
+    RoomDetailLabel.setLayoutX(x_res/2 - RoomDetailLabel.getWidth()/2);
+  }
+  @Override
+  public void customListenerY () {
+    DocPane.setPrefHeight(y_res*9/10 - 457);
+    RoomPane.setPrefHeight(y_res*9/10 - 400);
+  }
 
   @Override
   public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
     /* apply language configs */
-    /*
-    DetailTitle.setText(dictionary.getString("Room Details", currSession.getLanguage()));
-    DetailRoomName.setText(dictionary.getString("Room Name", currSession.getLanguage()));
-    DetailRoomFloor.setText(dictionary.getString("Floor", currSession.getLanguage()));
-    DetailRoomHCPs.setText(dictionary.getString("Healthcare Providers", currSession.getLanguage()));
-    */
     addResolutionListener(anchorPane);
     setBackground(anchorPane);
     if (currentPoint == null && currentPhysician != null) {
@@ -95,17 +142,13 @@ public class DetailMenuController extends CentralUIController implements Initial
         Platform.runLater(() -> {Goto.setLayoutX(ILabel.getWidth() + 10);});
 
         ILabel.setStyle("-fx-background-color: transparent");
-        ILabel.setOnMouseEntered(e -> {
-          ILabel.setStyle("-fx-background-color: f7f7f7");
-        });
-        ILabel.setOnMouseExited(e -> {
-          ILabel.setStyle("-fx-background-color: transparent");
-        });
         locPane.setOnMouseEntered(e -> {
           Goto.setVisible(true);
+          ILabel.setStyle("-fx-background-color: f7f7f7");
         });
         locPane.setOnMouseExited(e -> {
           Goto.setVisible(false);
+          ILabel.setStyle("-fx-background-color: transparent");
         });
         Goto.setOnMouseClicked(e -> {
           gotoMap(room);
@@ -142,11 +185,11 @@ public class DetailMenuController extends CentralUIController implements Initial
     }
   }
 
+
   DetailMenuController (Physician doc, Point room) {
     currentPhysician = doc;
     currentPoint = room;
   }
-
 
   public Label makeGoto (double LayoutX) {
     Label Goto = new Label("Go");
