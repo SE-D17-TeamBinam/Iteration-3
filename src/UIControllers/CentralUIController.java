@@ -1,10 +1,7 @@
 package UIControllers;
 
 import CredentialManager.CredentialManager;
-import Database.DatabaseController;
-import Database.DatabaseDriver;
 import Database.DatabaseInterface;
-import java.util.ArrayList;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
@@ -13,9 +10,10 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.Dictionary;
-import org.Point;
 import org.Session;
 
 
@@ -30,14 +28,17 @@ public class CentralUIController {
   protected static Session currSession;
   protected static CredentialManager credentialManager;
   protected static Dictionary dictionary;
+  /* resolution */
   protected static double x_res = 1300;
   protected static double y_res = 750;
+  /* banner and background */
   protected static Image banner = new Image ("/icons/banner.png");
   protected static Image background = new Image ("/icons/background_shapte.png");
   protected static Image logo = new Image ("/icons/BWFH_logo_rgb.jpg");
   protected static ImageView bannerView = new ImageView();
   protected static ImageView backgroundView = new ImageView();
   protected static ImageView logoView = new ImageView();
+  /* database object */
   protected static DatabaseInterface database;
 
 
@@ -67,6 +68,7 @@ public class CentralUIController {
     primaryStage.setScene(new Scene(root, x_res, y_res));
     primaryStage.show();
   }
+
 
   public void addResolutionListener (AnchorPane anchorPane) {
     anchorPane.widthProperty().addListener(new ChangeListener<Number>() {

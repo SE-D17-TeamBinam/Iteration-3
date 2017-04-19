@@ -30,6 +30,20 @@ public class Dictionary {
     Entry username = new Entry(usernameLabel);
     this.addEntry("Username", username);
 
+    HashMap<Language, String> hospitalLabel = new HashMap<Language, String>();
+    hospitalLabel.put(Language.SPANISH, "Hospital");
+    hospitalLabel.put(Language.ENGLISH, "Hospital");
+    hospitalLabel.put(Language.PORTUGESE, "Hospital");
+    Entry hospital = new Entry(hospitalLabel);
+    this.addEntry("Hospital", hospital);
+
+    HashMap<Language, String> physiciansLabel = new HashMap<Language, String>();
+    physiciansLabel.put(Language.SPANISH, "Médicos");
+    physiciansLabel.put(Language.ENGLISH, "Physicians");
+    physiciansLabel.put(Language.PORTUGESE, "Médicos");
+    Entry physicians = new Entry(physiciansLabel);
+    this.addEntry("Physicians", physicians);
+
     HashMap<Language, String> passwordLabel = new HashMap<Language, String>();
     passwordLabel.put(Language.SPANISH, "Contraseña");
     passwordLabel.put(Language.ENGLISH, "Password");
@@ -122,11 +136,11 @@ public class Dictionary {
     this.addEntry("Show on Map", showOnMap);
 
     HashMap<Language, String> n = new HashMap<Language, String>();
-    n.put(Language.SPANISH, "Ver información");
-    n.put(Language.ENGLISH, "View Info");
-    n.put(Language.PORTUGESE, "Ver informações");
+    n.put(Language.SPANISH, "Ver Detalles");
+    n.put(Language.ENGLISH, "View Details");
+    n.put(Language.PORTUGESE, "Ver Detalhes");
     Entry viewInfo = new Entry(n);
-    this.addEntry("View Info", viewInfo);
+    this.addEntry("View Details", viewInfo);
 
     HashMap<Language, String> logOffLabel = new HashMap<Language, String>();
     logOffLabel.put(Language.SPANISH, "Cerrar sesión");
