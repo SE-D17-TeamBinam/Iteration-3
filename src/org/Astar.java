@@ -21,6 +21,7 @@ public class Astar extends PathfindingStrategy {
 
     @Override
     public ArrayList<Point> execute(Point start, Point goal) throws NoPathException {
+      System.out.println("Using A*");
       boolean changeFloor = start.floor != goal.floor;
 
       Point next = new Point(500,500,"start",0, new ArrayList<Point>(),4);
@@ -151,4 +152,8 @@ public class Astar extends PathfindingStrategy {
 
       throw new NoPathException();  //throw error
     }
+
+  public String toString(){
+    return "A*";
+  }
 }
