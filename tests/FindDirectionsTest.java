@@ -52,7 +52,7 @@ public class FindDirectionsTest {
     ArrayList<Point> path = new ArrayList<Point>();
     Point point1 = new Point(0, 5, 4);
     Point point2 = new Point(20, 5, 4);
-    Point point3 = new Point(20, 60, 4);
+    Point point3 = new Point(30, 5, 4);
     Point point4 = new Point(10, 30, 6);
     Point point5 = new Point(20, 30, 6);
     //Points are created to test text directions
@@ -76,18 +76,19 @@ public class FindDirectionsTest {
 
   }
   @Test
-  void FindDirectionsTest3() {
+  void FindDirectionsTest4() {
     FindDirections basic = new FindDirections();
     ArrayList<Point> path = new ArrayList<Point>();
     Point point1 = new Point(0, 50, 4);
     Point point2 = new Point(2, 5, 4);
-    Point point3 = new Point(5, 5, 4);
-    Point point4 = new Point(10, 30, 6);
-    Point point5 = new Point(20, 30, 6);
+    Point point3 = new Point(2, 5, 4);
+    Point point4 = new Point(5, 5, 5);
+    Point point5 = new Point(10, 30, 6);
+    Point point6 = new Point(20, 30, 6);
     //Points are created to test text directions
-    //  path.add(point5);
-    // path.add(point4);;
-   // path.add(point3);
+    //path.add(point5);
+    path.add(point4);;
+    path.add(point3);
     path.add(point2);
     path.add(point1);
     //points are added to a list
@@ -101,4 +102,5 @@ public class FindDirectionsTest {
     assertEquals(expect,actualDirections);
 
   }
+
 }

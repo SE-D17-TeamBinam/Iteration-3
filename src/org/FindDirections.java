@@ -21,7 +21,7 @@ public class FindDirections {
   String changeFloor = "Go to floor";
   public float CurrentAngle;
   public float TurnChange;
-
+  int count=0;
 
   /**
    * This creates an empty lists that stores the strings of directions.
@@ -44,7 +44,6 @@ public class FindDirections {
     for(int i=reversePath.size()-1;  i>=0; i--){
       path.add(reversePath.get(i));
     }
-    int count = 0;
     Point destination = path.get(path.size()-1);
 
     while(destination !=path.get(count)){
@@ -89,8 +88,12 @@ public class FindDirections {
     float newY= next.getYCoord();
     float startY= start.getYCoord();
   //  if(CurrentAngle==0 && newY>startY){
+    boolean previous;
       if (CurrentAngle <= 45 && CurrentAngle >= -45) {
         directions.add(straight + " " + next.getName());
+        if(directions.get(count-1).equals((straight + " " + next.getName()))){
+          directions.remove(count-1);
+        }
       } else if (CurrentAngle < 135 && CurrentAngle > 45) {
         directions.add(right);
         directions.add(straight + " " + next.getName());
