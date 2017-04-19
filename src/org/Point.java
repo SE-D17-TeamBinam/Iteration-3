@@ -230,7 +230,7 @@ public class Point {
     if (obj.getClass() != this.getClass())
       return super.equals(obj);
     Point pobj = (Point) obj;
-    if (this.xCoord == pobj.xCoord && this.yCoord == pobj.yCoord && this.id == pobj.id && this.floor == pobj.floor){
+    if (this.xCoord == pobj.xCoord && this.yCoord == pobj.yCoord && this.id == pobj.id && this.floor == pobj.floor && this.neighbors.size() == pobj.neighbors.size()){
       for(String s : this.names){
         if (!pobj.names.contains(s))
           return false;

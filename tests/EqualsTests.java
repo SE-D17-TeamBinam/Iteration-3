@@ -56,8 +56,8 @@ public class EqualsTests {
   @Test
   public void testPhysEquals3() {
     ph2.setLocations(new ArrayList<Point>(Arrays.asList(p1,p2)));
-    ph1.setLocations(new ArrayList<Point>(Arrays.asList(p1,p2)));
-    Assertions.assertEquals(true, ph1.equals(ph2));
+    ph1.setLocations(new ArrayList<Point>(Arrays.asList(p2)));
+    Assertions.assertEquals(false, ph1.equals(ph2));
 
     ph2.setLocations(new ArrayList<Point>());
     ph1.setLocations(new ArrayList<Point>());

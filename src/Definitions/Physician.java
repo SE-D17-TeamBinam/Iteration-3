@@ -86,7 +86,7 @@ public class Physician {
     if (obj.getClass() != this.getClass())
       return super.equals(obj);
     Physician pobj = (Physician) obj;
-    if (this.firstName.equals(pobj.firstName) && this.lastName.equals(pobj.lastName) && this.title.equals(pobj.title) && this.PID == pobj.PID){
+    if (this.firstName.equals(pobj.firstName) && this.lastName.equals(pobj.lastName) && this.title.equals(pobj.title) && this.PID == pobj.PID && this.getLocations().size() == pobj.getLocations().size()){
       for(Point p : this.locations) {
         if (!pobj.locations.contains(p))
           return false;
