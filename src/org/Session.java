@@ -24,6 +24,11 @@ public class Session {
     return this.currLang;
   }
 
+  public void setAlgorithm(PathfindingStrategy algorithm){
+    this.algorithm = algorithm;
+    System.out.println(this.algorithm.toString());
+  }
+
   public Session() {
   }
 }

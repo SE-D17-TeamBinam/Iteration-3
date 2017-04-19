@@ -67,8 +67,10 @@ public class Point {
 
   //Methods
   public void connectTo(Point node) {
-    node.getNeighbors().add(this);
-    this.neighbors.add(node);
+    if (!node.getNeighbors().contains(this))
+      node.getNeighbors().add(this);
+    if (!this.getNeighbors().contains(node))
+      this.neighbors.add(node);
   }
 
   public void severFrom(Point point) {
@@ -224,5 +226,52 @@ public class Point {
     return true;
   }
 
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null)
+      return false;
+    if (obj.getClass() != this.getClass())
+      return super.equals(obj);
+    Point pobj = (Point) obj;
+    if (this.xCoord == pobj.xCoord && this.yCoord == pobj.yCoord && this.id == pobj.id && this.floor == pobj.floor && this.neighbors.size() == pobj.neighbors.size()){
+      if (this.names != null) {
+        for (String s : this.names) {
+          if (!pobj.names.contains(s))
+            return false;
+        }
+      }
+      else if (this.names != pobj.names){
+        return false;
+      }
+      ArrayList<Integer> ourNeighbors = new ArrayList<Integer>();
+      ArrayList<Integer> theirNeighbors = new ArrayList<Integer>();
+      for (Point p : this.neighbors)
+        ourNeighbors.add(p.id);
+      for (Point p : pobj.neighbors)
+        theirNeighbors.add(p.id);
+      System.out.println("ID: " + this.id + " -> " + pobj.id + ".  " + ourNeighbors + "  :  " + theirNeighbors);
+
+      for (int i : ourNeighbors){
+        if (!theirNeighbors.contains(i)){
+          return false;
+        }
+      }
+      return true;
+    }
+    return false;
+  }
+
+
+  @Override
+  public Object clone()  {
+    return new Point(xCoord,yCoord,names,id,neighbors, floor);
+  }
 }
 
+//  int xCoord;    //X coordinate
+//  int yCoord;    //Y coordinate
+//  ArrayList<String> names;  //Name of the room
+//  int id;      //Unique Identifier
+//  int floor;
+//  public ArrayList<Point> neighbors = new ArrayList<>();

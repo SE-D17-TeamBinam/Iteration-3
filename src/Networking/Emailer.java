@@ -26,7 +26,7 @@ public class Emailer implements IEmailer{
   public void email(String email, String text){
     String from = "testwpiemail@gmail.com"; // from changed accordingly
     final String username = "testwpiemail"; // username change accordingly
-    final String password = "********"; // password change accordingly
+    final String password = "************"; // password change accordingly
 
     String host = "smtp.gmail.com"; // Gmail smtp server address
 
@@ -55,7 +55,7 @@ public class Emailer implements IEmailer{
           InternetAddress.parse(email));
 
       // sets subject field of email
-      message.setSubject("Test Email Directions");
+      message.setSubject("Faulkner Hospital Directions");
 
       // sets message
       message.setText(text);

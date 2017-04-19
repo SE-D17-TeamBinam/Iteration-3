@@ -1,5 +1,7 @@
 package Database;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -10,6 +12,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import org.ListPoints;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.language.Soundex;
 import java.sql.ResultSet;
@@ -26,12 +32,18 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class DatabaseController implements DatabaseInterface {
 
-  private static final int fuzzySearchThreshold = 10;
+  private static final int fuzzySearchThreshold = 2;
   private static final int fuzzySearchLimit = 20;
   SaveThread saveThread;
+  LoadThread loadThread;
   public double progressBarPercentage = 0;
   ArrayList<Point> localPoints;
   ArrayList<Physician> localPhysicians;
+
+  ArrayList<Point> diffPoints = null;
+  ArrayList<Physician> diffPhysicians = null;
+  ArrayList<Point> remPoints = null;
+  ArrayList<Physician> remPhysicians = null;
 
 
   DatabaseDriver dbc = null;
@@ -41,6 +53,7 @@ public class DatabaseController implements DatabaseInterface {
     this.localPoints = new ArrayList<Point>();
     this.dbc = _dbc;
     saveThread = new SaveThread(this);
+    loadThread = new LoadThread(this);
   }
 
   ///////////////////////////
@@ -49,7 +62,7 @@ public class DatabaseController implements DatabaseInterface {
 
   public boolean removePhysician(long pid) {
     dbc.send_Command(
-        "delete from physician where PID = " + pid + ")"
+        "delete from physician where PID = " + pid
     );
 
     //ArrayList<Physician> new_physicians = localPhysicians;
@@ -140,11 +153,11 @@ public class DatabaseController implements DatabaseInterface {
 
     dbc.send_Command(
         "update physician SET first_name = '" + first_name + "', last_name =  '" + last_name
-            + "', title  =  '" + title + "' WHERE PID = " + PID + ")"
+            + "', title  =  '" + title + "' WHERE PID = " + PID
     );
 
     dbc.send_Command(
-        "delete from physician_location WHERE PID_ph = " + PID + ")"
+        "delete from physician_location WHERE PID_ph = " + PID
     );
 
     int i;
@@ -205,7 +218,12 @@ public class DatabaseController implements DatabaseInterface {
 
     } catch (SQLException e) {
       //e.printStackTrace();
-      System.out.println("error getting fake physcians from DB; Query Erro: " + e.getMessage());
+      System.out.println("error getting fake physcians from DB; Query Error: " + e.getMessage());
+      Alert alert = new Alert(AlertType.ERROR, "Message. Bad Things Happened! : " + "DB ERROR: error while trying to retrieve a physician"); //can add buttons if you want, or change to different popup types
+      alert.showAndWait(); //this puts it in focus
+      if (alert.getResult() == ButtonType.YES) {
+        //do stuff, if neccesary, else, delete
+      }
     }
 
     return my_p;
@@ -328,6 +346,25 @@ public class DatabaseController implements DatabaseInterface {
 
     return true;
   }
+  public boolean addPointWithoutNeighbors(Point realpoint) {
+    FakePoint point = new FakePoint(realpoint);
+    int cost = point.getCost();
+    int x = point.getXCoord();
+    int y = point.getYCoord();
+    int id = point.getId();
+    int floor = point.getFloor();
+    String name = point.getName().replace(';','_');
+    ArrayList<Integer> neighbors = point.getNeighbors();
+
+    dbc.send_Command(
+        "insert into Point (x,y,cost,pid,floor,name) values (" + x + ","
+            + y + "," + cost + "," + id + "," + floor + ",'" + name + "'); \n");
+
+    if(check_points(localPoints,realpoint)){
+      localPoints.add(realpoint);
+    }
+    return true;
+  }
 
   //PREFERABLY NOT USE FOR SINGLE ADDING, BECAUSE IT CANNNOT ADD THE POIN TO THE LOCAL COPY
   public boolean addPoint(FakePoint point) {
@@ -360,9 +397,16 @@ public class DatabaseController implements DatabaseInterface {
     return true;
   }
 
+
+
+
   public boolean editPoint(
       Point real_po
   ) {
+    removePoint(real_po.getId());
+    addPoint(real_po);
+
+    /*
     //FakePhysician fake_ph = new FakePhysician(real_ph);
     long PID = real_po.getId();
     String name = real_po.getName(); //real_po.getFirstName().replace(';','_');
@@ -395,7 +439,7 @@ public class DatabaseController implements DatabaseInterface {
     localPoints.remove(old_point);
     localPoints.add(real_po);
     //setPhysicians(new_physicians);
-
+*/
     return true;
   }
 
@@ -486,6 +530,11 @@ public class DatabaseController implements DatabaseInterface {
     } catch (SQLException e) {
       // e.printStackTrace();
       System.out.println("error getting fake points from DB; Query Error: " + e.getMessage());
+      Alert alert = new Alert(AlertType.ERROR, "Message. Bad Things Happened! : " + "DB ERROR: error while trying to retrieve a point"); //can add buttons if you want, or change to different popup types
+      alert.showAndWait(); //this puts it in focus
+      if (alert.getResult() == ButtonType.YES) {
+        //do stuff, if neccesary, else, delete
+      }
 
     }
 
@@ -525,7 +574,7 @@ public class DatabaseController implements DatabaseInterface {
     for (int i = 0; i < ret.size(); i++) {
       ArrayList<Integer> currentNeighbors = findFakePoint(ret.get(i), fakepoints).getNeighbors();
       for (int j = 0; j < currentNeighbors.size(); j++) {
-        ret.get(i).neighbors.add(findRealPoint(currentNeighbors.get(j), ret));
+        ret.get(i).connectTo(findRealPoint(currentNeighbors.get(j), ret));
       }
       progressBarPercentage = .25 + .25 * i / ret.size();
     }
@@ -625,6 +674,11 @@ public class DatabaseController implements DatabaseInterface {
       result = compare_points_lists(db_points, localPoints);
     } catch (SQLException e) {
       System.out.println("Cannot complete verification of points, querry/connection error");
+      Alert alert = new Alert(AlertType.ERROR, "Message. Bad Things Happened! : " + "DB ERROR: Cannot complete verification of points, querry/connection error"); //can add buttons if you want, or change to different popup types
+      alert.showAndWait(); //this puts it in focus
+      if (alert.getResult() == ButtonType.YES) {
+        //do stuff, if neccesary, else, delete
+      }
       e.printStackTrace();
       return false;
     }
@@ -639,6 +693,11 @@ public class DatabaseController implements DatabaseInterface {
       result = compare_physicians_lists(db_physicians, localPhysicians);
     } catch (SQLException e) {
       System.out.println("Cannot complete verification of physicians, query/connection error");
+      Alert alert = new Alert(AlertType.ERROR, "Message. Bad Things Happened! : " + "DB ERROR: Cannot complete verification of physicians, querry/connection error"); //can add buttons if you want, or change to different popup types
+      alert.showAndWait(); //this puts it in focus
+      if (alert.getResult() == ButtonType.YES) {
+        //do stuff, if neccesary, else, delete
+      }
       e.printStackTrace();
       return false;
     }
@@ -667,7 +726,8 @@ public class DatabaseController implements DatabaseInterface {
 
   @Override
   public void load() throws SQLException {
-    System.out.println("loading physicians and points from DB to local copies ");
+//    loadThread.start();
+    progressBarPercentage = 0;
     localPoints = getAllPoints();
     localPhysicians = getAllPhysicians();
     progressBarPercentage = 1;
@@ -675,37 +735,62 @@ public class DatabaseController implements DatabaseInterface {
 
   @Override
   public void save() {
-    System.out.println("trying to transfer local copies of physicians and points to DB");
-    for (Physician p : localPhysicians) {
-      ArrayList<Point> locations = p.getLocations();
-      for (int i = 0; i < locations.size(); i++) {
-        if (locations.get(i) == null) {
-          locations.remove(i);
+    if (remPoints != null){
+      for (Point p : remPoints){
+        System.out.println("Rem point " + p.getId());
+        this.removePoint(p.getId());
+      }
+      remPoints = null;
+    }
+    if (diffPoints != null){
+      for (Point p : diffPoints){
+        System.out.println("Diff point updating " + p.getId());
+        this.removePoint(p.getId());
+        this.addPointWithoutNeighbors(p);
+      }
+      for(Point p : diffPoints){
+        for (int i = 0; i < p.neighbors.size(); i++){
+          System.out.println("Diff neighbor point updating " + p.getId() + " -> "  + p.neighbors.get(i).getId());
+          this.addNeighbor(p.getId(), p.neighbors.get(i).getId());
         }
       }
-      p.setLocations(locations);
+
+      diffPoints = null;
     }
-    update_points(localPoints);
-    System.out.println("transferred local points copy");
-    try {
-      updatePhysicians(localPhysicians);
-      System.out.println("transferred local physicians copy");
-    } catch (SQLException e) {
-      //e.printStackTrace();
-      System.out
-          .println("failed to transfer local physicians copy to DB; Error: " + e.getMessage());
+
+
+    if (remPhysicians != null){
+      for (Physician p : remPhysicians){
+        System.out.println("Rem Physician " + p.getID());
+        this.removePhysician(p.getID());
+      }
+      remPhysicians = null;
     }
-    progressBarPercentage = 1;
+    if (diffPhysicians != null){
+      for(Physician p : diffPhysicians){
+        System.out.println("Diff Physician updating " + p.getID());
+        this.removePhysician(p.getID());
+        this.addPhysician(p);
+      }
+      diffPhysicians = null;
+
+    }
   }
 
+  //TODO Filter special nodes like ELEVATOR or STAIRS etc.
   @Override
   public ArrayList<Point> getNamedPoints() {
-    while (saveThread.running) {
+    while (saveThread.running || loadThread.running) {
       ;
     }
     try {
       load();
     } catch (SQLException e) {
+      Alert alert = new Alert(AlertType.ERROR, "Message. Bad Things Happened! : " + "DB ERROR: failed to load in getNamedPoints method: " + e.getMessage()); //can add buttons if you want, or change to different popup types
+      alert.showAndWait(); //this puts it in focus
+      if (alert.getResult() == ButtonType.YES) {
+        //do stuff, if neccesary, else, delete
+      }
       e.printStackTrace();
     }
     System.out.println("trying to get Points with names");
@@ -724,7 +809,7 @@ public class DatabaseController implements DatabaseInterface {
 
   @Override
   public ArrayList<Point> getPoints() {
-    while (saveThread.running) {
+    while (saveThread.running || loadThread.running) {
       ;
     }
     try {
@@ -735,24 +820,54 @@ public class DatabaseController implements DatabaseInterface {
       System.out.println(
           "Error Getting Data From The Database, failed to load, will return DB local points copy \n Query/Connection Error : "
               + e.getMessage());
+      Alert alert = new Alert(AlertType.ERROR, "Message. Bad Things Happened! : " + "DB ERROR:  failed to load, will return DB local points copy \n Query/Connection Error " + e.getMessage()); //can add buttons if you want, or change to different popup types
+      alert.showAndWait(); //this puts it in focus
+      if (alert.getResult() == ButtonType.YES) {
+        //do stuff, if neccesary, else, delete
+      }
     }
-    return localPoints;
+    ListPoints lp = new ListPoints(localPoints);
+    ListPoints lp2 = lp.deepClone();
+
+    return lp2.getPoints();
   }
 
   @Override
   public void setPoints(ArrayList<Point> points) {
-    while (saveThread.running) {
+    while (saveThread.running || loadThread.running) {
       ;
     }
+    progressBarPercentage = 0;
     System.out.println("Setting the DB local points copy");
-    localPoints = points;
+    diffPoints = new ArrayList<Point>(points);
+    System.out.println("" + diffPoints + "  :  " + localPoints);
+
+    for (int i = 0; i < diffPoints.size(); i++){
+      if (localPoints.contains(diffPoints.get(i))){
+        System.out.println("Removing " + diffPoints.get(i).getId() + " from diff");
+        diffPoints.remove(i);
+        i--;
+      }
+    }
+    remPoints = new ArrayList<Point>(localPoints);
+    for (int i = 0; i < remPoints.size(); i++){
+      if (points.contains(remPoints.get(i)) || diffPoints.contains(remPoints.get(i))){
+        remPoints.remove(i);
+        i--;
+      }
+    }
+
+    localPoints = (ArrayList<Point>) points.clone();
     //save_and_verify();
-    saveThread.start();
+//    saveThread.start();
+    save();
+    progressBarPercentage = 1;
   }
+
 
   @Override
   public ArrayList<Physician> getPhysicians() {
-    while (saveThread.running) {
+    while (saveThread.running || loadThread.running) {
       ;
     }
     try {
@@ -762,20 +877,50 @@ public class DatabaseController implements DatabaseInterface {
       System.out.println(
           "Error Getting Data From The Database, failed to load, will return DB local physicians copy \n Query/Connection Error : "
               + e.getMessage());
+      Alert alert = new Alert(AlertType.ERROR, "Message. Bad Things Happened! : " + "DB ERROR:  failed to load, will return DB local physicians copy \n Query/Connection Error " + e.getMessage()); //can add buttons if you want, or change to different popup types
+      alert.showAndWait(); //this puts it in focus
+      if (alert.getResult() == ButtonType.YES) {
+        //do stuff, if neccesary, else, delete
+      }
+
       //e.printStackTrace();
     }
-    return localPhysicians;
+    ArrayList<Physician> copyOfPhysicians = new ArrayList<Physician>();
+    for (Physician p : localPhysicians)
+      copyOfPhysicians.add((Physician) p.clone());
+
+    return copyOfPhysicians;
   }
 
   @Override
   public void setPhysicians(ArrayList<Physician> physicians) {
-    while (saveThread.running) {
+    while (saveThread.running || loadThread.running) {
       ;
     }
+    progressBarPercentage = 0;
+    diffPhysicians = new ArrayList<Physician>(physicians);
+    for (int i = 0; i < diffPhysicians.size(); i++){
+      if (localPhysicians.contains(diffPhysicians.get(i))){
+        diffPhysicians.remove(i);
+        i--;
+      }
+    }
+    System.out.println(diffPhysicians);
+    remPhysicians = new ArrayList<Physician>(localPhysicians);
+    for (int i = 0; i < remPhysicians.size(); i++){
+      if (physicians.contains(remPhysicians.get(i)) || diffPhysicians.contains(remPhysicians.get(i))){
+        remPhysicians.remove(i);
+        i--;
+      }
+    }
+
     System.out.println("Setting the DB local physicians copy");
-    localPhysicians = physicians;
+    localPhysicians = (ArrayList<Physician>) physicians.clone();
+
     //save_and_verify();
-    saveThread.start();
+//    saveThread.start();
+    save();
+    progressBarPercentage = 1;
   }
 
   ElevatorPoint toElevatorPoint(Point p) {
@@ -785,26 +930,35 @@ public class DatabaseController implements DatabaseInterface {
   }
 
   public ArrayList<Physician> fuzzySearchPhysicians(String searchTerm) {
+    long startTime = System.nanoTime();
+
     ArrayList<Physician> candidates = new ArrayList<Physician>();
+    if(searchTerm.replaceAll("\\s","") == "" || searchTerm == null){
+      candidates = localPhysicians;
+      return candidates;
+    }
     LinkedHashMap<Physician,Integer> my_map = new LinkedHashMap<Physician,Integer>();
-    Soundex soundex = new Soundex();
-    System.out.println("here");
+//    Soundex soundex = new Soundex();
+//    System.out.println("here");
+    String searchTerm2 = searchTerm.toLowerCase();
     for (Physician p : localPhysicians) {
-      System.out.println("here");
-      if(StringUtils.containsAny(p.getFirstName(),searchTerm) ||
-            StringUtils.containsAny(p.getLastName(),searchTerm)/*||
+//      System.out.println("here");
+      String first_name = p.getFirstName().toLowerCase();
+      String last_name = p.getLastName().toLowerCase();
+      if(StringUtils.containsAny(first_name,searchTerm2) ||
+            StringUtils.containsAny(last_name,searchTerm2)/*||
             StringUtils.containsAny(p.getTitle(),searchTerm)*/){
           //candidates.add(p);
-          int fn = StringUtils.getLevenshteinDistance(p.getFirstName(),searchTerm);
-          int ln = StringUtils.getLevenshteinDistance(p.getLastName(),searchTerm);
-          int t = StringUtils.getLevenshteinDistance(p.getTitle(),searchTerm);
+          int fn = StringUtils.getLevenshteinDistance(first_name,searchTerm2);
+          int ln = StringUtils.getLevenshteinDistance(last_name,searchTerm2);
+          //int t = StringUtils.getLevenshteinDistance(p.getTitle(),searchTerm);
           int value = Math.min(fn,ln);//,t);
           my_map.put(p,value);
-          System.out.println("here, value, id: " + value + " " + p.getID());
+//          System.out.println("here, value, id: " + value + " " + p.getID());
 
         }
 
-      }
+    }
       LinkedHashMap sortedMap = sortByValues(my_map);
       //Map<Integer,Physician> sortedMap = new TreeMap<Integer,Physician>(map);
       ArrayList list2 = new ArrayList(sortedMap.entrySet());
@@ -818,8 +972,9 @@ public class DatabaseController implements DatabaseInterface {
         Entry my_entry = (Map.Entry) it2.next();
         //sortedHashMap.put(entry.getKey(),entry.getValue());
         candidates.add(counter,(Physician) my_entry.getKey());
-        System.out.println("key, value : " + my_entry.getKey() + " " + my_entry.getValue());
+//        System.out.println("key, value : " + my_entry.getKey() + " " + my_entry.getValue());
       }
+
 
 
 /*      while(iterator.hasNext() && counter < fuzzySearchLimit) {
@@ -830,29 +985,18 @@ public class DatabaseController implements DatabaseInterface {
         System.out.println("key, value : " + my_entry.getKey() + " " + my_entry.getValue());
         iterator.remove();
       }*/
-      System.out.println("size : " + candidates.size());
+//      System.out.println("size : " + candidates.size());
+
+
+    long endTime = System.nanoTime();
+    long duration = endTime - startTime;
+    System.out.println("duration physician: " +  duration);
 
     return candidates;
   }
 
   private  LinkedHashMap sortByValues(Map map) {
 
-    /*
-    Set<Entry<Physician, Integer>> set = map.entrySet();
-    List<Entry<Physician, Integer>> list = new ArrayList<Entry<Physician, Integer>>(set);
-    Collections.sort( list, new Comparator<Map.Entry<Physician, Integer>>()
-    {
-      public int compare( Map.Entry<Physician, Integer> o1, Map.Entry<Physician, Integer> o2 )
-      {
-        return (o2.getValue()).compareTo( o1.getValue() );
-      }
-    } );
-    HashMap sortedHashMap = new HashMap();
-    for (Iterator it = list.iterator(); it.hasNext();) {
-      Map.Entry entry = (Map.Entry) it.next();
-      sortedHashMap.put(entry.getKey(),entry.getValue());
-    }
-*/
     ArrayList list = new ArrayList(map.entrySet());
 
     // Define comparator
@@ -867,26 +1011,105 @@ public class DatabaseController implements DatabaseInterface {
     for (Iterator it = list.iterator(); it.hasNext();) {
       Map.Entry entry = (Map.Entry) it.next();
       sortedHashMap.put(entry.getKey(),entry.getValue());
-      System.out.println("in comaprator : " + entry.getValue());
+//      System.out.println("in comaprator : " + entry.getValue());
     }
     return sortedHashMap;
   }
 
 
   public ArrayList<Point> fuzzySearchPoints(String searchTerm) {
-    ArrayList<Point> ret = new ArrayList<Point>();
-    Soundex soundex = new Soundex();
-    try {
-      for (Point p : getNamedPoints()) {
-        if (soundex.difference(searchTerm, p.getName()) > fuzzySearchThreshold) {
-          ret.add(p);
+    long startTime = System.nanoTime();
+
+    ArrayList<Point> candidates = new ArrayList<Point>();
+    LinkedHashMap<Point,Integer> my_map = new LinkedHashMap<Point,Integer>();
+    ArrayList<Point> named_points = getLocalNamedPoints();
+//    ArrayList<Point> named_points = getNamedPoints(); slow af
+//    Soundex soundex = new Soundex();
+//    System.out.println("here");
+
+    searchTerm = searchTerm.toLowerCase();
+    for (Point p : named_points) {
+      boolean worthit = false;
+//      System.out.println("here");
+      ArrayList<String> names = p.getNames();
+      ArrayList<String> lc_names = new ArrayList<String>();
+      ArrayList<Integer> distances = new ArrayList<Integer>();
+      long startTime2 = System.nanoTime();
+      int i;
+      for(i = 0;i < names.size();i++){
+        lc_names.add(names.get(i).toLowerCase());
+        if(StringUtils.containsAny(lc_names.get(i),searchTerm)){
+          worthit = true;
+          distances.add(StringUtils.getLevenshteinDistance(lc_names.get(i),searchTerm));
         }
       }
-    } catch (EncoderException e) {
-      e.printStackTrace();
-      System.out.println("There was a problem encoding one of the strings");
+      long endTime2 = System.nanoTime();
+      long duration2 = endTime2 - startTime2;
+      System.out.println("duration point first nested loop, counter: " +  duration2 + " " + i);
+
+      if (worthit) {
+        int value = distances.get(0);
+        long startTime3 = System.nanoTime();
+        int k;
+        for(k = 0;i < distances.size();i++){
+          if(distances.get(i) < value){
+            value = distances.get(i);
+          }
+        }
+        long endTime3 = System.nanoTime();
+        long duration3 = endTime3 - startTime3;
+        System.out.println("duration point first nested loop, counter: " +  duration3 + " " + i);
+
+
+        my_map.put(p,value);
+        System.out.println("here, value, id: " + value + " " + p.getId());
+
+      }
+
     }
-    return ret;
+    LinkedHashMap sortedMap = sortByValues(my_map);
+    //Map<Integer,Physician> sortedMap = new TreeMap<Integer,Physician>(map);
+    ArrayList list2 = new ArrayList(sortedMap.entrySet());
+
+    int counter = -1;
+    //Set set = sortedMap.entrySet();
+    //Iterator iterator = set.iterator();
+    //HashMap sortedHashMap = new HashMap();
+    for (Iterator it2 = list2.iterator(); it2.hasNext() && counter < fuzzySearchLimit;) {
+      counter++;
+      Entry my_entry = (Map.Entry) it2.next();
+      //sortedHashMap.put(entry.getKey(),entry.getValue());
+      candidates.add(counter,(Point) my_entry.getKey());
+      System.out.println("key, value : " + my_entry.getKey() + " " + my_entry.getValue());
+    }
+
+    System.out.println("size : " + candidates.size());
+
+    long endTime = System.nanoTime();
+    long duration = endTime - startTime;
+    System.out.println("duration point: " +  duration);
+    return candidates;
+  }
+
+  /**
+   * A much faster search for named points. Doesn't contact the database!
+   * @author backslash166
+   * @return ArrayList\<Point> The list of points which have names
+   */
+  private ArrayList<Point> getLocalNamedPoints() {
+    ArrayList<Point> named_points = new ArrayList<Point>();
+    if(localPoints.size()>0) {
+      for (Point p : localPoints) {
+        if (p.getName() != null) {
+          String name = p.getName();
+          if (!name.equals("") && !name.equals("null") && !name.equals("ELEVATOR")) {
+            //the point is named
+            named_points.add(p);
+          }
+        }
+      }
+    }
+    return named_points;
   }
 
 

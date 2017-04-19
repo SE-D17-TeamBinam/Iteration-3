@@ -1,27 +1,25 @@
 package UIControllers;
 
 import Definitions.Physician;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
+import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -111,9 +109,12 @@ public class SearchMenuController extends CentralUIController implements Initial
     roomPhysicians.setCellValueFactory(new Callback<CellDataFeatures<Point, String>, ObservableValue<String>>() {
       public ObservableValue<String> call(CellDataFeatures<Point, String> p) {
         String physicians = "";
-        for (int i = 0; i < docs.size(); i++) {
-          if (docs.get(i).getLocations().contains(p.getValue())){
-            physicians = physicians + docs.get(i).getFirstName() + " " + docs.get(i).getLastName() + "\n";
+        for (Physician doc : docs) {
+          for (Point room : doc.getLocations()) {
+            if (room.getId() == p.getValue().getId()){
+              physicians = physicians + doc.getFirstName() + " " + doc.getLastName() + "\n";
+              break;
+            }
           }
         }
         return new ReadOnlyStringWrapper(physicians);
@@ -181,6 +182,7 @@ public class SearchMenuController extends CentralUIController implements Initial
 
   public void updatePhysicians (List<Physician> HCs){
     HCOL.clear();
+
     if (searchString != "") {
       for (Physician doc : HCs) {
         if ((doc.getFirstName() + " " + doc.getLastName()).contains(searchString)) {
@@ -190,11 +192,14 @@ public class SearchMenuController extends CentralUIController implements Initial
     } else {
       HCOL.addAll(HCs);
     }
+
+    HCOL.addAll(database.fuzzySearchPhysicians(searchString));
     PhysicianDirectory.setItems(HCOL);
   }
 
   public void updateRooms (List<Point> Rooms){
     RMOL.clear();
+
     if (searchString != "") {
       for (Point room : Rooms) {
         if (room.getName().contains(searchString)) {
@@ -213,6 +218,7 @@ public class SearchMenuController extends CentralUIController implements Initial
     } else {
       RMOL.addAll(Rooms);
     }
+    //RMOL.addAll(database.fuzzySearchPoints(searchString));
     RoomDirectory.setItems(RMOL);
   }
 
