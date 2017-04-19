@@ -3,8 +3,6 @@ package UIControllers;
 import Definitions.Physician;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ChangeListener;
@@ -20,7 +18,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -441,16 +438,4 @@ public class DirectEditController extends CentralUIController implements Initial
     }
   }
 
-  public ArrayList<String> enterAlias(){
-    TextInputDialog aliasEntry = new TextInputDialog();
-    aliasEntry.setResizable(true);
-    aliasEntry.setTitle("Alias Entry");
-    aliasEntry.setHeaderText("Enter alias for point");
-    aliasEntry.setContentText("Please enter an alias");
-    Optional<String> res = aliasEntry.showAndWait();
-    String s = res.toString().substring(9, res.toString().length()-1);
-    ArrayList<String> aliases = new ArrayList<String>(Arrays.asList(s.split(", ")));
-    return aliases;
-    //ArrayList<String>(Arrays.asList(String.split))
-  }
 }
