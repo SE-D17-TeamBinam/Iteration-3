@@ -5,7 +5,7 @@ import java.sql.SQLException;
 /**
  * Created by Evan on 4/18/2017.
  */
-public class LoadThread implements Runnable {
+class LoadThread implements Runnable {
   DatabaseController dbc;
   boolean running = false;
 
