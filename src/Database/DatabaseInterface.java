@@ -127,7 +127,7 @@ public interface DatabaseInterface {
 
 
   //TODO Javadoc
-  //public ArrayList<Point> fuzzySearchPoints(String searchTerm);
+  public ArrayList<Point> fuzzySearchPoints(String searchTerm);
 
 
 }
