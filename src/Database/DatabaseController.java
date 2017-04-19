@@ -934,18 +934,18 @@ public class DatabaseController implements DatabaseInterface {
     LinkedHashMap<Physician,Integer> my_map = new LinkedHashMap<Physician,Integer>();
 //    Soundex soundex = new Soundex();
 //    System.out.println("here");
-    searchTerm = searchTerm.toLowerCase();
+    String searchTerm2 = searchTerm.toLowerCase();
     for (Physician p : localPhysicians) {
 //      System.out.println("here");
       String first_name = p.getFirstName().toLowerCase();
       String last_name = p.getLastName().toLowerCase();
-      if(StringUtils.containsAny(first_name,searchTerm) ||
-            StringUtils.containsAny(last_name,searchTerm)/*||
+      if(StringUtils.containsAny(first_name,searchTerm2) ||
+            StringUtils.containsAny(last_name,searchTerm2)/*||
             StringUtils.containsAny(p.getTitle(),searchTerm)*/){
           //candidates.add(p);
-          int fn = StringUtils.getLevenshteinDistance(p.getFirstName(),searchTerm);
-          int ln = StringUtils.getLevenshteinDistance(p.getLastName(),searchTerm);
-          int t = StringUtils.getLevenshteinDistance(p.getTitle(),searchTerm);
+          int fn = StringUtils.getLevenshteinDistance(first_name,searchTerm2);
+          int ln = StringUtils.getLevenshteinDistance(last_name,searchTerm2);
+          //int t = StringUtils.getLevenshteinDistance(p.getTitle(),searchTerm);
           int value = Math.min(fn,ln);//,t);
           my_map.put(p,value);
 //          System.out.println("here, value, id: " + value + " " + p.getID());
