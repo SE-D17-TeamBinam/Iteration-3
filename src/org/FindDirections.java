@@ -88,7 +88,7 @@ public class FindDirections {
   private void FloorDirections(Point next, Point start) {
     float newY= next.getYCoord();
     float startY= start.getYCoord();
-    if(CurrentAngle==0 && newY>startY){
+  //  if(CurrentAngle==0 && newY>startY){
       if (CurrentAngle <= 45 && CurrentAngle >= -45) {
         directions.add(straight + " " + next.getName());
       } else if (CurrentAngle < 135 && CurrentAngle > 45) {
@@ -105,10 +105,10 @@ public class FindDirections {
         ChangeDirectionLeft(Angle);
       }
 
-    }else{
-      directions.add(reverse);
-    }
-    }
+    }//else{
+      //directions.add(reverse);
+    //}
+    //}
 
     public void ChangeDirectionRight(float Angle){
       this.TurnChange = -90;
