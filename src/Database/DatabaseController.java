@@ -840,6 +840,8 @@ public class DatabaseController implements DatabaseInterface {
   }
 
   public ArrayList<Physician> fuzzySearchPhysicians(String searchTerm) {
+    long startTime = System.nanoTime();
+
     ArrayList<Physician> candidates = new ArrayList<Physician>();
     if(searchTerm.replaceAll("\\s","") == "" || searchTerm == null){
       candidates = localPhysicians;
@@ -885,6 +887,10 @@ public class DatabaseController implements DatabaseInterface {
 
       System.out.println("size : " + candidates.size());
 
+    long endTime = System.nanoTime();
+    long duration = endTime - startTime;
+    System.out.println("duration physician: " +  duration);
+
     return candidates;
   }
 
@@ -911,9 +917,12 @@ public class DatabaseController implements DatabaseInterface {
 
 
   public ArrayList<Point> fuzzySearchPoints(String searchTerm) {
+    long startTime = System.nanoTime();
+
     ArrayList<Point> candidates = new ArrayList<Point>();
     LinkedHashMap<Point,Integer> my_map = new LinkedHashMap<Point,Integer>();
-    ArrayList<Point> named_points = getNamedPoints();
+    ArrayList<Point> named_points = getLocalNamedPoints();
+//    ArrayList<Point> named_points = getNamedPoints(); slow af
 //    Soundex soundex = new Soundex();
 //    System.out.println("here");
 
@@ -924,20 +933,33 @@ public class DatabaseController implements DatabaseInterface {
       ArrayList<String> names = p.getNames();
       ArrayList<String> lc_names = new ArrayList<String>();
       ArrayList<Integer> distances = new ArrayList<Integer>();
-      for(int i = 0;i < names.size();i++){
+      long startTime2 = System.nanoTime();
+      int i;
+      for(i = 0;i < names.size();i++){
         lc_names.add(names.get(i).toLowerCase());
         if(StringUtils.containsAny(lc_names.get(i),searchTerm)){
           worthit = true;
           distances.add(StringUtils.getLevenshteinDistance(lc_names.get(i),searchTerm));
         }
       }
+      long endTime2 = System.nanoTime();
+      long duration2 = endTime2 - startTime2;
+      System.out.println("duration point first nested loop, counter: " +  duration2 + " " + i);
+
       if (worthit) {
         int value = distances.get(0);
-        for(int i = 0;i < distances.size();i++){
+        long startTime3 = System.nanoTime();
+        int k;
+        for(k = 0;i < distances.size();i++){
           if(distances.get(i) < value){
             value = distances.get(i);
           }
         }
+        long endTime3 = System.nanoTime();
+        long duration3 = endTime3 - startTime3;
+        System.out.println("duration point first nested loop, counter: " +  duration3 + " " + i);
+
+
         my_map.put(p,value);
         System.out.println("here, value, id: " + value + " " + p.getId());
 
@@ -962,7 +984,31 @@ public class DatabaseController implements DatabaseInterface {
 
     System.out.println("size : " + candidates.size());
 
+    long endTime = System.nanoTime();
+    long duration = endTime - startTime;
+    System.out.println("duration point: " +  duration);
     return candidates;
+  }
+
+  /**
+   * A much faster search for named points. Doesn't contact the database!
+   * @author backslash166
+   * @return ArrayList\<Point> The list of points which have names
+   */
+  private ArrayList<Point> getLocalNamedPoints() {
+    ArrayList<Point> named_points = new ArrayList<Point>();
+    if(localPoints.size()>0) {
+      for (Point p : localPoints) {
+        if (p.getName() != null) {
+          String name = p.getName();
+          if (!name.equals("") && !name.equals("null") && !name.equals("ELEVATOR")) {
+            //the point is named
+            named_points.add(p);
+          }
+        }
+      }
+    }
+    return named_points;
   }
 
 
