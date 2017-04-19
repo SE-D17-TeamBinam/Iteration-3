@@ -51,7 +51,7 @@ public class DatabaseController implements DatabaseInterface {
 
   public boolean removePhysician(long pid) {
     dbc.send_Command(
-        "delete from physician where PID = " + pid + ")"
+        "delete from physician where PID = " + pid
     );
 
     //ArrayList<Physician> new_physicians = localPhysicians;
@@ -142,11 +142,11 @@ public class DatabaseController implements DatabaseInterface {
 
     dbc.send_Command(
         "update physician SET first_name = '" + first_name + "', last_name =  '" + last_name
-            + "', title  =  '" + title + "' WHERE PID = " + PID + ")"
+            + "', title  =  '" + title + "' WHERE PID = " + PID
     );
 
     dbc.send_Command(
-        "delete from physician_location WHERE PID_ph = " + PID + ")"
+        "delete from physician_location WHERE PID_ph = " + PID
     );
 
     int i;
