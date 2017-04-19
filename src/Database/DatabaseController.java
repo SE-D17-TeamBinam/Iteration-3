@@ -12,6 +12,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.language.Soundex;
 import java.sql.ResultSet;
@@ -209,7 +212,12 @@ public class DatabaseController implements DatabaseInterface {
 
     } catch (SQLException e) {
       //e.printStackTrace();
-      System.out.println("error getting fake physcians from DB; Query Erro: " + e.getMessage());
+      System.out.println("error getting fake physcians from DB; Query Error: " + e.getMessage());
+      Alert alert = new Alert(AlertType.ERROR, "Message. Bad Things Happened! : " + "DB ERROR: error while trying to retrieve a physician"); //can add buttons if you want, or change to different popup types
+      alert.showAndWait(); //this puts it in focus
+      if (alert.getResult() == ButtonType.YES) {
+        //do stuff, if neccesary, else, delete
+      }
     }
 
     return my_p;
@@ -494,6 +502,11 @@ public class DatabaseController implements DatabaseInterface {
     } catch (SQLException e) {
       // e.printStackTrace();
       System.out.println("error getting fake points from DB; Query Error: " + e.getMessage());
+      Alert alert = new Alert(AlertType.ERROR, "Message. Bad Things Happened! : " + "DB ERROR: error while trying to retrieve a point"); //can add buttons if you want, or change to different popup types
+      alert.showAndWait(); //this puts it in focus
+      if (alert.getResult() == ButtonType.YES) {
+        //do stuff, if neccesary, else, delete
+      }
 
     }
 
@@ -633,6 +646,11 @@ public class DatabaseController implements DatabaseInterface {
       result = compare_points_lists(db_points, localPoints);
     } catch (SQLException e) {
       System.out.println("Cannot complete verification of points, querry/connection error");
+      Alert alert = new Alert(AlertType.ERROR, "Message. Bad Things Happened! : " + "DB ERROR: Cannot complete verification of points, querry/connection error"); //can add buttons if you want, or change to different popup types
+      alert.showAndWait(); //this puts it in focus
+      if (alert.getResult() == ButtonType.YES) {
+        //do stuff, if neccesary, else, delete
+      }
       e.printStackTrace();
       return false;
     }
@@ -647,6 +665,11 @@ public class DatabaseController implements DatabaseInterface {
       result = compare_physicians_lists(db_physicians, localPhysicians);
     } catch (SQLException e) {
       System.out.println("Cannot complete verification of physicians, query/connection error");
+      Alert alert = new Alert(AlertType.ERROR, "Message. Bad Things Happened! : " + "DB ERROR: Cannot complete verification of physicians, querry/connection error"); //can add buttons if you want, or change to different popup types
+      alert.showAndWait(); //this puts it in focus
+      if (alert.getResult() == ButtonType.YES) {
+        //do stuff, if neccesary, else, delete
+      }
       e.printStackTrace();
       return false;
     }
@@ -702,6 +725,11 @@ public class DatabaseController implements DatabaseInterface {
       //e.printStackTrace();
       System.out
           .println("failed to transfer local physicians copy to DB; Error: " + e.getMessage());
+      Alert alert = new Alert(AlertType.ERROR, "Message. Bad Things Happened! : " + "DB ERROR: failed to transfer local physicians copy to DB; Error: " + e.getMessage()); //can add buttons if you want, or change to different popup types
+      alert.showAndWait(); //this puts it in focus
+      if (alert.getResult() == ButtonType.YES) {
+        //do stuff, if neccesary, else, delete
+      }
     }
     progressBarPercentage = 1;
   }
@@ -714,6 +742,11 @@ public class DatabaseController implements DatabaseInterface {
     try {
       load();
     } catch (SQLException e) {
+      Alert alert = new Alert(AlertType.ERROR, "Message. Bad Things Happened! : " + "DB ERROR: failed to load in getNamedPoints method: " + e.getMessage()); //can add buttons if you want, or change to different popup types
+      alert.showAndWait(); //this puts it in focus
+      if (alert.getResult() == ButtonType.YES) {
+        //do stuff, if neccesary, else, delete
+      }
       e.printStackTrace();
     }
     System.out.println("trying to get Points with names");
@@ -743,6 +776,11 @@ public class DatabaseController implements DatabaseInterface {
       System.out.println(
           "Error Getting Data From The Database, failed to load, will return DB local points copy \n Query/Connection Error : "
               + e.getMessage());
+      Alert alert = new Alert(AlertType.ERROR, "Message. Bad Things Happened! : " + "DB ERROR:  failed to load, will return DB local points copy \n Query/Connection Error " + e.getMessage()); //can add buttons if you want, or change to different popup types
+      alert.showAndWait(); //this puts it in focus
+      if (alert.getResult() == ButtonType.YES) {
+        //do stuff, if neccesary, else, delete
+      }
     }
     return localPoints;
   }
@@ -771,6 +809,12 @@ public class DatabaseController implements DatabaseInterface {
       System.out.println(
           "Error Getting Data From The Database, failed to load, will return DB local physicians copy \n Query/Connection Error : "
               + e.getMessage());
+      Alert alert = new Alert(AlertType.ERROR, "Message. Bad Things Happened! : " + "DB ERROR:  failed to load, will return DB local physicians copy \n Query/Connection Error " + e.getMessage()); //can add buttons if you want, or change to different popup types
+      alert.showAndWait(); //this puts it in focus
+      if (alert.getResult() == ButtonType.YES) {
+        //do stuff, if neccesary, else, delete
+      }
+
       //e.printStackTrace();
     }
     return localPhysicians;

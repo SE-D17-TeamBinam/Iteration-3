@@ -7,6 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 
 /**
  * Registers, Connects to, and sends commands to a database
@@ -34,6 +37,13 @@ public class DatabaseDriver {
         System.out.println(e.getMessage());
       }
     } catch (ClassNotFoundException e) {
+      Alert alert = new Alert(AlertType.ERROR, "Message. Bad Things Happened! :" + "\u001B[31m"
+          + "Could not find Database Driver Jar File, make sure you add it to the classpath!"
+          + "\u001B[30m"); //can add buttons if you want, or change to different popup types
+      alert.showAndWait(); //this puts it in focus
+      if (alert.getResult() == ButtonType.YES) {
+        //do stuff, if neccesary, else, delete
+      }
       System.out.println("\u001B[31m"
           + "Could not find Database Driver Jar File, make sure you add it to the classpath!"
           + "\u001B[30m");
@@ -66,6 +76,11 @@ public class DatabaseDriver {
             stmt.execute(command);
           } catch (SQLException e2) {
             System.out.println(e2.getMessage());
+            Alert alert = new Alert(AlertType.ERROR, "Message. Bad Things Happened! : " + "DB ERROR: probably a misformed sql command"); //can add buttons if you want, or change to different popup types
+            alert.showAndWait(); //this puts it in focus
+            if (alert.getResult() == ButtonType.YES) {
+              //do stuff, if neccesary, else, delete
+            }
           }
         }
       }
