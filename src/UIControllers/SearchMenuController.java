@@ -260,4 +260,17 @@ public class SearchMenuController extends CentralUIController implements Initial
   public void clear () {
     SearchField.setText("");
   }
+
+  public void viewMap () {
+    if (searchMode == 1 && RoomDirectory.getSelectionModel().getSelectedItem() != null) {
+      Stage primaryStage = (Stage) anchorPane.getScene().getWindow();
+      try {
+        searchingPoint = RoomDirectory.getSelectionModel().getSelectedItem();
+        loadScene(primaryStage, "/MapScene.fxml");
+      } catch (Exception e) {
+        System.out.println("Cannot load main menu");
+        e.printStackTrace();
+      }
+    }
+  }
 }
