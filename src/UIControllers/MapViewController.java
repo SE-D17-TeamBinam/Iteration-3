@@ -212,16 +212,7 @@ public class MapViewController extends CentralUIController implements Initializa
   // Proxies the images for each floor
   private HashMap<Integer, Image> floorImages = new HashMap<Integer, Image>();
 
-  private Point startFocus;
   public boolean viewAll = true;
-  public MapViewController(Point startFocus){
-    viewAll = false;
-    this.startFocus = startFocus;
-  }
-
-  public MapViewController(){
-
-  }
 
 //  private HashMap<Point, String>
 
@@ -317,6 +308,7 @@ public class MapViewController extends CentralUIController implements Initializa
     initializeMapImage();
     initializeUserPane();
     initializeSearchChoices();
+    resultsList.setPrefHeight(userPaneRectangle.getHeight() - searchPaneVBox.getLayoutY() - resultsList.getLayoutY() - searchGoButton.getPrefHeight() - 5);
     // Adds a circle to show where the mouse is on the map
   }
 
@@ -325,6 +317,8 @@ public class MapViewController extends CentralUIController implements Initializa
         new KeyFrame(Duration.millis(1), new EventHandler<ActionEvent>() {
           @Override
           public void handle(ActionEvent event) {
+
+            resultsList.setPrefHeight(userPaneRectangle.getHeight() - searchPaneVBox.getLayoutY() - resultsList.getLayoutY() - searchGoButton.getHeight() - 5);
             double x = userPane.getLayoutX();
             if (x < userPaneTargetX) {
               userPane.setLayoutX(x + 1);
@@ -912,12 +906,11 @@ public class MapViewController extends CentralUIController implements Initializa
 
 
   private void getMap() {
-    if(viewAll) {
       allPoints = database.getPoints();
       docs = database.getPhysicians();
-    }else{
-      allPoints = new ArrayList<Point>();
-      allPoints.add(startFocus);
+    if(searchingPoint != null) {
+      setPointFocus(searchingPoint);
+      searchingPoint = null;
     }
   }
 
@@ -1172,7 +1165,7 @@ public class MapViewController extends CentralUIController implements Initializa
       for (String s : directions) {
         out += s + ", ";
       }
-      textDirectionsBox.setText(out);
+      textDirectionsBox.setText(out.substring(0, out.length()-2));
       textDirectionsBox.setVisible(true);
     }
   }
