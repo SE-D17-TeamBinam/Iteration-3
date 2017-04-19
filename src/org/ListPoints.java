@@ -177,7 +177,7 @@ public class ListPoints {
     }
     try{
       for(Point goal : this.points){
-        Astar(p, goal);
+        executeStrategy(p, goal);
       }
     } catch (NoPathException e){
       throw new DisconnectedNodeException(p);
