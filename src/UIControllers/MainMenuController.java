@@ -30,6 +30,8 @@ public class MainMenuController extends CentralUIController implements Initializ
   private AnchorPane anchorPane;
   @FXML
   private ImageView MainKey;
+  @FXML
+  private ImageView InfoButton;
 
   @FXML
   private Button MapButton;
@@ -46,25 +48,29 @@ public class MainMenuController extends CentralUIController implements Initializ
     addResolutionListener(anchorPane);
     setBackground(anchorPane);
     CentralController.resetSession();
+    applyLanguageConfig();
+  }
+
+  public void applyLanguageConfig(){
     SearchLabel.setText(dictionary.getString("Search", currSession.getLanguage()));
     MapLabel.setText(dictionary.getString("Map", currSession.getLanguage()));
   }
 
   @Override
   public void customListenerX () {
-    MapLabel.setLayoutX(5*(x_res/7) - 95);
-    MapButton.setLayoutX(5*(x_res/7) - 175);
-    SearchButton.setLayoutX(2*(x_res/7) - 175);
-    MainKey.setLayoutX(x_res - MainKey.getFitWidth());
-    SearchLabel.setLayoutX(2*(x_res/7) - 95);
+    MapLabel.setLayoutX(5*(x_res/7) - MapLabel.getPrefWidth()/2);
+    MapButton.setLayoutX(5*(x_res/7) - MapButton.getPrefWidth()/2);
+    SearchButton.setLayoutX(2*(x_res/7) - SearchButton.getPrefWidth()/2);
+    MainKey.setLayoutX(x_res - MainKey.getFitWidth() - 10);
+    SearchLabel.setLayoutX(2*(x_res/7) - SearchLabel.getPrefWidth()/2);
   }
 
   @Override
   public void customListenerY () {
-    MainKey.setLayoutY(y_res - MainKey.getFitHeight());
-    MapButton.setLayoutY(6*(y_res/11) - 160);
+    MainKey.setLayoutY(y_res - MainKey.getFitHeight() - 10);
+    MapButton.setLayoutY(6*(y_res/11) - MapButton.getPrefHeight()/2);
     MapLabel.setLayoutY(6*(y_res/11) + 100);
-    SearchButton.setLayoutY(6*(y_res/11) - 160);
+    SearchButton.setLayoutY(6*(y_res/11) - SearchButton.getPrefHeight()/2);
     SearchLabel.setLayoutY(6*(y_res/11) + 100);
     langBox.setLayoutY(y_res - 50);
   }
@@ -91,6 +97,14 @@ public class MainMenuController extends CentralUIController implements Initializ
     Stage primaryStage = (Stage) MainMenu.getScene().getWindow();
     try {
       loadScene(primaryStage, "/AdminLogin.fxml");
+    } catch (Exception e) {
+    }
+  }
+
+  public void gotoAbout() {
+    Stage primaryStage = (Stage) MainMenu.getScene().getWindow();
+    try {
+      loadScene(primaryStage, "/AboutPage.fxml");
     } catch (Exception e) {
     }
   }

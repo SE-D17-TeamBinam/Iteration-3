@@ -1,99 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1300.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UIControllers.DirectEditController">
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1300.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UIControllers.DirectEditController">
    <children>
       <Pane fx:id="DirectEdit" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750" prefWidth="1300" style="-fx-background-color: transparent;">
          <children>
-            <Button fx:id="DirectBack" layoutX="5.0" layoutY="5.0" mnemonicParsing="false" onMouseClicked="#back" prefHeight="75.0" prefWidth="150.0" text="&lt;- Back">
-               <font>
-                  <Font size="26.0" />
-               </font>
-            </Button>
-            <ListView fx:id="Directory" layoutX="80.0" layoutY="216.0" prefHeight="475.0" prefWidth="523.0" />
-            <TextField fx:id="LastName" layoutX="779.0" layoutY="215.0" prefHeight="28.0" prefWidth="230.0">
+            <TextField fx:id="LastName" layoutX="141.0" layoutY="191.0" prefHeight="44.0" prefWidth="284.0">
                <font>
                   <Font size="20.0" />
                </font>
             </TextField>
-            <TextField fx:id="FirstName" layoutX="779.0" layoutY="285.0" prefHeight="28.0" prefWidth="230.0">
+            <TextField fx:id="FirstName" layoutX="141.0" layoutY="261.0" prefHeight="44.0" prefWidth="284.0">
                <font>
                   <Font size="20.0" />
                </font>
             </TextField>
-            <TextField fx:id="Title" layoutX="779.0" layoutY="355.0" prefHeight="28.0" prefWidth="230.0">
+            <TextField fx:id="Title" layoutX="141.0" layoutY="331.0" prefHeight="44.0" prefWidth="284.0">
                <font>
                   <Font size="20.0" />
                </font>
             </TextField>
-            <Label fx:id="DirectFirstName" alignment="CENTER_RIGHT" layoutX="622.0" layoutY="220.0" prefHeight="30.0" prefWidth="141.0" text="Last Name" textAlignment="RIGHT">
+            <Label fx:id="DirectFirstName" alignment="CENTER_RIGHT" layoutX="14.0" layoutY="196.0" prefHeight="30.0" prefWidth="111.0" text="Last Name" textAlignment="RIGHT">
                <font>
-                  <Font size="20.0" />
+                  <Font name="Times New Roman" size="20.0" />
                </font>
             </Label>
-            <Label fx:id="DirectLastName" alignment="CENTER_RIGHT" layoutX="622.0" layoutY="290.0" prefHeight="30.0" prefWidth="141.0" text="First Name" textAlignment="RIGHT">
+            <Label fx:id="DirectLastName" alignment="CENTER_RIGHT" layoutX="14.0" layoutY="266.0" prefHeight="30.0" prefWidth="111.0" text="First Name" textAlignment="RIGHT">
                <font>
-                  <Font size="20.0" />
+                  <Font name="Times New Roman" size="20.0" />
                </font>
             </Label>
-            <Label fx:id="DirectTitle" alignment="CENTER_RIGHT" layoutX="622.0" layoutY="360.0" prefHeight="30.0" prefWidth="141.0" text="Title" textAlignment="RIGHT">
+            <Label fx:id="DirectTitle" alignment="CENTER_RIGHT" layoutX="14.0" layoutY="336.0" prefHeight="30.0" prefWidth="111.0" text="Title" textAlignment="RIGHT">
                <font>
-                  <Font size="20.0" />
+                  <Font name="Times New Roman" size="20.0" />
                </font>
             </Label>
-            <Label fx:id="DirectLocations" alignment="CENTER_RIGHT" layoutX="622.0" layoutY="430.0" prefHeight="30.0" prefWidth="141.0" text="Locations" textAlignment="RIGHT">
+            <Label fx:id="DirectLocations" alignment="CENTER_RIGHT" layoutX="14.0" layoutY="406.0" prefHeight="30.0" prefWidth="111.0" text="Locations" textAlignment="RIGHT">
                <font>
-                  <Font size="20.0" />
+                  <Font name="Times New Roman" size="20.0" />
                </font>
             </Label>
-            <Button fx:id="DirectLogoff" layoutX="1145.0" layoutY="5.0" mnemonicParsing="false" onMouseClicked="#logoff" prefHeight="75.0" prefWidth="150.0" text="Log off">
+            <Label fx:id="DirectSave" alignment="CENTER" layoutX="1152.0" layoutY="600.0" mnemonicParsing="false" onMouseClicked="#save" prefHeight="48.0" prefWidth="111.0" style="-fx-background-color: #3255bc;" text="Save" textFill="WHITE">
                <font>
-                  <Font size="26.0" />
+                  <Font name="Times New Roman" size="20.0" />
                </font>
-            </Button>
-            <Button fx:id="DirectSave" layoutX="1127.0" layoutY="576.0" mnemonicParsing="false" onMouseClicked="#save" prefHeight="48.0" prefWidth="111.0" text="Save">
+            </Label>
+            <Label fx:id="DirectCancel" alignment="CENTER" layoutX="1152.0" layoutY="660.0" mnemonicParsing="false" onMouseClicked="#cancel" prefHeight="48.0" prefWidth="111.0" style="-fx-background-color: #3255bc;" text="Cancel" textFill="WHITE">
                <font>
-                  <Font size="20.0" />
+                  <Font name="Times New Roman" size="20.0" />
                </font>
-            </Button>
-            <Button fx:id="DirectCancel" layoutX="1127.0" layoutY="646.0" mnemonicParsing="false" onMouseClicked="#cancel" prefHeight="48.0" prefWidth="111.0" text="Cancel">
+            </Label>
+            <Label fx:id="DirectCreate" alignment="CENTER" layoutX="1152.0" layoutY="480.0" mnemonicParsing="false" onMouseClicked="#create" prefHeight="48.0" prefWidth="111.0" style="-fx-background-color: #3255bc;" text="Create" textFill="WHITE">
                <font>
-                  <Font size="20.0" />
+                  <Font name="Times New Roman" size="20.0" />
                </font>
-            </Button>
-            <Button fx:id="DirectCreate" layoutX="1127.0" layoutY="436.0" mnemonicParsing="false" onMouseClicked="#create" prefHeight="48.0" prefWidth="111.0" text="Create">
+            </Label>
+            <Label fx:id="DirectDelete" alignment="CENTER" layoutX="1152.0" layoutY="540.0" mnemonicParsing="false" onMouseClicked="#delete" prefHeight="48.0" prefWidth="111.0" style="-fx-background-color: #3255bc;" text="Delete" textFill="WHITE">
                <font>
-                  <Font size="20.0" />
+                  <Font name="Times New Roman" size="20.0" />
                </font>
-            </Button>
-            <Button fx:id="DirectDelete" layoutX="1127.0" layoutY="506.0" mnemonicParsing="false" onMouseClicked="#delete" prefHeight="48.0" prefWidth="111.0" text="Delete">
+            </Label>
+            <ListView fx:id="Locations" layoutX="141.0" layoutY="401.0" prefHeight="308.0" prefWidth="284.0" />
+            <TableView fx:id="Directory" editable="true" layoutX="466.0" layoutY="236.0" prefHeight="473.0" prefWidth="670.0">
+              <columns>
+                <TableColumn fx:id="firstNameField" prefWidth="150.0" text="First Name" />
+                <TableColumn fx:id="lastNameField" prefWidth="150.0" text="Last Name" />
+                 <TableColumn fx:id="titleField" prefWidth="150.0" text="Title" />
+                 <TableColumn fx:id="locationsField" minWidth="0.0" prefWidth="200.0" text="Locations" />
+              </columns>
+            </TableView>
+            <Label fx:id="DirectBack" alignment="CENTER" layoutX="12.0" layoutY="12.0" onMouseClicked="#back" prefHeight="60.0" prefWidth="134.0" style="-fx-background-color: #3255bc;" text="Back" textFill="WHITE">
                <font>
-                  <Font size="20.0" />
+                  <Font name="Times New Roman" size="24.0" />
                </font>
-            </Button>
-            <Button fx:id="DirectEditMap" layoutX="1089.0" layoutY="209.0" mnemonicParsing="false" onMouseClicked="#editMap" prefHeight="64.0" prefWidth="149.0" text="Edit Map">
+            </Label>
+            <Label fx:id="AddLocation" alignment="CENTER" layoutX="57.0" layoutY="464.0" onMouseClicked="#addLocation" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #3255bc;" text="+" textFill="WHITE">
                <font>
-                  <Font size="20.0" />
+                  <Font name="Times New Roman Bold" size="20.0" />
                </font>
-            </Button>
-            <ListView fx:id="Locations" layoutX="779.0" layoutY="425.0" prefHeight="269.0" prefWidth="230.0" />
-            <Button fx:id="AddLocation" layoutX="1025.0" layoutY="435.0" mnemonicParsing="false" onMouseClicked="#addLocation" prefHeight="45.0" prefWidth="45.0" text="+">
+            </Label>
+            <Label fx:id="RemoveLocation" alignment="CENTER" layoutX="57.0" layoutY="521.0" onMouseClicked="#removeLocation" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #3255bc;" text="-" textFill="WHITE">
+            	<font>
+                  <Font name="Times New Roman Bold" size="20.0" />
+               </font>
+           </Label>
+            <Pane fx:id="DirectSearchPane" layoutX="465.0" layoutY="191.0" prefHeight="44.0" prefWidth="304.0">
+               <children>
+                  <TextField fx:id="DirectSearch" layoutX="61.0" />
+                  <Label layoutY="4.0" text="Search:" />
+                  <ImageView fx:id="DirectClear" fitHeight="25.0" fitWidth="25.0" layoutX="259.0" layoutY="2.0" onMouseClicked="#clearSearch" opacity="0.7" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@icons/x.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Pane>
+            <Label fx:id="DirectLogoff" alignment="CENTER" layoutX="1152.0" layoutY="14.0" onMouseClicked="#logoff" prefHeight="60.0" prefWidth="134.0" style="-fx-background-color: #3255bc;" text="Log off" textFill="WHITE">
                <font>
-                  <Font size="20.0" />
+                  <Font name="Times New Roman" size="24.0" />
                </font>
-            </Button>
-            <Button fx:id="RemoveLocation" layoutX="1025.0" layoutY="492.0" mnemonicParsing="false" onMouseClicked="#removeLocation" prefHeight="45.0" prefWidth="45.0" text="-">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Button>
+            </Label>
          </children>
       </Pane>
    </children>
