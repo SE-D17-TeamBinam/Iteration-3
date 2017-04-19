@@ -26,9 +26,10 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class DatabaseController implements DatabaseInterface {
 
-  private static final int fuzzySearchThreshold = 10;
+  private static final int fuzzySearchThreshold = 2;
   private static final int fuzzySearchLimit = 20;
   SaveThread saveThread;
+  LoadThread loadThread;
   public double progressBarPercentage = 0;
   ArrayList<Point> localPoints;
   ArrayList<Physician> localPhysicians;
@@ -41,6 +42,7 @@ public class DatabaseController implements DatabaseInterface {
     this.localPoints = new ArrayList<Point>();
     this.dbc = _dbc;
     saveThread = new SaveThread(this);
+    loadThread = new LoadThread(this);
   }
 
   ///////////////////////////
@@ -667,7 +669,7 @@ public class DatabaseController implements DatabaseInterface {
 
   @Override
   public void load() throws SQLException {
-    System.out.println("loading physicians and points from DB to local copies ");
+//    loadThread.start();
     localPoints = getAllPoints();
     localPhysicians = getAllPhysicians();
     progressBarPercentage = 1;
@@ -700,7 +702,7 @@ public class DatabaseController implements DatabaseInterface {
 
   @Override
   public ArrayList<Point> getNamedPoints() {
-    while (saveThread.running) {
+    while (saveThread.running || loadThread.running) {
       ;
     }
     try {
@@ -724,7 +726,7 @@ public class DatabaseController implements DatabaseInterface {
 
   @Override
   public ArrayList<Point> getPoints() {
-    while (saveThread.running) {
+    while (saveThread.running || loadThread.running) {
       ;
     }
     try {
@@ -741,7 +743,7 @@ public class DatabaseController implements DatabaseInterface {
 
   @Override
   public void setPoints(ArrayList<Point> points) {
-    while (saveThread.running) {
+    while (saveThread.running || loadThread.running) {
       ;
     }
     System.out.println("Setting the DB local points copy");
@@ -752,7 +754,7 @@ public class DatabaseController implements DatabaseInterface {
 
   @Override
   public ArrayList<Physician> getPhysicians() {
-    while (saveThread.running) {
+    while (saveThread.running || loadThread.running) {
       ;
     }
     try {
@@ -769,7 +771,7 @@ public class DatabaseController implements DatabaseInterface {
 
   @Override
   public void setPhysicians(ArrayList<Physician> physicians) {
-    while (saveThread.running) {
+    while (saveThread.running || loadThread.running) {
       ;
     }
     System.out.println("Setting the DB local physicians copy");
@@ -787,7 +789,7 @@ public class DatabaseController implements DatabaseInterface {
   public ArrayList<Physician> fuzzySearchPhysicians(String searchTerm) {
     ArrayList<Physician> candidates = new ArrayList<Physician>();
     LinkedHashMap<Physician,Integer> my_map = new LinkedHashMap<Physician,Integer>();
-    Soundex soundex = new Soundex();
+//    Soundex soundex = new Soundex();
     System.out.println("here");
     for (Physician p : localPhysicians) {
       System.out.println("here");
