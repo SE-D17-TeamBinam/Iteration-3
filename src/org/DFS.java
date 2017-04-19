@@ -24,6 +24,7 @@ public class DFS extends PathfindingStrategy {
    */
   @Override
   public ArrayList<Point> execute(Point start, Point goal) throws NoPathException{
+    System.out.println("Using DFS");
     stack = new Stack();
     visited = new HashSet<>();
     Point currPoint;
@@ -55,5 +56,9 @@ public class DFS extends PathfindingStrategy {
       }
     }
     throw new NoPathException();
+  }
+
+  public String toString(){
+    return "DFS";
   }
 }

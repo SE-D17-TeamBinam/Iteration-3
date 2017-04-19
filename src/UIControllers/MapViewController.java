@@ -43,9 +43,14 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.Astar;
+import org.BFS;
+import org.CentralController;
+import org.DFS;
 import org.ElevatorPoint;
 import org.FindDirections;
 import org.ListPoints;
+import org.PathfindingStrategy;
 import org.Point;
 import org.StairPoint;
 
@@ -332,6 +337,25 @@ public class MapViewController extends CentralUIController implements Initializa
     setDirectionsOptions();
     resultsList.setPrefHeight(userPaneRectangle.getHeight() - searchPaneVBox.getLayoutY() - resultsList.getLayoutY() - searchGoButton.getPrefHeight() - 5);
     // Adds a circle to show where the mouse is on the map
+    initializePathFindingBox();
+  }
+
+  @FXML
+  private ChoiceBox pathFindingChoiceBox;
+
+  private void initializePathFindingBox(){
+    ArrayList<PathfindingStrategy> strats = new ArrayList<PathfindingStrategy>();
+    PathfindingStrategy as = new Astar();
+    strats.add(as);
+    strats.add(new DFS());
+    strats.add(new BFS());
+    pathFindingChoiceBox.getItems().setAll(strats);
+    pathFindingChoiceBox.getSelectionModel().selectedIndexProperty().addListener(
+        new ChangeListener<Number>() {
+          public void changed(ObservableValue ov, Number old_value, Number new_value) {
+            CentralController.getCurrSession().setAlgorithm ((PathfindingStrategy) pathFindingChoiceBox.getItems().get((int) new_value));
+          }
+        });
   }
 
   private boolean saving = false;
@@ -951,7 +975,12 @@ public class MapViewController extends CentralUIController implements Initializa
 
   private void getMap() {
       allPoints = database.getPoints();
-      docs = database.getPhysicians();
+      for(int i = 0;i < allPoints.size();i++){
+        System.out.println("id : " + allPoints.get(i).getId());
+        for(int k = 0;k < allPoints.get(i).getNeighbors().size();k++){
+          System.out.println("neighbor id : " + allPoints.get(i).getNeighbors().get(k).getId());
+        }
+      }
     if(searchingPoint != null) {
       setPointFocus(searchingPoint);
       searchingPoint = null;
@@ -1192,6 +1221,7 @@ public class MapViewController extends CentralUIController implements Initializa
   @FXML
   private void drawPathButtonClicked() {
     if (startPoint != null && endPoint != null) {
+      System.out.println(currSession.algorithm);
       pathfinding = true;
       saveButton.setDisable(true);
       goButton.setDisable(true);
@@ -1204,10 +1234,10 @@ public class MapViewController extends CentralUIController implements Initializa
       ArrayList<String> directions = td.getTextDirections(allPoints);
       String out = "";
       for (String s : directions) {
-        out += s + ", ";
+        out += s + ". ";
       }
       directionsPane.setVisible(true);
-      textDirectionsBox.setText(out.substring(0, out.length()-2));
+      textDirectionsBox.setText(out);
     }
   }
 
@@ -1391,7 +1421,6 @@ public class MapViewController extends CentralUIController implements Initializa
   private String searchString = "";
   private ArrayList<Point> results = new ArrayList<Point>();
   // allPoints
-  private ArrayList<Physician> docs;
 
 
   private void refreshListView() {
@@ -1424,11 +1453,15 @@ public class MapViewController extends CentralUIController implements Initializa
   @FXML
   private void searchGoButtonClicked(){
     Point selected = searchPoints.get(resultsList.getSelectionModel().getSelectedItem());
-    if(selected != null) {
-      floorChoiceBox.setValue(selected.getFloor());
-      System.out.println(selected.getNeighbors());
-      setPointFocus(selected);
-    }
+      int ind = allPoints.indexOf(selected);
+      if(ind >= 0) {
+        Point actual = allPoints.get(ind);
+        if (actual != null) {
+          floorChoiceBox.setValue(actual.getFloor());
+          setPointFocus(actual);
+        }
+      }
+
   }
 
   @FXML
@@ -1470,16 +1503,27 @@ public class MapViewController extends CentralUIController implements Initializa
     return out;
   }
 
+  private ArrayList<Point> filterPointList(ArrayList<Point> points){
+    ArrayList<Point> out = new ArrayList<Point>();
+    for(Point p : points){
+      if(p.getName() != null && !p.getName().equals("null") && !p.getName().equals("") && !p.getName().equals("ELEVATOR")){
+        out.add(p);
+      }
+    }
+    return out;
+  }
+
   private ArrayList<Point> searchAllPoints(String search) {
-    return searchPointList(search, allPoints);
+    return filterPointList(database.fuzzySearchPoints(search));
   }
 
   private ArrayList<Point> searchFloorPoints(String search){
-    return searchPointList(search, floorPoints);
+    return (new ListPoints(filterPointList(database.fuzzySearchPoints(search)))).getFloor((int)floorChoiceBox.getValue()).getPoints();
   }
 
   private ArrayList<Point> searchPhysicians(String search){
     ArrayList<Point> out = new ArrayList<Point>();
+    ArrayList<Physician> docs = database.fuzzySearchPhysicians(search);
     for(Physician p : docs){
       if(p.getFirstName().contains(search) || p.getLastName().contains(search) || p.getTitle().contains(search)){
         out.addAll(p.getLocations());

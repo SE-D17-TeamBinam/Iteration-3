@@ -26,7 +26,7 @@ public class BFS extends PathfindingStrategy{
    */
   @Override
   public ArrayList<Point> execute(Point start, Point goal) throws NoPathException {
-
+    System.out.println("Using BFS");
     // Used to denote the current node to enqueue neighbors.
     Point currPoint;
 
@@ -62,5 +62,8 @@ public class BFS extends PathfindingStrategy{
   }
 
 
+  public String toString(){
+    return "BFS";
+  }
 
 }
