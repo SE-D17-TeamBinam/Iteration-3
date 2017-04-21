@@ -768,7 +768,7 @@ public class DatabaseController implements DatabaseInterface {
     }
     if (diffPhysicians != null){
       for(Physician p : diffPhysicians){
-        System.out.println("Diff Physician updating " + p.getID());
+        System.out.println("Diff Physician updating " + p.getID() + ": " + p.getFirstName());
         this.removePhysician(p.getID());
         this.addPhysician(p);
       }
