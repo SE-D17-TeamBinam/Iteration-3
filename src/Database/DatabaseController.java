@@ -859,8 +859,8 @@ public class DatabaseController implements DatabaseInterface {
 
     localPoints = (ArrayList<Point>) points.clone();
     //save_and_verify();
-//    saveThread.start();
-    save();
+    saveThread.start();
+//    save();
     progressBarPercentage = 1;
   }
 
@@ -918,8 +918,8 @@ public class DatabaseController implements DatabaseInterface {
     localPhysicians = (ArrayList<Physician>) physicians.clone();
 
     //save_and_verify();
-//    saveThread.start();
-    save();
+    saveThread.start();
+//    save();
     progressBarPercentage = 1;
   }
 
