@@ -1,16 +1,18 @@
 package FileController;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.OutputStream;
+import java.io.StringWriter;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Properties;
 import org.Astar;
 import org.BFS;
-import org.CentralController;
 import org.DFS;
-import org.DataController;
 import org.ListPoints;
 import org.PathfindingStrategy;
 import org.Point;
@@ -23,6 +25,9 @@ public class SettingsIO {
   private String settingsLoc;
   private File settingsFile;
   private Properties settings;
+  private static final HashSet<String> SETTINGS_KEYS = new HashSet<>(Arrays.asList(
+      "startingKiosk", "algorithm", "timeoutLength", "fullscreen", "genericPointColor",
+      "stairPointColor", "elevatorPointColor"));
 
   public SettingsIO(String settingsLoc){
     this.settingsLoc = settingsLoc;
@@ -66,12 +71,34 @@ public class SettingsIO {
 
   public PathfindingStrategy getAlgorithm(){
     String strat = settings.getProperty("algorithm");
-    if(strat.equals("dfs")){
-      return new DFS();
-    } else if(strat.equals("bsf")){
-      return new BFS();
-    } else {
-      return new Astar();
+    switch (strat) {
+      case "dfs":
+        return new DFS();
+      case "bsf":
+        return new BFS();
+      default:
+        return new Astar();
     }
+  }
+
+  /**
+   * TODO(tom): Might be a good idea to move the writing to another function
+   * Update the settings file
+   * @param tag: the key in the settings folder
+   * @param value: the new setting value
+   * @return if the change was successful
+   */
+  public boolean updateSetting(String tag, String value){
+    if(!SETTINGS_KEYS.contains(tag)){
+      return false;
+    }
+    settings.setProperty(tag, value);
+    try{
+      StringWriter out = new StringWriter();
+      settings.store(out, settingsLoc);
+    } catch (IOException e) {
+      return false;
+    }
+    return true;
   }
 }
