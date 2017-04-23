@@ -768,7 +768,7 @@ public class DatabaseController implements DatabaseInterface {
     }
     if (diffPhysicians != null){
       for(Physician p : diffPhysicians){
-        System.out.println("Diff Physician updating " + p.getID());
+        System.out.println("Diff Physician updating " + p.getID() + ": " + p.getFirstName());
         this.removePhysician(p.getID());
         this.addPhysician(p);
       }
@@ -859,8 +859,8 @@ public class DatabaseController implements DatabaseInterface {
 
     localPoints = (ArrayList<Point>) points.clone();
     //save_and_verify();
-//    saveThread.start();
-    save();
+    saveThread.start();
+//    save();
     progressBarPercentage = 1;
   }
 
@@ -918,8 +918,8 @@ public class DatabaseController implements DatabaseInterface {
     localPhysicians = (ArrayList<Physician>) physicians.clone();
 
     //save_and_verify();
-//    saveThread.start();
-    save();
+    saveThread.start();
+//    save();
     progressBarPercentage = 1;
   }
 

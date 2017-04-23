@@ -67,10 +67,12 @@ public class Point {
 
   //Methods
   public void connectTo(Point node) {
-    if (!node.getNeighbors().contains(this))
+    if (!node.getNeighbors().contains(this)) {
       node.getNeighbors().add(this);
-    if (!this.getNeighbors().contains(node))
+    }
+    if (!this.getNeighbors().contains(node)) {
       this.neighbors.add(node);
+    }
   }
 
   public void severFrom(Point point) {
@@ -182,15 +184,16 @@ public class Point {
   /**
    * TimeDistance is just like Distance but it returns the double type instead of int
    * <p>
-   *   creates the distance by using the pythagorean theorem between two coordinates
+   * creates the distance by using the pythagorean theorem between two coordinates
    * </p>
-   * @param End  - Point type that always has an X,Y coordinate
-   * @return  Double
+   *
+   * @param End - Point type that always has an X,Y coordinate
+   * @return Double
    */
   public double TimeDistance(Point End) {//Straight Line Distance
     double x = End.xCoord - this.xCoord;
     double y = End.yCoord - this.yCoord;
-    return  Math.sqrt(x * x + y * y);
+    return Math.sqrt(x * x + y * y);
   }
 
   public void setID(int ID) {
@@ -229,7 +232,39 @@ public class Point {
 
   @Override
   public boolean equals(Object obj) {
-    if (obj == null)
+    if (obj == null || (obj.getClass() != Point.class && obj.getClass() != ElevatorPoint.class)) {
+      return false; // if obj is not the right class then just say no
+    }
+    FakePoint pobj = new FakePoint((Point) obj);
+    FakePoint pthis = new FakePoint(this); // convert to FakePoints to make comparing neighbors easier
+    if (pobj.getName().equals(pthis.getName()) && pobj.getId() == pthis.getId()
+        && pobj.getXCoord() == pthis.getXCoord() && pobj.getYCoord() == pthis.getYCoord()
+        && pobj.getFloor() == pthis.getFloor() && pobj.getNeighbors().size() == pthis.getNeighbors().size()){ // if all single value attributes and the size of the neighbor list
+      for (int i = 0; i < pthis.getNeighbors().size(); i++){ // for all neighbors
+        if (!pobj.getNeighbors().contains(pthis.getNeighbors().get(i))) // if the neighbor is not in the other list of neighbors
+          return false;
+      }
+      return true; // if all the neighbors were good
+    }
+    return false; // if an attribute was wrong then return false
+  }
+
+
+  @Override
+  public Object clone() {
+    return new Point(xCoord, yCoord, names, id, neighbors, floor);
+  }
+}
+
+//  int xCoord;    //X coordinate
+//  int yCoord;    //Y coordinate
+//  ArrayList<String> names;  //Name of the room
+//  int id;      //Unique Identifier
+//  int floor;
+//  public ArrayList<Point> neighbors = new ArrayList<>();
+
+/*
+if (obj == null)
       return false;
     if (obj.getClass() != this.getClass())
       return super.equals(obj);
@@ -260,18 +295,4 @@ public class Point {
       return true;
     }
     return false;
-  }
-
-
-  @Override
-  public Object clone()  {
-    return new Point(xCoord,yCoord,names,id,neighbors, floor);
-  }
-}
-
-//  int xCoord;    //X coordinate
-//  int yCoord;    //Y coordinate
-//  ArrayList<String> names;  //Name of the room
-//  int id;      //Unique Identifier
-//  int floor;
-//  public ArrayList<Point> neighbors = new ArrayList<>();
+ */
