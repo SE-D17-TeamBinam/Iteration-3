@@ -53,8 +53,10 @@ public class Astar extends PathfindingStrategy {
         }
 
         for (int j = 0; j < next.neighbors.size(); j++ ){ //searching through neighbors
-
-          if(open.contains(next.neighbors.get(j))){ // visited but seen
+          if(next.neighbors.get(j).isBlocked){
+            //doesnt update!!!
+          }
+          else if(open.contains(next.neighbors.get(j))){ // visited but seen
             if (next.neighbors.get(j).cost < next.cost){ // successor cost <= current cost
 
               next.neighbors.get(j).cost = next.cost + next.Distance(next.neighbors.get(j)); //update cost
