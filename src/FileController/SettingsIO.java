@@ -6,8 +6,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
+import org.Astar;
+import org.BFS;
+import org.CentralController;
+import org.DFS;
 import org.DataController;
 import org.ListPoints;
+import org.PathfindingStrategy;
 import org.Point;
 
 /**
@@ -49,4 +54,24 @@ public class SettingsIO {
     throw new DefaultKioskNotInMemoryException(kioskID);
   }
 
+  public boolean fullscreenPreference(){
+    boolean fs = Boolean.parseBoolean(settings.getProperty("fullscreen", "false"));
+    return fs;
+  }
+
+  public int getTimeout(){
+    return Integer.parseInt(settings.getProperty("timeoutLength"));
+  }
+
+
+  public PathfindingStrategy getAlgorithm(){
+    String strat = settings.getProperty("algorithm");
+    if(strat.equals("dfs")){
+      return new DFS();
+    } else if(strat.equals("bsf")){
+      return new BFS();
+    } else {
+      return new Astar();
+    }
+  }
 }
