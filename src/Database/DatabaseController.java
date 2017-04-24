@@ -923,6 +923,7 @@ public class DatabaseController implements DatabaseInterface {
         diffPhysicians.remove(i);
         i--;
       }
+      progressBarPercentage = .25*i/diffPhysicians.size();
     }
     System.out.println(diffPhysicians);
     remPhysicians = new ArrayList<Physician>(localPhysicians);
@@ -931,6 +932,7 @@ public class DatabaseController implements DatabaseInterface {
         remPhysicians.remove(i);
         i--;
       }
+      progressBarPercentage = .25 + .25*i/remPhysicians.size();
     }
 
     System.out.println("Setting the DB local physicians copy");
