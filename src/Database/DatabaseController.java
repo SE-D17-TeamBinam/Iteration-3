@@ -804,7 +804,18 @@ public class DatabaseController implements DatabaseInterface {
       }
     }
 
-    return namedPoints;
+    ListPoints lp = new ListPoints(namedPoints);
+    ListPoints lp2 = lp.deepClone();
+    ArrayList<Point> copy = new ArrayList<Point>();
+    for (Point p : lp2.getPoints()){
+      if (p.getName().equals("ELEVATOR")){
+        copy.add(toElevatorPoint(p));
+      }
+      else{
+        copy.add(p);
+      }
+    }
+    return copy;
   }
 
   @Override
@@ -828,8 +839,16 @@ public class DatabaseController implements DatabaseInterface {
     }
     ListPoints lp = new ListPoints(localPoints);
     ListPoints lp2 = lp.deepClone();
-
-    return lp2.getPoints();
+    ArrayList<Point> copy = new ArrayList<Point>();
+    for (Point p : lp2.getPoints()){
+      if (p.getName().equals("ELEVATOR")){
+        copy.add(toElevatorPoint(p));
+      }
+      else{
+        copy.add(p);
+      }
+    }
+    return copy;
   }
 
   @Override
