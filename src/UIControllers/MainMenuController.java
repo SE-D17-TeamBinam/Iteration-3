@@ -42,6 +42,7 @@ public class MainMenuController extends CentralUIController implements Initializ
   @FXML
   private Label MapLabel;
 
+
   public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
     Session session = new Session();
     chooseLang();
@@ -49,7 +50,6 @@ public class MainMenuController extends CentralUIController implements Initializ
     setBackground(anchorPane);
     CentralController.resetSession();
     applyLanguageConfig();
-//    enterAlias();
   }
 
 
@@ -100,7 +100,7 @@ public class MainMenuController extends CentralUIController implements Initializ
     Stage primaryStage = (Stage) MainMenu.getScene().getWindow();
     try {
       loadScene(primaryStage, "/AdminLogin.fxml");
-    } catch (Exception e) {
+    } catch (Exception e) { e.printStackTrace();
     }
   }
 
@@ -137,29 +137,6 @@ public class MainMenuController extends CentralUIController implements Initializ
         });
   }
 
-//  public ArrayList<String> enterAlias(){
-////    Directory.getSelectionModel().selectedItemProperty().addListener(
-////        new ChangeListener<Physician>() {
-////          public void changed(ObservableValue<? extends Physician> ov,
-////              Physician old_val, Physician new_val) {
-////            int clicked = Directory.getSelectionModel().getSelectedIndex();
-////            if (clicked >= 0) {
-////              selectedHPIndex = clicked;
-////              selectedHP = docDisplay.get(selectedHPIndex);
-////            }
-////          }}
-////    );
-//
-//    TextInputDialog aliasEntry = new TextInputDialog();
-//    aliasEntry.setResizable(true);
-//    aliasEntry.setTitle("Alias Entry");
-//    aliasEntry.setHeaderText("Enter alias for point");
-//    aliasEntry.setContentText("Please enter an alias");
-//    Optional<String> res = aliasEntry.showAndWait();
-//    String s = res.toString().substring(9, res.toString().length()-1);
-//    ArrayList<String> aliases = new ArrayList<String>(Arrays.asList(s.split(", ")));
-//    return aliases;
-//    //ArrayList<String>(Arrays.asList(String.split))
   }
 
 

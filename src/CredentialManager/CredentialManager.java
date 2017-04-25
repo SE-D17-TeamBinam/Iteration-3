@@ -1,38 +1,84 @@
 package CredentialManager;
 
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+
 /**
- * Created by Tom on 4/3/2017.
+ * Created by Praneeth Appikatla on 4/25/2017.
  */
-public class CredentialManager {
+public class CredentialManager implements CredentialInterface{
+  Map<String, String> DB = new HashMap<String, String>();
+  private String SALT = getSaltString();
 
-  private String adminName = "admin";
-  private String adminToken = "admin";
+  private static CredentialManager instance = new CredentialManager();
 
+  public CredentialManager(){}
 
-  public CredentialManager(){
-
+  public static CredentialManager getInstance() {
+    return instance;
   }
 
-  public CredentialManager(String adminName, String adminToken){
-    this.adminName = adminName;
-    this.adminToken = adminToken;
-  }
-
-
-  /**
-   * Check if the hash is the same as the verified user
-   * TODO(tom): this is vulnerable to a timing attack
-   * TODO(haofan): return exception if failed
-   * @param name: the name the challenger is presenting
-   * @param token: the token the challenger is presenting
-   * @return boolean if the challenger is authed
-   */
-  public boolean userIsAdmin(String name, String token) {
-    if (name.equals(this.adminName) && token.equals(this.adminToken)) {
-      return true;
-    } else {
+  @Override
+  public Boolean signup(String username, String password) {
+    if (!(DB.containsKey(username))) {
+      String saltedPass = SALT + password;
+      String hashedPass = generateHash(saltedPass);
+      DB.put(username.toLowerCase(), hashedPass);
       return false;
+    }
+    else {
+      return true;
     }
   }
 
+  @Override
+  public Boolean login(String username, String password) {
+    Boolean isAuthenticated = false;
+    String saltedPass = SALT + password;
+    String hashedPass = generateHash(saltedPass);
+
+    String storedHash = DB.get(username);
+    if(hashedPass.equals(storedHash)){
+      isAuthenticated = true;
+    } else {
+      isAuthenticated = false;
+    }
+    return isAuthenticated;
+  }
+
+  @Override
+  public String generateHash(String input) {
+    StringBuilder hash = new StringBuilder();
+    // implements Secure Hash Algorithm 1
+    try {
+      MessageDigest sha = MessageDigest.getInstance("SHA-1");
+      byte[] hashedBytes = sha.digest(input.getBytes());
+      char[] digits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+          'a', 'b', 'c', 'd', 'e', 'f' };
+      for (int idx = 0; idx < hashedBytes.length; ++idx) {
+        byte b = hashedBytes[idx];
+        hash.append(digits[(b & 0xf0) >> 4]);
+        hash.append(digits[b & 0x0f]);
+      }
+    } catch (NoSuchAlgorithmException e) {}
+
+    return hash.toString();
+  }
+
+  public String getSaltString(){
+    // helper to generate a random string from certain characters
+    String saltChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+    StringBuilder salt = new StringBuilder();
+    Random rand = new Random();
+    while (salt.length() < 20) { // length of random string
+      int index = (int) (rand.nextFloat() * saltChars.length());
+      salt.append(saltChars.charAt(index));
+    }
+    String randStr = salt.toString();
+    return randStr;
+  }
 }

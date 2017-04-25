@@ -29,6 +29,8 @@ public class AdminMenuController extends CentralUIController implements Initiali
   private Label DirectEditLabel;
   @FXML
   private Label LogOffButton;
+  @FXML
+  private Label LoginLabel;
 
   @Override
   public void customListenerX () {
@@ -52,6 +54,7 @@ public class AdminMenuController extends CentralUIController implements Initiali
   public void initialize(URL location, ResourceBundle resources) {
     addResolutionListener(anchorPane);
     setBackground(anchorPane);
+    LoginLabel.setText(LoginLabel.getText()+ currentUser);
   }
 
   @FXML

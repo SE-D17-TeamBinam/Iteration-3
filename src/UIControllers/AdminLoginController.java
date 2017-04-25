@@ -27,7 +27,6 @@ public class AdminLoginController extends CentralUIController implements Initial
   @FXML
   private PasswordField AdminPassField;
 
-  /* language fields */
   @FXML
   private Label AdminBack;
   @FXML
@@ -38,17 +37,13 @@ public class AdminLoginController extends CentralUIController implements Initial
   private Label AdminLoginButton;
   @FXML
   private Label LoginError;
-
   @FXML
   private AnchorPane anchorPane;
+  @FXML
+  private Label CreateAccountButton;
 
   @Override
   public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
-    /* apply language configs */
-    //AdminBack.setText(dictionary.getString("Back", currSession.getLanguage()));
-    //AdminNameLabel.setText(dictionary.getString("Username", currSession.getLanguage()));
-    //AdminPassLabel.setText(dictionary.getString("Password", currSession.getLanguage()));
-    //AdminLoginButton.setText(dictionary.getString("Login", currSession.getLanguage()));
     addResolutionListener(anchorPane);
     setBackground(anchorPane);
   }
@@ -61,6 +56,7 @@ public class AdminLoginController extends CentralUIController implements Initial
     AdminNameField.setLayoutX(x_res/2 - 20);
     AdminPassField.setLayoutX(x_res/2 - 20);
     LoginError.setLayoutX(x_res/2 - LoginError.getPrefWidth()/2);
+    CreateAccountButton.setLayoutX(x_res - CreateAccountButton.getPrefWidth() - 10);
   }
   @Override
   public void customListenerY () {
@@ -70,6 +66,7 @@ public class AdminLoginController extends CentralUIController implements Initial
     AdminNameField.setLayoutY(4*y_res/11);
     AdminPassField.setLayoutY(6*y_res/11);
     LoginError.setLayoutY(7*y_res/11 + 10);
+    CreateAccountButton.setLayoutY(y_res - CreateAccountButton.getPrefHeight() - 10);
   }
 
   // Detects if a key is pressed when the username, password, or login button are highlighted
@@ -90,8 +87,10 @@ public class AdminLoginController extends CentralUIController implements Initial
     Stage primaryStage = (Stage) AdminLogin.getScene().getWindow();
     String enteredName = AdminNameField.getText();
     String enteredPass = AdminPassField.getText();
-    if (credentialManager.userIsAdmin(enteredName, enteredPass))  {
+
+    if (credentialManager.login(enteredName, enteredPass)){
       LoginError.setVisible(false);
+      currentUser = enteredName;
       try {
         loadScene(primaryStage, "/AdminMenu.fxml");
       } catch (Exception e) {
@@ -101,6 +100,17 @@ public class AdminLoginController extends CentralUIController implements Initial
     } else {
       LoginError.setVisible(true);
     }
+  }
+
+  public void createAccount() {
+    Stage primaryStage = (Stage) AdminLogin.getScene().getWindow();
+    try {
+      loadScene(primaryStage, "/SignupMenu.fxml");
+    } catch (Exception e){
+      System.out.println("Cannot load signup menu");
+      e.printStackTrace();
+    }
+
   }
 
   /**

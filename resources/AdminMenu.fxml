@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1300.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UIControllers.AdminMenuController">
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1300.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UIControllers.AdminMenuController">
    <children>
       <Pane fx:id="AdminMenu" prefHeight="750.0" prefWidth="1300.0">
          <children>
@@ -57,6 +57,11 @@
             <Label fx:id="LogOffButton" alignment="CENTER" layoutX="1154.0" layoutY="12.0" mnemonicParsing="false" onMouseClicked="#logoff" prefHeight="60.0" prefWidth="134.0" style="-fx-background-color: #3255bc;" text="Log off" textFill="WHITE">
                <font>
                   <Font name="Times New Roman" size="26.0" />
+               </font>
+            </Label>
+            <Label fx:id="LoginLabel" layoutX="490.0" layoutY="696.0" prefHeight="40.0" prefWidth="363.0" text="You are logged in as: ">
+               <font>
+                  <Font name="Times New Roman" size="21.0" />
                </font>
             </Label>
          </children>

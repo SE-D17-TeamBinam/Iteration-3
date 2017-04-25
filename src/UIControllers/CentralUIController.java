@@ -10,9 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import org.Dictionary;
 import org.Point;
 import org.Session;
@@ -26,8 +24,9 @@ public class CentralUIController {
     3 for admin map
    */
   protected static int mapViewFlag = 0;
+  protected static String currentUser;
   protected static Session currSession;
-  protected static CredentialManager credentialManager;
+  protected static CredentialManager credentialManager = CredentialManager.getInstance();
   protected static Dictionary dictionary;
   /* resolution */
   protected static double x_res = 1300;
@@ -47,7 +46,7 @@ public class CentralUIController {
 
   public void setSession (Session s, DatabaseInterface dbe) {
     this.currSession = s;
-    this.credentialManager = s.credentialManager;
+    this.credentialManager = credentialManager;
     this.dictionary = s.dictionary;
     this.database = dbe;
   }
