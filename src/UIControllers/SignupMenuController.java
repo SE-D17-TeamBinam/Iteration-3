@@ -41,9 +41,9 @@ public class SignupMenuController extends CentralUIController implements Initial
   @FXML
   private Label SignupButton;
   @FXML
-  private Label UsernameError;
+  private Label UsernameRequired;
   @FXML
-  private Label PassError;
+  private Label PassRequired;
   @FXML
   private Label SignupError;
   @FXML
@@ -58,6 +58,38 @@ public class SignupMenuController extends CentralUIController implements Initial
     UsernameExistsError.setVisible(false);
   }
 
+  @Override
+  public void customListenerX () {
+    SignupTypeLabel.setLayoutX(x_res/2 - 540);
+    SignupNameLabel.setLayoutX(x_res/2 - 540);
+    SignupPassLabel.setLayoutX(x_res/2 - 540);
+    SignupButton.setLayoutX(x_res/2 - SignupButton.getPrefWidth()/2);
+    SignupNameField.setLayoutX(x_res/2 - 20);
+    SignupPassField.setLayoutX(x_res/2 - 20);
+    SignupBox.setLayoutX(x_res/2 - 20);
+    UsernameExistsError.setLayoutX(x_res/2 - 20);
+    SignupError.setLayoutX(x_res/2 - 125);
+    UsernameRequired.setLayoutX(x_res/2 + 160);
+    PassRequired.setLayoutX(x_res/2 + 160);
+  }
+  @Override
+  public void customListenerY () {
+    SignupTypeLabel.setLayoutY(3*y_res/11 - 10);
+    SignupNameLabel.setLayoutY(4.5*y_res/11 - 5);
+    SignupPassLabel.setLayoutY(6*y_res/11);
+    SignupButton.setLayoutY(8*y_res/11);
+    SignupBox.setLayoutY(3*y_res/11);
+    SignupNameField.setLayoutY(4.5*y_res/11);
+    SignupPassField.setLayoutY(6*y_res/11);
+    UsernameExistsError.setLayoutY(4.5*y_res/11 + 40);
+    SignupError.setLayoutY(2*y_res/11);
+    UsernameRequired.setLayoutY(4.5*y_res/11 - 22);
+    PassRequired.setLayoutY(6*y_res/11 - 22);
+  }
+
+  /**
+   * initializes choice box for creating admin or staff account
+   */
   public void intializeChoiceBox(){
     SignupBox.getItems().addAll("STAFF", "ADMIN");
     SignupBox.getSelectionModel().select("STAFF");
@@ -70,13 +102,16 @@ public class SignupMenuController extends CentralUIController implements Initial
     }
   }
 
+  /**
+   * sign up account from text in text fields
+   */
   public void signup() {
     String pass = SignupPassField.getText();
     String username = SignupNameField.getText();
     if (pass.equals("") || username.equals("")){
       SignupError.setVisible(true);
-      UsernameError.setTextFill(Paint.valueOf("red"));
-      PassError.setTextFill(Paint.valueOf("red"));
+      UsernameRequired.setTextFill(Paint.valueOf("red"));
+      PassRequired.setTextFill(Paint.valueOf("red"));
     }
     else if (credentialManager.signup(username, pass)){
       UsernameExistsError.setVisible(true);
@@ -93,7 +128,7 @@ public class SignupMenuController extends CentralUIController implements Initial
   }
 
   /**
-   * go back to the main menu
+   * go back to admin login
    */
   public void back () {
     Stage primaryStage = (Stage) SignupMenu.getScene().getWindow();
