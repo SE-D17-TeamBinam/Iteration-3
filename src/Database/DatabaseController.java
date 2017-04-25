@@ -778,7 +778,7 @@ public class DatabaseController implements DatabaseInterface {
   //TODO Filter special nodes like ELEVATOR or STAIRS etc.
   @Override
   public ArrayList<Point> getNamedPoints() {
-    if (!loadThread.running) {
+    if (!(loadThread.running)) {
       progressBarPercentage = 0;
       loadThread.start();
     }
@@ -808,7 +808,7 @@ public class DatabaseController implements DatabaseInterface {
 
   @Override
   public ArrayList<Point> getPoints() {
-    if (!loadThread.running) {
+    if (!(loadThread.running)) {
       progressBarPercentage = 0;
       loadThread.start();
     }
@@ -860,7 +860,7 @@ public class DatabaseController implements DatabaseInterface {
 
   @Override
   public ArrayList<Physician> getPhysicians() {
-    if (!loadThread.running) {
+    if (!(loadThread.running)) {
       progressBarPercentage = 0;
       loadThread.start();
     }

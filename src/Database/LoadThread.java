@@ -18,13 +18,13 @@ class LoadThread implements Runnable {
   }
 
   public void start() {
+    running = true;
     (new Thread(this, "Load Thread")).start();
   }
 
   @Override
   public void run(){
     System.out.println("loading physicians and points from DB to local copies ");
-    running = true;
     try {
       dbc.localPoints = dbc.getAllPoints();
       dbc.localPhysicians = dbc.getAllPhysicians();
@@ -40,6 +40,7 @@ class LoadThread implements Runnable {
       }
     }
     dbc.progressBarPercentage = 1;
+    System.out.println("Loading Finished");
     running = false;
   }
 }

@@ -16,7 +16,6 @@ class SaveThread implements Runnable {
 
   @Override
   public void run() {
-    running = true;
     System.out.println("Starting save thread");
     dbe.save();
     dbe.progressBarPercentage = 1;
@@ -24,6 +23,7 @@ class SaveThread implements Runnable {
   }
 
   public void start() {
+    running = true;
     (new Thread(this, "Save Thread")).start();
   }
 }
