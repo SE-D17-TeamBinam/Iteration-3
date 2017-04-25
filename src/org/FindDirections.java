@@ -22,6 +22,7 @@ public class FindDirections {
   public float CurrentAngle;
   public float TurnChange;
 
+  private int hallsPassed = 0;
 
   /**
    * This creates an empty lists that stores the strings of directions.
@@ -89,31 +90,37 @@ public class FindDirections {
     float newY= next.getYCoord();
     float startY= start.getYCoord();
   //  if(CurrentAngle==0 && newY>startY){
-      if (CurrentAngle <= 45 && CurrentAngle >= -45) {
-        directions.add(straight + " " + next.getName());
-      } else if (CurrentAngle < 135 && CurrentAngle > 45) {
-        directions.add(right);
-        directions.add(straight + " " + next.getName());
-        ChangeDirectionRight(Angle);
-      } else if (CurrentAngle >= 135 || CurrentAngle <= -135) {
-        directions.add(reverse);
-        directions.add(straight + " " + next.getName());
-        ChangeDirectionReverse(Angle);
-      } else if (CurrentAngle > -135 && CurrentAngle < -45) {
-        directions.add(left);
-        directions.add(straight + " " + next.getName());
-        ChangeDirectionLeft(Angle);
-      }
 
-    }//else{
-      //directions.add(reverse);
-    //}
-    //}
+    String name = "";
+    if(!next.getName().equals("null")){
+      name = next.getName();
+    }
+    if(name.equals("INTERSECTION")){
+      hallsPassed++;
+      return;
+    }
+    if (CurrentAngle <= 45 && CurrentAngle >= -45) {
+      //directions.add(straight + " " + name);
+    } else if (CurrentAngle < 135 && CurrentAngle > 45) {
+      directions.add(right + " after " + hallsPassed + " hallways");
+      directions.add(straight + " " + name);
+      ChangeDirectionRight(Angle);
+    } else if (CurrentAngle >= 135 || CurrentAngle <= -135) {
+      directions.add(reverse);
+      directions.add(straight + " " + name);
+      ChangeDirectionReverse(Angle);
+    } else if (CurrentAngle > -135 && CurrentAngle < -45) {
+      directions.add(left + " after " + hallsPassed + " hallways");
+      directions.add(straight + " " + name);
+      ChangeDirectionLeft(Angle);
+    }
+    hallsPassed = 0;
+  }
 
     public void ChangeDirectionRight(float Angle){
       this.TurnChange = -90;
-
     }
+
     public void ChangeDirectionLeft(float Angle){
       this.TurnChange =90;
     }
