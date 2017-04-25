@@ -296,8 +296,8 @@ public class MapViewController extends CentralUIController implements Initializa
         return false;
       } else {
         Connection c = (Connection) o;
-        boolean b = ((c.getStart().equals(this.getStart()) && c.getEnd().equals(this.getEnd())) ||
-            (c.getEnd().equals(this.getStart()) && c.getStart().equals(this.getEnd())));
+        boolean b = ((c.getStart().hashCode() == this.getStart().hashCode() && c.getEnd().hashCode() == this.getEnd().hashCode()) ||
+            (c.getEnd().hashCode() == this.getStart().hashCode() && c.getStart().hashCode() == this.getEnd().hashCode()));
         return b;
       }
     }

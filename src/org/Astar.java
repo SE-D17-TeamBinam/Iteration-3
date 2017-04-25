@@ -53,11 +53,13 @@ public class Astar extends PathfindingStrategy {
         }
 
         for (int j = 0; j < next.neighbors.size(); j++ ){ //searching through neighbors
-
-          if(open.contains(next.neighbors.get(j))){ // visited but seen
+          if(next.neighbors.get(j).isBlocked){
+            //doesnt update!!!
+          }
+          else if(open.contains(next.neighbors.get(j))){ // visited but seen
             if (next.neighbors.get(j).cost < next.cost){ // successor cost <= current cost
 
-              next.neighbors.get(j).cost = next.cost + 1; //update cost
+              next.neighbors.get(j).cost = next.cost + next.Distance(next.neighbors.get(j)); //update cost
               next.neighbors.get(j).parent = next;  //update parent
               break;
             }
@@ -66,7 +68,7 @@ public class Astar extends PathfindingStrategy {
           }else{// new to search
             if(next.neighbors.get(j) instanceof ElevatorPoint ){ //meets an elevator and changes node
               if(changeFloor) {
-                next.neighbors.get(j).cost = next.cost + 1; //update cost
+                next.neighbors.get(j).cost = next.cost + next.Distance(next.neighbors.get(j)); //update cost
                 next.neighbors.get(j).parent = next;  //update parent
 
                 ElevatorPoint elevator = (ElevatorPoint) next.neighbors.get(j); //cast to elevator
@@ -78,14 +80,14 @@ public class Astar extends PathfindingStrategy {
                   while (elevator.floor != goal.floor) {
                     if (move < 0 && (elevator.neighbors.get(count).floor - elevator.floor
                         == -1)) { // goal is below current floor & neighbor is next elevator below
-                      elevator.neighbors.get(count).cost = next.cost + 1; //update cost
+                      elevator.neighbors.get(count).cost = next.cost; //update cost
                       elevator.neighbors.get(count).parent = elevator;  //update parent
 
                       elevator = (ElevatorPoint) elevator.neighbors.get(count);
                       count = 0;
                     } else if ((move > 0 && (elevator.neighbors.get(count).floor - elevator.floor
                         == 1))) {// goal is above and neighbor goes higher
-                      elevator.neighbors.get(count).cost = next.cost + 1; //update cost
+                      elevator.neighbors.get(count).cost = next.cost; //update cost
                       elevator.neighbors.get(count).parent = elevator;  //update parent
 
                       elevator = (ElevatorPoint) elevator.neighbors.get(count);
@@ -102,7 +104,7 @@ public class Astar extends PathfindingStrategy {
             }
             else if(next.neighbors.get(j) instanceof StairPoint){ //meets an elevator and changes node
               if(changeFloor) {
-                next.neighbors.get(j).cost = next.cost + 1; //update cost
+                next.neighbors.get(j).cost = next.cost + next.Distance(next.neighbors.get(j)); //update cost
                 next.neighbors.get(j).parent = next;  //update parent
 
                 StairPoint stair = (StairPoint) next.neighbors.get(j); //cast to elevator
@@ -114,14 +116,14 @@ public class Astar extends PathfindingStrategy {
                   while (stair.floor != goal.floor) {
                     if (move < 0 && (stair.neighbors.get(count).floor - stair.floor
                         == -1)) { // goal is below current floor & neighbor is next elevator below
-                      stair.neighbors.get(count).cost = next.cost + 1; //update cost
+                      stair.neighbors.get(count).cost = next.cost; //update cost
                       stair.neighbors.get(count).parent = stair;  //update parent
 
                       stair = (StairPoint) stair.neighbors.get(count);
                       count = 0;
                     } else if ((move > 0 && (stair.neighbors.get(count).floor - stair.floor
                         == 1))) {// goal is above and neighbor goes higher
-                      stair.neighbors.get(count).cost = next.cost + 1; //update cost
+                      stair.neighbors.get(count).cost = next.cost; //update cost
                       stair.neighbors.get(count).parent = stair;  //update parent
 
                       stair = (StairPoint) stair.neighbors.get(count);
@@ -142,7 +144,7 @@ public class Astar extends PathfindingStrategy {
 //          }
             else { // right floor(s).
               open.add(next.neighbors.get(j));    //add sucessor to open
-              next.neighbors.get(j).cost = next.cost + 1; //update cost
+              next.neighbors.get(j).cost = next.cost + next.Distance(next.neighbors.get(j)); //update cost
               next.neighbors.get(j).parent = next;  //update parent
             }
           }

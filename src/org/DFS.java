@@ -1,6 +1,5 @@
 package org;
 
-import com.sun.org.apache.bcel.internal.generic.NOP;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Stack;
@@ -42,7 +41,7 @@ public class DFS extends PathfindingStrategy {
       // them to the queue and to visited. Additionally,
       // set their parent to the current node.
       for (Point neighbor : currPoint.getNeighbors()) {
-        if (!visited.contains(neighbor)) {
+        if (!visited.contains(neighbor)&&!neighbor.isBlocked) {
           neighbor.addParent(currPoint);
           stack.push(neighbor);
           visited.add(neighbor);

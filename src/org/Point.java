@@ -1,8 +1,6 @@
 package org;
 
-import Database.FakePhysician;
 import Database.FakePoint;
-import Definitions.Physician;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -26,18 +24,21 @@ public class Point {
   //Attributes For A* only below.
   Point parent;
   int cost;
+  boolean isBlocked;
 
   //Constructor
   public Point(double xCoord, double yCoord, ArrayList<String> names) {
     this.xCoord = (int) xCoord;
     this.yCoord = (int) yCoord;
     this.names = names;
+    this.isBlocked = false;
   }
 
   public Point(double xCoord, double yCoord, int floor) {
     this.xCoord = (int) xCoord;
     this.yCoord = (int) yCoord;
     this.floor = floor;
+    this.isBlocked = false;
   }
 
   public Point(int xCoord, int yCoord, ArrayList<String> names, int id,
@@ -51,6 +52,7 @@ public class Point {
     this.neighbors = new_neighbors;
     this.cost = 0;
     this.floor = floor;
+    this.isBlocked = false;
   }
 
   public Point(int xCoord, int yCoord, String name, int id, ArrayList<Point> new_neighbors,
@@ -63,9 +65,18 @@ public class Point {
     this.neighbors = new_neighbors;
     this.cost = 0;
     this.floor = floor;
+    this.isBlocked = false;
   }
 
-  //Methods
+  //Methods{
+  public void setBlocked(Boolean change){
+    this.isBlocked = change;
+  }
+
+  public boolean getBlocked(){
+    return this.isBlocked;
+  }
+
   public void connectTo(Point node) {
     if (!node.getNeighbors().contains(this))
       node.getNeighbors().add(this);
@@ -106,7 +117,6 @@ public class Point {
   public void setNames(ArrayList<String> _names) {
     this.names = _names;
   }
-
 
   public String getName() {
     if (names != null && names.size() > 0) {
