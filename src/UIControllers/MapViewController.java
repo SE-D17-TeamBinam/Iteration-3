@@ -17,13 +17,20 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Cursor;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
@@ -34,13 +41,17 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.Astar;
@@ -114,6 +125,8 @@ public class MapViewController extends CentralUIController implements Initializa
   private Button saveButton;
   @FXML
   private Label mainFloorLabel;
+  @FXML
+  private Button aliasButton;
 
   // The pane for point type selection
   @FXML
@@ -147,6 +160,7 @@ public class MapViewController extends CentralUIController implements Initializa
   private ChoiceBox carrierBox;
   @FXML
   private Button sendButton;
+
 
   final ToggleGroup directionSelect = new ToggleGroup();
 
@@ -1235,7 +1249,7 @@ public class MapViewController extends CentralUIController implements Initializa
         out += s + ". ";
       }
       directionsPane.setVisible(true);
-      textDirectionsBox.setText(out);
+      textDirectionsBox.setText(out.substring(0, out.length()-2));
     }
   }
 
@@ -2016,4 +2030,107 @@ public class MapViewController extends CentralUIController implements Initializa
       e.text(detailEntry.getText(),(Carrier) carrierBox.getSelectionModel().getSelectedItem(), textDirectionsBox.getText());
     }
   }
+
+  public void addAlias() {
+    // Creates popup window only if point is selected
+    if (pointFocus != null) {
+      // initializations
+      ArrayList<TextField> aliases = new ArrayList<TextField>();
+      Stage primaryStage = (Stage) mapViewPane.getScene().getWindow();
+      Stage dialog = new Stage();
+      dialog.setMaxHeight(500);
+      dialog.setMaxWidth(500);
+      dialog.setTitle("Alias Entry");
+      dialog.setResizable(true);
+      dialog.initModality(Modality.APPLICATION_MODAL);
+      dialog.initOwner(primaryStage);
+      VBox dialogVbox = new VBox(20);
+
+      Button saveAliasButton = new Button("Save");
+      Button addButton = new Button("+");
+      addButton.setStyle("-fx-background-color:#3255bc");
+      addButton.setTextFill(Paint.valueOf("White"));
+      Button cancelButton = new Button("Cancel");
+      TextField entry = new TextField();
+      entry.requestFocus();
+      aliases.add(entry);
+
+      // organize into grid pane
+      GridPane grid = new GridPane();
+      grid.setHgap(10);
+      grid.setVgap(10);
+      grid.setPadding(new Insets(40, 0, 10, 10));
+      grid.add(entry, 1, 1);
+      grid.add(addButton, 2, 1);
+      addButton.setFocusTraversable(false);
+      grid.add(new Label("Add names to selected point."), 1, 0);
+
+      // keep button sizes constant and color uniform with UI
+      TilePane tileButtons = new TilePane();
+      saveAliasButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+      cancelButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+      saveAliasButton.setStyle("-fx-background-color:#3255bc");
+      cancelButton.setStyle("-fx-background-color:#3255bc");
+      saveAliasButton.setTextFill(Paint.valueOf("White"));
+      cancelButton.setTextFill(Paint.valueOf("White"));
+      tileButtons.setHgap(10);
+      tileButtons.setVgap(8.0);
+      tileButtons.setPadding(new Insets(20, 10, 20, 20));
+      tileButtons.getChildren().addAll(saveAliasButton, cancelButton);
+
+      // add to Vbox
+      dialogVbox.getChildren().addAll(grid, tileButtons);
+
+      // wrap into ScrollPane
+      ScrollPane scroll = new ScrollPane(dialogVbox);
+      scroll.setHbarPolicy(ScrollBarPolicy.NEVER);
+      scroll.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
+      Scene dialogScene = new Scene(scroll, 300, 200);
+      dialog.setScene(dialogScene);
+
+      // "+" button functionality: adds a new text field
+      addButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        @Override
+        public void handle(MouseEvent event) {
+          TextField nextEntry = new TextField();
+          // keep track of where to add the text field
+          grid.add(nextEntry, 1, grid.getChildren().size()-1);
+          nextEntry.requestFocus();
+          aliases.add(nextEntry);
+        }
+      });
+
+      // "Save" button functionality: sets the names of currently selected point to what's in the
+      // text fields and closes the text box
+      saveAliasButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        @Override
+        public void handle(MouseEvent event) {
+          ArrayList<String> aliasList = pointFocus.getNames();
+          for (int i = 0; i < aliases.size(); i++) {
+            // doesn't add to list when text field is empty or is that alias already exists for that
+            // point ignoring case
+            if (!(aliases.get(i).getText().equalsIgnoreCase("")) && !(pointFocus.getNames().contains(aliases.get(i).getText()))){
+              aliasList.add(pointFocus.getNames().size() , aliases.get(i).getText().trim());
+            }
+          }
+          pointFocus.setNames(aliasList);
+          for (int i = 0; i < pointFocus.getNames().size(); i++) {
+            System.out.println(pointFocus.getNames().get(i));
+          }
+          dialog.close();
+        }
+      });
+
+      dialog.showAndWait();
+    }
+    else {
+      Dialog alert = new Alert(AlertType.INFORMATION, "Please select a point to add an alias to.");
+      alert.setHeaderText("Information");
+      alert.showAndWait();
+    }
+
+
+  }
+
+
 }
