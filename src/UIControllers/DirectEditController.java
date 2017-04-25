@@ -11,6 +11,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -63,15 +64,15 @@ public class DirectEditController extends CentralUIController implements Initial
   @FXML
   private ListView<ChoiceBox> Locations;
   @FXML
-  private Label AddLocation;
+  private Button AddLocation;
   @FXML
-  private Label RemoveLocation;
+  private Button RemoveLocation;
   @FXML
   private AnchorPane anchorPane;
 
 
   @FXML
-  private Label DirectBack;
+  private Button DirectBack;
   @FXML
   private Label DirectFirstName;
   @FXML
@@ -81,15 +82,15 @@ public class DirectEditController extends CentralUIController implements Initial
   @FXML
   private Label DirectLocations;
   @FXML
-  private Label DirectCancel;
+  private Button DirectCancel;
   @FXML
-  private Label DirectSave;
+  private Button DirectSave;
   @FXML
-  private Label DirectLogoff;
+  private Button DirectLogoff;
   @FXML
-  private Label DirectCreate;
+  private Button DirectCreate;
   @FXML
-  private Label DirectDelete;
+  private Button DirectDelete;
   @FXML
   private TextField DirectSearch;
 
@@ -202,8 +203,8 @@ public class DirectEditController extends CentralUIController implements Initial
         return new ReadOnlyStringWrapper(locations);
       }
     });
-    rooms = database.getNamedPoints();
-    docs = database.getPhysicians();
+    rooms = roomsCache;
+    docs = docsCache;
     roomNames = new ArrayList<>();
 
     // load all displayDocs
@@ -409,8 +410,10 @@ public class DirectEditController extends CentralUIController implements Initial
   //////// scene travel ///////
   /////////////////////////////
   public void back () {
+    refreshDatabase();
     Stage primaryStage = (Stage) DirectEdit.getScene().getWindow();
     try {
+      docsCache = database.getPhysicians();
       loadScene(primaryStage, "/AdminMenu.fxml");
     } catch (Exception e) {
       System.out.println("Cannot load admin login menu");
@@ -419,6 +422,7 @@ public class DirectEditController extends CentralUIController implements Initial
   }
 
   public void logoff () {
+    refreshDatabase();
     Stage primaryStage = (Stage) DirectEdit.getScene().getWindow();
     try {
       loadScene(primaryStage, "/MainMenu.fxml");
@@ -430,6 +434,7 @@ public class DirectEditController extends CentralUIController implements Initial
 
   public void editMap(){
     mapViewFlag = 3;
+    refreshDatabase();
     Stage primaryStage = (Stage) DirectEdit.getScene().getWindow();
     try {
       loadScene(primaryStage, "/MapScene.fxml");

@@ -2,6 +2,10 @@ package UIControllers;
 
 import CredentialManager.CredentialManager;
 import Database.DatabaseInterface;
+import Definitions.Physician;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
@@ -10,9 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import org.Dictionary;
 import org.Point;
 import org.Session;
@@ -40,16 +42,36 @@ public class CentralUIController {
   protected static ImageView backgroundView = new ImageView();
   protected static ImageView logoView = new ImageView();
   /* database object */
+  protected static ArrayList<Physician> docsCache;
+  protected static ArrayList<Point> roomsCache;
   protected static DatabaseInterface database;
   /* */
   protected static Point searchingPoint;
 
 
-  public void setSession (Session s, DatabaseInterface dbe) {
-    this.currSession = s;
-    this.credentialManager = s.credentialManager;
-    this.dictionary = s.dictionary;
-    this.database = dbe;
+  public void setSession (Session session, DatabaseInterface dbInterface) {
+    this.currSession = session;
+    this.credentialManager = session.credentialManager;
+    this.dictionary = session.dictionary;
+    this.database = dbInterface;
+    refreshDatabase();
+  }
+
+  public void refreshDatabase () {
+    docsCache = database.getPhysicians();
+    roomsCache = database.getNamedPoints();
+    Collections.sort(docsCache, new Comparator<Physician>() {
+      @Override
+      public int compare(Physician doc1, Physician doc2) {
+        return doc1.getLastName().compareTo(doc2.getLastName());
+      }
+    });
+    Collections.sort(roomsCache, new Comparator<Point>() {
+      @Override
+      public int compare(Point room1, Point room2) {
+        return room1.getName().compareTo(room2.getName());
+      }
+    });
   }
   /**
    * Set the stage to the initial scene (main menu)
