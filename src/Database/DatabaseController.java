@@ -724,11 +724,11 @@ public class DatabaseController implements DatabaseInterface {
 
   @Override
   public void load() throws SQLException {
-//    loadThread.start();
+    loadThread.start();
     progressBarPercentage = 0;
-    localPoints = getAllPoints();
-    localPhysicians = getAllPhysicians();
-    progressBarPercentage = 1;
+//    localPoints = getAllPoints();
+//    localPhysicians = getAllPhysicians();
+//    progressBarPercentage = 1;
   }
 
   @Override
