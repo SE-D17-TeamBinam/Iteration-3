@@ -34,6 +34,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -171,7 +172,7 @@ public class MapViewController extends CentralUIController implements Initializa
   ImageView helpButton;
 
   @FXML
-  private Label searchLabel;
+  private Text searchLabel;
 
   @FXML
   private ChoiceBox pathFindingChoiceBox;
@@ -215,6 +216,15 @@ public class MapViewController extends CentralUIController implements Initializa
 
   @FXML
   private ListView resultsList;
+
+  @FXML
+  private Pane textDirectionsPane;
+
+  @FXML
+  private Label textDirectionsTabLabel;
+
+  @FXML
+  private ImageView textDirectionsPaneTabImageView;
 
   private int searchType;
 
@@ -393,6 +403,7 @@ public class MapViewController extends CentralUIController implements Initializa
       initializeLanguageConfigs();
     } else {
       userPane.setVisible(false);
+      textDirectionsPane.setVisible(false);
     }
     helpPane.setVisible(false);
     typeSelection();
@@ -403,12 +414,10 @@ public class MapViewController extends CentralUIController implements Initializa
     initializeScene();
     initializeFloorChoiceBox();
     initializeMapImage();
-    initializeUserPane();
+    initializeGlobalTimer();
     initializeSearchChoices();
     setDirectionsOptions();
-    resultsList.setPrefHeight(
-        userPaneRectangle.getHeight() - searchPaneVBox.getLayoutY() - resultsList.getLayoutY()
-            - searchGoButton.getPrefHeight() - 5);
+    repositionResultsList();
     // Adds a circle to show where the mouse is on the map
     initializePathFindingBox();
   }
@@ -430,7 +439,7 @@ public class MapViewController extends CentralUIController implements Initializa
         });
   }
 
-  private void initializeUserPane() {
+  private void initializeGlobalTimer() {
     Timeline globalTimer = new Timeline(
         new KeyFrame(Duration.millis(1), new EventHandler<ActionEvent>() {
           @Override
@@ -445,27 +454,41 @@ public class MapViewController extends CentralUIController implements Initializa
 
   private void globalTimerActions() {
     updateProgressBar();
-    resultsList.setPrefHeight(
-        userPaneRectangle.getHeight() - searchPaneVBox.getLayoutY() - resultsList.getLayoutY()
-            - searchGoButton.getHeight() - 5);
+    repositionResultsList();
     animateUserPane();
     animateTextDirectionsPane();
   }
 
-  private void animateTextDirectionsPane() {
+  private void repositionResultsList() {
+    resultsList.setPrefHeight(
+        userPaneRectangle.getHeight() - searchPaneVBox.getLayoutY() - resultsList.getLayoutY()
+            - searchGoButton.getPrefHeight() - 50);
+  }
 
+  private void animateTextDirectionsPane() {
+    double x = textDirectionsPane.getLayoutX();
+    if (x < textDirectionsPaneTargetX) {
+      textDirectionsPane.setLayoutX(x + 1);
+      map_x_max = x + 1 + textDirectionsPaneTabImageView.getFitWidth();
+      fixMapDisplayLocation();
+      fixZoomPanePos();
+    } else if (x > textDirectionsPaneTargetX) {
+      textDirectionsPane.setLayoutX(x - 1);
+      map_x_max = x - 1 + textDirectionsPaneTabImageView.getFitWidth();
+      fixZoomPanePos();
+    }
   }
 
   private void animateUserPane() {
     double x = userPane.getLayoutX();
     if (x < userPaneTargetX) {
       userPane.setLayoutX(x + 1);
-      map_x_max = x + 1 + tabImageView.getFitWidth();
+      map_x_max = x + 1 + userPaneTabImageView.getFitWidth();
       fixMapDisplayLocation();
       fixZoomPanePos();
     } else if (x > userPaneTargetX) {
       userPane.setLayoutX(x - 1);
-      map_x_max = x - 1 + tabImageView.getFitWidth();
+      map_x_max = x - 1 + userPaneTabImageView.getFitWidth();
       fixZoomPanePos();
     }
   }
@@ -586,6 +609,7 @@ public class MapViewController extends CentralUIController implements Initializa
     AdminLogOff.setLayoutX(x_res - AdminLogOff.getPrefWidth() - 5);
     fixMapDisplayLocation();
     updateUserPane();
+    updateTextDirectionsPane();
   }
 
   @Override
@@ -599,12 +623,11 @@ public class MapViewController extends CentralUIController implements Initializa
     typeSelectionPaneRectangle.setHeight(adminPaneRectangle.getHeight());
     fixMapDisplayLocation();
     updateUserPane();
+    updateTextDirectionsPane();
     directionsPane.setLayoutY(y_res - 180); // TODO Not constant height
     helpButton.setLayoutY(y_res - 60);
     helpPane.setLayoutY(y_res - 540);
-    resultsList.setPrefHeight(
-        userPaneRectangle.getHeight() - searchPaneVBox.getLayoutY() - resultsList.getLayoutY()
-            - searchGoButton.getHeight() - 5);
+    repositionResultsList();
   }
 
   private void initializeVisualNodes() {
@@ -956,10 +979,16 @@ public class MapViewController extends CentralUIController implements Initializa
   // Fixes the location of the zoom buttons and label, vertically and horizontally
   private void fixZoomPanePos() {
     setZoomPaneY(y_res - zoomPane.getPrefHeight() - ZOOM_PANE_OFFSET_VERTICAL);
+
+    double txt = (textDirectionsPane.getLayoutX() + textDirectionsPaneTabImageView.getFitWidth());
+    double usr = (userPane.getLayoutX() + userPaneTabImageView.getFitWidth());
+
     setZoomPaneX(
-        (userPane.isVisible() ? userPane.getLayoutX() + tabImageView.getFitWidth() : x_res)
+        (textDirectionsPane.isVisible() ? (txt < usr ? txt : usr) : x_res)
             - zoomPane.getPrefWidth() - ZOOM_PANE_OFFSET_HORIZONTAL
             - adminPaneRectangle.getWidth() * (adminPane.isVisible() ? 1 : 0));
+
+
   }
 
   // Change the zoom pane's horizontal location
@@ -1204,7 +1233,7 @@ public class MapViewController extends CentralUIController implements Initializa
   private Pane userPane;
 
   @FXML
-  private ImageView tabImageView;
+  private ImageView userPaneTabImageView;
 
   @FXML
   private Rectangle userPaneRectangle;
@@ -1212,20 +1241,62 @@ public class MapViewController extends CentralUIController implements Initializa
   @FXML
   private void toggleUserPane() {
     userPaneVisible = ~userPaneVisible & 0x1; // toggles 1 or 0
-    tabImageView.setImage(new Image("/icons/tab" + userPaneVisible + ".png"));
+    if(userPaneVisible == 1 && textDirectionsPaneVisible == 1){
+      toggleTextDirectionsPane();
+    }
+    userPaneTabImageView.setImage(new Image("/icons/tab" + userPaneVisible + ".png"));
     userPaneTargetX =
-        x_res - userPane.getWidth() * userPaneVisible - (~userPaneVisible & 0x1) * tabImageView
+        x_res - userPane.getWidth() * userPaneVisible
+            - (~userPaneVisible & 0x1) * userPaneTabImageView
             .getFitWidth();
+  }
+
+  @FXML
+  private void toggleTextDirectionsPane() {
+    textDirectionsPaneVisible = ~textDirectionsPaneVisible & 0x1; // toggles 1 or 0
+    if(userPaneVisible == 1 && textDirectionsPaneVisible == 1){
+      toggleUserPane();
+    }
+    textDirectionsPaneTabImageView
+        .setImage(new Image("/icons/tab" + textDirectionsPaneVisible + ".png"));
+    textDirectionsPaneTargetX =
+        x_res - textDirectionsPane.getWidth() * textDirectionsPaneVisible
+            - (~textDirectionsPaneVisible & 0x1) * textDirectionsPaneTabImageView
+            .getFitWidth();
+  }
+
+
+  @FXML
+  private Rectangle textDirectionsTabRectangle;
+
+  @FXML
+  private Rectangle textDirectionsPaneRectangle;
+
+  private double textDirectionsPaneTargetX;
+  private int textDirectionsPaneVisible = 0;
+
+  private void updateTextDirectionsPane() {
+    textDirectionsPaneTargetX =
+        x_res - textDirectionsPane.getWidth() * textDirectionsPaneVisible
+            - (~textDirectionsPaneVisible & 0x1) * textDirectionsPaneTabImageView
+            .getFitWidth();
+    textDirectionsPaneRectangle.setHeight(y_res - bannerView.getImage().getHeight());
+    textDirectionsPane
+        .setLayoutY(bannerView.getImage().getHeight() + textDirectionsTabRectangle.getHeight());
+    textDirectionsPane.setLayoutX(textDirectionsPaneTargetX);
+    map_x_max = textDirectionsPaneTargetX + textDirectionsPaneTabImageView.getFitWidth();
+    fixZoomPanePos();
   }
 
   private void updateUserPane() {
     userPaneTargetX =
-        x_res - userPane.getWidth() * userPaneVisible - (~userPaneVisible & 0x1) * tabImageView
+        x_res - userPane.getWidth() * userPaneVisible
+            - (~userPaneVisible & 0x1) * userPaneTabImageView
             .getFitWidth();
     userPaneRectangle.setHeight(y_res - bannerView.getImage().getHeight());
     userPane.setLayoutY(bannerView.getImage().getHeight() - 1);
     userPane.setLayoutX(userPaneTargetX);
-    map_x_max = userPaneTargetX + tabImageView.getFitWidth();
+    map_x_max = userPaneTargetX + userPaneTabImageView.getFitWidth();
     fixZoomPanePos();
   }
 
@@ -1253,6 +1324,7 @@ public class MapViewController extends CentralUIController implements Initializa
   @FXML
   private void drawPathButtonClicked() {
     if (startPoint != null && endPoint != null) {
+      ArrayList<Point> pathPoints;
       System.out.println(currSession.algorithm);
       pathfinding = true;
       saveButton.setDisable(true);
@@ -1262,6 +1334,10 @@ public class MapViewController extends CentralUIController implements Initializa
       allPoints.clear();
       allPoints.addAll(lp2);
       switchFloors((int) floorChoiceBox.getValue());
+      // Get Text Directions
+      pathPoints = allPoints;
+//      displayTextDirections(pathPoints);
+      // Below will be removed
       FindDirections td = new FindDirections();
       ArrayList<String> directions = td.getTextDirections(allPoints);
       String out = "";
@@ -1271,6 +1347,39 @@ public class MapViewController extends CentralUIController implements Initializa
       directionsPane.setVisible(true);
       textDirectionsBox.setText(out);
     }
+  }
+
+  private void displayTextDirections(ArrayList<Point> path){
+    FindDirections td = new FindDirections();
+    ArrayList<String> directions = td.getTextDirections(path);
+    for(String s : directions){
+      // Now add the string and associated icon to an hbox, then add the hbox to the list
+      HBox item = new HBox();
+      Image iconImg = directionToImage(s);
+      ImageView iconView = new ImageView();
+      iconView.setFitWidth(40);
+      iconView.setFitHeight(40);
+      item.getChildren().add(iconView);
+
+    }
+  }
+
+  private Image directionToImage(String directions){
+    Image out = new Image("straight");
+    if(directions.contains("left")){
+      out = new Image("left.png");
+    }else if(directions.contains("right")){
+      out = new Image("right.png");
+
+    }else if(directions.contains("straight")){
+      out = new Image("straight.png");
+
+    }else if(directions.contains("destination")){
+      out = new Image("destination.png");
+    }else if(directions.contains("around")){
+      out = new Image("turn-around.png");
+    }
+    return out;
   }
 
   @FXML
@@ -1461,17 +1570,13 @@ public class MapViewController extends CentralUIController implements Initializa
   @FXML
   private void searchGoButtonClicked() {
     Point selected = searchPoints.get(resultsList.getSelectionModel().getSelectedItem());
-    System.out.println("Selected: " + selected.getId());
-    Point actual = null;
-    System.out.println(allPoints.contains(selected));
-    for (int i = 0; i < allPoints.size(); i++) {
-      if(selected.equals(allPoints.get(i))){
-        actual = allPoints.get(i);
+    int ind = allPoints.indexOf(selected);
+    if (ind != -1) {
+      Point actual = allPoints.get(ind);
+      if (actual != null) {
+        floorChoiceBox.setValue(actual.getFloor());
+        setPointFocus(actual);
       }
-    }
-    if (actual != null) {
-      floorChoiceBox.setValue(actual.getFloor());
-      setPointFocus(actual);
     }
 
   }
@@ -1843,6 +1948,7 @@ public class MapViewController extends CentralUIController implements Initializa
       if (mapViewFlag == 3) {
 
       } else {
+
       }
     }
   }
