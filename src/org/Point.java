@@ -91,6 +91,10 @@ public class Point {
     }
   }
 
+  public String toString(){
+    return this.getName();
+  }
+
   public ArrayList<Point> getNeighbors() {
     return neighbors;
   }
