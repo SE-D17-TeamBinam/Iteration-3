@@ -7,7 +7,6 @@ import java.util.ArrayList;
  */
 public class Astar extends PathfindingStrategy {
 
-
   /**
    * This is the A* algorithm to find the most efficient path
    * <p>
