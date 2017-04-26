@@ -10,7 +10,9 @@ import java.util.Random;
  * Created by Praneeth Appikatla on 4/25/2017.
  */
 public class CredentialManager implements CredentialInterface{
-  HashMap<HashMap<String, String>, UserType> users = new HashMap <HashMap<String,String>, UserType>();
+  HashMap<String, String> credentials = new HashMap<>();
+  CredentialEntry entries = new CredentialEntry(credentials);
+  HashMap<CredentialEntry, UserType> users = new HashMap <CredentialEntry, UserType>();
   private String SALT = getSaltString();
   private static CredentialManager instance = new CredentialManager();
 
@@ -22,11 +24,12 @@ public class CredentialManager implements CredentialInterface{
 
   @Override
   public Boolean signup(String username, String password, UserType type) {
-    HashMap<String, String> loginInfo = new HashMap<>();
-    if (!(loginInfo.containsKey(username))) {
+    if (!(entries.containsUsername(username))){
       String saltedPass = SALT + password;
       String hashedPass = generateHash(saltedPass);
-      loginInfo.put(username, hashedPass);
+      CredentialEntry loginInfo = new CredentialEntry(new HashMap<>());
+      loginInfo.login.put(username, hashedPass);
+      entries.login.put(username, hashedPass);
       users.put(loginInfo, type);
       return false;
     }
@@ -37,14 +40,13 @@ public class CredentialManager implements CredentialInterface{
 
   @Override
   public Boolean login(String username, String password) {
-    HashMap<String, String> loginInfo = new HashMap<>();
-    loginInfo.put(username, password);
-    UserType type = users.get(loginInfo);
+    CredentialEntry login = new CredentialEntry(new HashMap<>());
     Boolean isAuthenticated = false;
     String saltedPass = SALT + password;
     String hashedPass = generateHash(saltedPass);
 
-    String storedHash = null;
+    String storedHash = entries.getPass(username);
+
     if(hashedPass.equals(storedHash)){
       isAuthenticated = true;
     } else {

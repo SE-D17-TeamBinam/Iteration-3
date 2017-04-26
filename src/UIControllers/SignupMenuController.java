@@ -92,8 +92,8 @@ public class SignupMenuController extends CentralUIController implements Initial
    * initializes choice box for creating admin or staff account
    */
   public void intializeChoiceBox(){
-    SignupBox.getItems().addAll("STAFF", "ADMIN");
-    SignupBox.getSelectionModel().select("STAFF");
+    SignupBox.getItems().addAll(UserType.STAFF, UserType.ADMIN);
+    SignupBox.getSelectionModel().select(UserType.STAFF);
   }
 
   @FXML
@@ -110,6 +110,7 @@ public class SignupMenuController extends CentralUIController implements Initial
     String pass = SignupPassField.getText();
     String username = SignupNameField.getText();
     UserType type = (UserType) SignupBox.getSelectionModel().getSelectedItem();
+
     if (pass.equals("") || username.equals("")){
       SignupError.setVisible(true);
       UsernameRequired.setTextFill(Paint.valueOf("red"));
