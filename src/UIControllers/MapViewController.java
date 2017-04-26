@@ -531,10 +531,6 @@ public class MapViewController extends CentralUIController implements Initializa
 
   }
 
-  private HashMap<String, Point> listedPoints = new HashMap<String, Point>();
-  private Point startPoint = null;
-  private Point endPoint = null;
-
   private boolean pathfinding = false;
 
   private void switchFloors(int floor) {
@@ -550,26 +546,38 @@ public class MapViewController extends CentralUIController implements Initializa
     ListPoints lp = new ListPoints(allPoints);
     floorPoints = lp.getFloor(floor).getPoints();
     initializeVisualNodes();
-    String start = (String) startNodeBox.getValue();
-    String end = (String) endNodeBox.getValue();
-    listedPoints.clear();
-    listedPoints.put(start, startPoint);
-    listedPoints.put(end, endPoint);
+
+    // Setup the Point choice boxes on the left
+
+    Point start = (Point) startNodeBox.getValue();
+    Point end = (Point) endNodeBox.getValue();
+
+    // Clear them first
     startNodeBox.getItems().clear();
     endNodeBox.getItems().clear();
+
+    if(start != null && start.getFloor() != (int) floorChoiceBox.getValue()) {
+      startNodeBox.getItems().add(start);
+      endNodeBox.getItems().add(start);
+    }
+    if(end != null && end.getFloor() != (int) floorChoiceBox.getValue()) {
+      startNodeBox.getItems().add(end);
+      endNodeBox.getItems().add(end);
+    }
+
+
+    ArrayList<Point> selectablePoints = new ArrayList<Point>();
+    // Now add the points on the current floor
     for (Point p : floorPoints) {
       if (p.getName() == null || p.getName().equals("") || p.getName().equals("null") || p.getName()
           .equals("ELEVATOR")) {
-        if (mapViewFlag == 3) {
-          String s = "" + p.getId();
-          listedPoints.put(s, p);
-        }
-      } else {
-        listedPoints.put(p.getName(), p);
+      }else{
+        selectablePoints.add(p);
       }
     }
-    startNodeBox.getItems().addAll(listedPoints.keySet());
-    endNodeBox.getItems().addAll(listedPoints.keySet());
+    startNodeBox.getItems().addAll(selectablePoints);
+    endNodeBox.getItems().addAll(selectablePoints);
+
     startNodeBox.setValue(start);
     endNodeBox.setValue(end);
 
@@ -1174,28 +1182,45 @@ public class MapViewController extends CentralUIController implements Initializa
   @FXML
   private void clearButtonClicked() {
     pathfinding = false;
-    startPoint = null;
-    endPoint = null;
     getMap();
     switchFloors((int) floorChoiceBox.getValue());
     saveButton.setDisable(false);
     goButton.setDisable(false);
+    directions = "";
   }
 
   @FXML
   private void setEndButtonClicked() {
-    endPoint = listedPoints.get((String) endNodeBox.getValue());
-    if (endPoint == null && pointFocus != null) {
-      endPoint = pointFocus;
+    setEnd(getSelectedPointInSearch());
+  }
+
+  private void setEnd(Point newEnd){
+    if(newEnd != null){
+      if(newEnd.getFloor() == (int) floorChoiceBox.getValue()){
+        endNodeBox.setValue(newEnd);
+      }else{
+        endNodeBox.getItems().add(newEnd);
+        startNodeBox.getItems().add(newEnd);
+        endNodeBox.setValue(newEnd);
+      }
+    }
+  }
+
+  private void setStart(Point newStart){
+    if(newStart != null){
+      if(newStart.getFloor() == (int) floorChoiceBox.getValue()){
+        startNodeBox.setValue(newStart);
+      }else{
+        startNodeBox.getItems().add(newStart);
+        endNodeBox.getItems().add(newStart);
+        startNodeBox.setValue(newStart);
+      }
     }
   }
 
   @FXML
   private void setStartButtonClicked() {
-    startPoint = listedPoints.get((String) startNodeBox.getValue());
-    if (startPoint == null && pointFocus != null) {
-      startPoint = pointFocus;
-    }
+    setStart(getSelectedPointInSearch());
   }
 
   @FXML
@@ -1327,14 +1352,16 @@ public class MapViewController extends CentralUIController implements Initializa
 
   @FXML
   private void drawPathButtonClicked() {
-    if (startPoint != null && endPoint != null) {
+    Point start = (Point) startNodeBox.getSelectionModel().getSelectedItem();
+    Point end = (Point) endNodeBox.getSelectionModel().getSelectedItem();
+    if (start != null && end != null) {
       ArrayList<Point> pathPoints;
       System.out.println(currSession.algorithm);
       pathfinding = true;
       saveButton.setDisable(true);
       goButton.setDisable(true);
       ListPoints lp = new ListPoints(allPoints);
-      ArrayList<Point> lp2 = lp.executeStrategy(startPoint, endPoint);
+      ArrayList<Point> lp2 = lp.executeStrategy(start, end);
       allPoints.clear();
       allPoints.addAll(lp2);
       switchFloors((int) floorChoiceBox.getValue());
@@ -1602,16 +1629,24 @@ public class MapViewController extends CentralUIController implements Initializa
 
   @FXML
   private void searchGoButtonClicked() {
+    Point p = getSelectedPointInSearch();
+    if(p != null) {
+      floorChoiceBox.setValue(p.getFloor());
+      setPointFocus(p);
+    }
+  }
+
+
+  private Point getSelectedPointInSearch(){
     Point selected = searchPoints.get(resultsList.getSelectionModel().getSelectedItem());
     int ind = allPoints.indexOf(selected);
     if (ind != -1) {
       Point actual = allPoints.get(ind);
       if (actual != null) {
-        floorChoiceBox.setValue(actual.getFloor());
-        setPointFocus(actual);
+        return actual;
       }
     }
-
+    return null;
   }
 
 
