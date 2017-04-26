@@ -31,6 +31,8 @@ public class AdminMenuController extends CentralUIController implements Initiali
   private Label LogOffButton;
   @FXML
   private Label LoginLabel;
+  @FXML
+  private Label CreateAccountButton;
 
   @Override
   public void customListenerX () {
@@ -94,6 +96,16 @@ public class AdminMenuController extends CentralUIController implements Initiali
       loadScene(primaryStage, "/MainMenu.fxml");
     } catch (Exception e) {
       System.out.println("Cannot load main menu");
+      e.printStackTrace();
+    }
+  }
+
+  public void createAccount() {
+    Stage primaryStage = (Stage) AdminMenu.getScene().getWindow();
+    try {
+      loadScene(primaryStage, "/SignupMenu.fxml");
+    } catch (Exception e) {
+      System.out.println("Cannot load signup menu");
       e.printStackTrace();
     }
   }

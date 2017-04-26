@@ -39,8 +39,6 @@ public class AdminLoginController extends CentralUIController implements Initial
   private Label LoginError;
   @FXML
   private AnchorPane anchorPane;
-  @FXML
-  private Label CreateAccountButton;
 
   @Override
   public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
@@ -56,7 +54,6 @@ public class AdminLoginController extends CentralUIController implements Initial
     AdminNameField.setLayoutX(x_res/2 - 20);
     AdminPassField.setLayoutX(x_res/2 - 20);
     LoginError.setLayoutX(x_res/2 - LoginError.getPrefWidth()/2);
-    CreateAccountButton.setLayoutX(x_res - CreateAccountButton.getPrefWidth() - 10);
   }
   @Override
   public void customListenerY () {
@@ -66,7 +63,6 @@ public class AdminLoginController extends CentralUIController implements Initial
     AdminNameField.setLayoutY(4*y_res/11);
     AdminPassField.setLayoutY(6*y_res/11);
     LoginError.setLayoutY(7*y_res/11 + 10);
-    CreateAccountButton.setLayoutY(y_res - CreateAccountButton.getPrefHeight() - 10);
   }
 
   // Detects if a key is pressed when the username, password, or login button are highlighted
@@ -100,17 +96,6 @@ public class AdminLoginController extends CentralUIController implements Initial
     } else {
       LoginError.setVisible(true);
     }
-  }
-
-  public void createAccount() {
-    Stage primaryStage = (Stage) AdminLogin.getScene().getWindow();
-    try {
-      loadScene(primaryStage, "/SignupMenu.fxml");
-    } catch (Exception e){
-      System.out.println("Cannot load signup menu");
-      e.printStackTrace();
-    }
-
   }
 
   /**

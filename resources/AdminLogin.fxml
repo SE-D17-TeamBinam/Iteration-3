@@ -41,11 +41,6 @@
                   <Font name="Times New Roman" size="24.0" />
                </font>
             </Label>
-            <Label fx:id="CreateAccountButton" alignment="CENTER" layoutX="1136.0" layoutY="671.0" onMouseClicked="#createAccount" prefHeight="65.0" prefWidth="150.0" style="-fx-background-color: #3255bc;" text="Create Account" textFill="WHITE">
-               <font>
-                  <Font name="Times New Roman" size="20.0" />
-               </font>
-            </Label>
          </children>
       </Pane>
    </children>

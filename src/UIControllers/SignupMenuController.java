@@ -136,7 +136,7 @@ public class SignupMenuController extends CentralUIController implements Initial
   public void back () {
     Stage primaryStage = (Stage) SignupMenu.getScene().getWindow();
     try {
-      loadScene(primaryStage, "/AdminLogin.fxml");
+      loadScene(primaryStage, "/AdminMenu.fxml");
     } catch (Exception e) {
       System.out.println("Cannot load main menu");
       e.printStackTrace();
