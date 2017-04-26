@@ -28,6 +28,7 @@ class LoadThread implements Runnable {
     try {
       dbc.localPoints = dbc.getAllPoints();
       dbc.localPhysicians = dbc.getAllPhysicians();
+      dbc.progressBarPercentage = 1;
     } catch (SQLException e){
       System.out.println(
           "Error Getting Data From The Database, failed to load, will return DB local physicians copy \n Query/Connection Error : "
