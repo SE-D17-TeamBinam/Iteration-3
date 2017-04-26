@@ -53,7 +53,7 @@ public class FakePoint {
     this.name = "";
     if (equivalent.getNames() != null) {
       for (String n : equivalent.getNames()) {
-        if (n != null && n.length() > 1) {
+        if (n.length() > 1) {
           this.name += n + "\t";
         }
       }
