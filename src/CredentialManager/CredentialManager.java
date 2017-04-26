@@ -10,10 +10,10 @@ import java.util.Random;
  * Created by Praneeth Appikatla on 4/25/2017.
  */
 public class CredentialManager implements CredentialInterface{
-  HashMap<String, String> credentials = new HashMap<>();
-  CredentialEntry entries = new CredentialEntry(credentials);
-  HashMap<CredentialEntry, UserType> users = new HashMap <CredentialEntry, UserType>();
-  private String SALT = getSaltString();
+  private HashMap<String, String> credentials = new HashMap<>();
+  private CredentialEntry entries = new CredentialEntry(credentials);
+  private HashMap<CredentialEntry, UserType> users = new HashMap <CredentialEntry, UserType>();
+  private String SALT = getSaltString(20);
   private static CredentialManager instance = new CredentialManager();
 
   public CredentialManager(){}
@@ -74,12 +74,17 @@ public class CredentialManager implements CredentialInterface{
     return hash.toString();
   }
 
-  public String getSaltString(){
+  /**
+   *
+   * @param length Specified length of the string you want to create
+   * @return A random string of specified length
+   */
+  public String getSaltString(int length){
     // helper to generate a random string from certain characters
     String saltChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
     StringBuilder salt = new StringBuilder();
     Random rand = new Random();
-    while (salt.length() < 20) { // length of random string
+    while (salt.length() < length) { // length of random string
       int index = (int) (rand.nextFloat() * saltChars.length());
       salt.append(saltChars.charAt(index));
     }
