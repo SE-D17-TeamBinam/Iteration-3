@@ -750,7 +750,7 @@ public class DatabaseController implements DatabaseInterface {
       }
       for(Point p : diffPoints){
         for (int i = 0; i < p.neighbors.size(); i++){
-          System.out.println("Diff neighbor point updating " + p.getId() + " -> "  + p.neighbors.get(i).getId());
+//          System.out.println("Diff neighbor point updating " + p.getId() + " -> "  + p.neighbors.get(i).getId());
           this.addNeighbor(p.getId(), p.neighbors.get(i).getId());
         }
       }
