@@ -361,6 +361,7 @@ public class MapViewController extends CentralUIController implements Initializa
   // Proxies the images for each floor
   private HashMap<Integer, Image> floorImages = new HashMap<Integer, Image>();
 
+  private int maxID = 0;
 
   private class Connection {
 
@@ -443,8 +444,8 @@ public class MapViewController extends CentralUIController implements Initializa
     repositionResultsList();
     // Adds a circle to show where the mouse is on the map
     initializePathFindingBox();
+    findMaxID();
   }
-
 
   private void initializePathFindingBox() {
     ArrayList<PathfindingStrategy> strats = new ArrayList<PathfindingStrategy>();
@@ -1708,14 +1709,37 @@ public class MapViewController extends CentralUIController implements Initializa
     return out;
   }
 
+
+  private void findMaxID(){
+    if(allPoints.size() > 0) {
+      maxID = allPoints.get(allPoints.size() - 1).getId();
+    }
+  }
+
+  private void defragmentIDs(){
+    for(int i = 0; i < allPoints.size(); i++){
+      allPoints.get(i).setID(i+1);
+    }
+  }
+
   @FXML
   private void saveMapButtonClicked() {
     saveButton.setDisable(true);
     progressPane.setVisible(true);
     saving = true;
-    int i = 0;
+    // Only assigns IDs to points that have not been assigned IDs
+    // Checks if the newly assigned IDs exceed the value of Point.ID_MAX
+    // If it exceeds that value, then it defragments the unique IDs, essentially reassigning ID
+    // values based on index in the allPoints ArrayList
     for (Point p : allPoints) {
-      p.setID(i++);
+      if(p.getId() == 0){
+        int newID = ++maxID;
+        if(newID < 0 || newID > Point.ID_MAX) {
+          defragmentIDs();
+        }else{
+          p.setID(maxID);
+        }
+      }
     }
     database.setPoints(allPoints);
   }
