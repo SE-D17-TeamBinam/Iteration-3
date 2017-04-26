@@ -2051,9 +2051,9 @@ public class MapViewController extends CentralUIController implements Initializa
       addButton.setStyle("-fx-background-color:#3255bc");
       addButton.setTextFill(Paint.valueOf("White"));
       Button cancelButton = new Button("Cancel");
-      //TextField entry = new TextField();
-      //entry.requestFocus();
-      //aliases.add(entry);
+      TextField entry = new TextField();
+      entry.requestFocus();
+      aliases.add(entry);
 
       // organize into grid pane
       GridPane grid = new GridPane();
@@ -2064,24 +2064,6 @@ public class MapViewController extends CentralUIController implements Initializa
       grid.add(addButton, 2, 1);
       addButton.setFocusTraversable(false);
       grid.add(new Label("Add or remove names of selected point."), 1, 0);
-
-      //
-
-      ArrayList<String> currNames = new ArrayList<>();
-      currNames = pointFocus.getNames();
-
-      for (int i = 0; i < currNames.size(); i++) {
-          TextField name = new TextField();
-          String s = currNames.get(i);
-          name.setText(s);
-          aliases.add(name);
-
-      }
-
-      for (int i = 0; i < aliases.size() ; i++) {
-        grid.add(aliases.get(i), 1, grid.getChildren().size()-1);
-      }
-
 
 
       // keep button sizes constant and color uniform with UI
@@ -2107,6 +2089,23 @@ public class MapViewController extends CentralUIController implements Initializa
       Scene dialogScene = new Scene(scroll, 300, 200);
       dialog.setScene(dialogScene);
 
+
+      //
+      ArrayList<String> currNames = new ArrayList<>();
+      currNames = pointFocus.getNames();
+
+      for (int i = 0; i < currNames.size(); i++) {
+        TextField name = new TextField();
+        String s = currNames.get(i);
+        name.setText(s);
+        aliases.add(name);
+
+      }
+
+      for (int i = 0; i < aliases.size() ; i++) {
+        grid.add(aliases.get(i), 1, grid.getChildren().size()-1);
+      }
+
       // "+" button functionality: adds a new text field
       addButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
         @Override
@@ -2124,14 +2123,13 @@ public class MapViewController extends CentralUIController implements Initializa
       saveAliasButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
         @Override
         public void handle(MouseEvent event) {
-          ArrayList<String> aliasList = new ArrayList<>();
-
+          ArrayList<String> names = new ArrayList<>();
           for (int i = 0; i < aliases.size(); i++) {
-            if (!(aliases.get(i).getText().equalsIgnoreCase(""))) {
-              aliasList.add(aliases.get(i).getText().trim());
+            if (!(aliases.get(i).getText().equals("")) && !pointFocus.getNames().contains(aliases.get(i).getText())) {
+              names.add(aliases.get(i).getText().trim());
             }
-          }//&& !(pointFocus.getNames().contains(aliases.get(i).getText())) a thing
-            pointFocus.setNames(aliasList);
+          }
+            pointFocus.setNames(names);
             for (int i = 0; i < pointFocus.getNames().size(); i++) {
               System.out.println(pointFocus.getNames().get(i));
             }
