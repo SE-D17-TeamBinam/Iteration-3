@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -31,8 +32,8 @@ import org.Point;
  * Created by Leon Zhang on 2017/4/1.
  */
 public class SearchMenuController extends CentralUIController implements Initializable {
-  private ArrayList<Physician> docs = docsCache;
-  private ArrayList<Point> rooms = roomsCache;
+  private ArrayList<Physician> docs;
+  private ArrayList<Point> rooms;
   private String searchString = "";
   private ObservableList<Physician> HCOL = FXCollections.observableArrayList();
   private ObservableList<Point> RMOL = FXCollections.observableArrayList();
@@ -77,6 +78,10 @@ public class SearchMenuController extends CentralUIController implements Initial
   public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
     addResolutionListener(anchorPane);
     setBackground(anchorPane);
+    docs = database.getPhysicians();
+    rooms = database.getNamedPoints();
+    sortDocs(docs);
+    sortRooms(rooms);
 
     /* apply language configs */
     SearchMap.setText(dictionary.getString("Show on Map", currSession.getLanguage()));
@@ -108,16 +113,16 @@ public class SearchMenuController extends CentralUIController implements Initial
     );
     roomPhysicians.setCellValueFactory(new Callback<CellDataFeatures<Point, String>, ObservableValue<String>>() {
       public ObservableValue<String> call(CellDataFeatures<Point, String> p) {
-        String physicians = "";
+        String physician = "";
         for (Physician doc : docs) {
           for (Point room : doc.getLocations()) {
-            if (room.getId() == p.getValue().getId()){
-              physicians = physicians + doc.getFirstName() + " " + doc.getLastName() + "\n";
+            if (room.getName().equals(p.getValue().getName())){
+              physician = physician + doc.getFirstName() + " " + doc.getLastName() + "\n";
               break;
             }
           }
         }
-        return new ReadOnlyStringWrapper(physicians);
+        return new ReadOnlyStringWrapper(physician);
       }
     });
     SearchField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -128,7 +133,7 @@ public class SearchMenuController extends CentralUIController implements Initial
         updateRooms(rooms);
       }
     });
-    updatePhysicians(docs);
+    //Platform.runLater(() -> {updatePhysicians(docs);});
     toggleDoc();
   }
 
@@ -191,7 +196,7 @@ public class SearchMenuController extends CentralUIController implements Initial
       HCOL.addAll(HCs);
     }
     */
-    if (searchString.equals("")) {
+    if (searchString == "") {
       HCOL.addAll(HCs);
     } else {
       HCOL.addAll(database.fuzzySearchPhysicians(searchString));
@@ -221,7 +226,7 @@ public class SearchMenuController extends CentralUIController implements Initial
       RMOL.addAll(Rooms);
     }
     */
-    if (searchString.equals("")) {
+    if (searchString == "") {
       RMOL.addAll(Rooms);
     } else {
       RMOL.addAll(database.fuzzySearchPoints(searchString));

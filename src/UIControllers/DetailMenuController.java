@@ -81,7 +81,7 @@ public class DetailMenuController extends CentralUIController implements Initial
     RoomPane.setLayoutX(roomFieldX);
     RoomFloorField.setLayoutX(roomFieldX);
     RoomNameField.setLayoutX(roomFieldX);
-    double roomLabelX = x_res * 0.22 - RoomNameField.getPrefWidth()/2;
+    double roomLabelX = x_res * 0.4 - RoomNameField.getPrefWidth()/2;
     RoomNameLabel.setLayoutX(roomLabelX);
     RoomFloorLabel.setLayoutX(roomLabelX);
     RoomHPLabel.setLayoutX(roomLabelX);
@@ -96,8 +96,8 @@ public class DetailMenuController extends CentralUIController implements Initial
     DocFirstNameField.setLayoutX(docFieldX);
     DocLastNameField.setLayoutX(docFieldX);
     DocTitleField.setLayoutX(docFieldX);
-    DocInfoLabel.setLayoutX(x_res/2 - DocInfoLabel.getPrefWidth()/2);
-    RoomDetailLabel.setLayoutX(x_res/2 - RoomDetailLabel.getPrefWidth()/2);
+    Platform.runLater(() -> {DocInfoLabel.setLayoutX(x_res/2 - DocInfoLabel.getWidth()/2);});
+    Platform.runLater(() -> {RoomDetailLabel.setLayoutX(x_res/2 - RoomDetailLabel.getWidth()/2);});
   }
   @Override
   public void customListenerY () {
@@ -117,7 +117,7 @@ public class DetailMenuController extends CentralUIController implements Initial
       DocLastNameField.setText(currentPhysician.getLastName());
       DocTitleField.setText(currentPhysician.getTitle());
       for (Point room : currentPhysician.getLocations()){
-        String txt = room.getName();
+        String txt = "  " + room.getName() + "  ";
         Pane locPane = new Pane();
 
         Label ILabel = new Label();
@@ -128,11 +128,10 @@ public class DetailMenuController extends CentralUIController implements Initial
         //Platform.runLater(() -> {ILabel.setPrefWidth(ILabel.getWidth() + 15);});
 
 
-        Label Goto = new Label();
+        Button Goto = new Button();
         Goto.setPrefHeight(46);
-        Goto.setPrefWidth(46);
+        Goto.setPrefWidth(50);
         Goto.setLayoutY(2);
-        Goto.setStyle("-fx-background-color: #3255bc; -fx-text-fill: white;");
         Goto.setAlignment(Pos.CENTER);
         Goto.setFont(Font.font("Times New Roman", 24));
         Goto.setText("Go");
@@ -142,7 +141,7 @@ public class DetailMenuController extends CentralUIController implements Initial
         ILabel.setStyle("-fx-background-color: transparent");
         locPane.setOnMouseEntered(e -> {
           Goto.setVisible(true);
-          ILabel.setStyle("-fx-background-color: f7f7f7");
+          ILabel.setStyle("-fx-background-color: white");
         });
         locPane.setOnMouseExited(e -> {
           Goto.setVisible(false);
@@ -162,7 +161,8 @@ public class DetailMenuController extends CentralUIController implements Initial
       DetailRoom.setVisible(true);
       RoomNameField.setText(currentPoint.getName());
       RoomFloorField.setText(Integer.toString(currentPoint.getFloor()));
-      ArrayList<Physician> docs = docsCache;
+      ArrayList<Physician> docs = database.getPhysicians();
+      sortDocs(docs);
       for (Physician doc : docs){
         for (Point room : doc.getLocations()){
           if (room.getId() == currentPoint.getId()){

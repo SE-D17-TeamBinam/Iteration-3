@@ -4,6 +4,7 @@ import Definitions.Physician;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -171,6 +172,11 @@ public class DirectEditController extends CentralUIController implements Initial
     addResolutionListener(anchorPane);
     setBackground(anchorPane);
 
+    rooms = database.getNamedPoints();
+    docs = database.getPhysicians();
+    sortDocs(docs);
+    sortRooms(rooms);
+
     /* apply language configs */
     DirectBack.setText(dictionary.getString("Back", currSession.getLanguage()));
     DirectFirstName.setText(dictionary.getString("First Name", currSession.getLanguage()));
@@ -203,8 +209,6 @@ public class DirectEditController extends CentralUIController implements Initial
         return new ReadOnlyStringWrapper(locations);
       }
     });
-    rooms = roomsCache;
-    docs = docsCache;
     roomNames = new ArrayList<>();
 
     // load all displayDocs
@@ -255,7 +259,10 @@ public class DirectEditController extends CentralUIController implements Initial
     docDisplay.clear();
     if (searchString != "") {
       for (Physician doc : docs) {
-        if ((doc.getFirstName() + " " + doc.getLastName()).contains(searchString)) {
+        if (Pattern.compile(Pattern.quote(searchString),
+            Pattern.CASE_INSENSITIVE).matcher(
+                doc.getFirstName() + " " + doc.getLastName()
+            ).find()) {
           docDisplay.add(doc);
         }
       }
@@ -324,7 +331,9 @@ public class DirectEditController extends CentralUIController implements Initial
   private ArrayList<Point> finalLocs () {
     ArrayList<Point> ret = new ArrayList<>();
     for (ChoiceBox cb : locations) {
-      addtoFinalLocs(ret, cb);
+      if (cb.getValue() != null) {
+        addtoFinalLocs(ret, cb);
+      }
     }
     return ret;
   }
@@ -334,6 +343,7 @@ public class DirectEditController extends CentralUIController implements Initial
       try {
         if (n.getName().equals(L.getValue().toString())) {
           ret.add(n);
+          break;
         }
       } catch (NullPointerException e) {
         continue;
@@ -352,9 +362,9 @@ public class DirectEditController extends CentralUIController implements Initial
       selectedHP.setLocations(finalLocs());
       // check if it's a new Physician
       boolean isNewPhysician = true;
-      for (Physician doc : docs) {
-        if (doc.getID() == selectedHP.getID()){
-          doc = selectedHP;
+      for (int i = 0 ; i < docs.size() ; i++) {
+        if (docs.get(i).getID() == selectedHP.getID()){
+          docs.set(i, selectedHP);
           docDisplay.set(selectedHPIndex, selectedHP);
           isNewPhysician = false;
           break;
@@ -364,12 +374,13 @@ public class DirectEditController extends CentralUIController implements Initial
         docs.add(selectedHP);
         docDisplay.add(selectedHP);
       }
+      database.setPhysicians(docs);
+      database.save();
       // refresh the page
       refreshInfo();
       refreshDir();
       // save to database
       Directory.getSelectionModel().select(selectedHP);
-      database.setPhysicians(docs);
     } catch (NullPointerException e) {
       System.out.println("Nothing is selected");
     }
@@ -410,10 +421,8 @@ public class DirectEditController extends CentralUIController implements Initial
   //////// scene travel ///////
   /////////////////////////////
   public void back () {
-    refreshDatabase();
     Stage primaryStage = (Stage) DirectEdit.getScene().getWindow();
     try {
-      docsCache = database.getPhysicians();
       loadScene(primaryStage, "/AdminMenu.fxml");
     } catch (Exception e) {
       System.out.println("Cannot load admin login menu");
@@ -422,7 +431,6 @@ public class DirectEditController extends CentralUIController implements Initial
   }
 
   public void logoff () {
-    refreshDatabase();
     Stage primaryStage = (Stage) DirectEdit.getScene().getWindow();
     try {
       loadScene(primaryStage, "/MainMenu.fxml");
@@ -434,7 +442,6 @@ public class DirectEditController extends CentralUIController implements Initial
 
   public void editMap(){
     mapViewFlag = 3;
-    refreshDatabase();
     Stage primaryStage = (Stage) DirectEdit.getScene().getWindow();
     try {
       loadScene(primaryStage, "/MapScene.fxml");

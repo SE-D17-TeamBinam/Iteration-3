@@ -42,8 +42,6 @@ public class CentralUIController {
   protected static ImageView backgroundView = new ImageView();
   protected static ImageView logoView = new ImageView();
   /* database object */
-  protected static ArrayList<Physician> docsCache;
-  protected static ArrayList<Point> roomsCache;
   protected static DatabaseInterface database;
   /* */
   protected static Point searchingPoint;
@@ -54,25 +52,32 @@ public class CentralUIController {
     this.credentialManager = session.credentialManager;
     this.dictionary = session.dictionary;
     this.database = dbInterface;
-    refreshDatabase();
+    try {
+      database.load();
+    } catch (Exception e) {
+    }
   }
 
-  public void refreshDatabase () {
-    docsCache = database.getPhysicians();
-    roomsCache = database.getNamedPoints();
-    Collections.sort(docsCache, new Comparator<Physician>() {
+
+  public void sortDocs (ArrayList<Physician> docs) {
+    Collections.sort(docs, new Comparator<Physician>() {
       @Override
       public int compare(Physician doc1, Physician doc2) {
         return doc1.getLastName().compareTo(doc2.getLastName());
       }
     });
-    Collections.sort(roomsCache, new Comparator<Point>() {
+  }
+
+  public void sortRooms (ArrayList<Point> rooms) {
+    Collections.sort(rooms, new Comparator<Point>() {
       @Override
       public int compare(Point room1, Point room2) {
         return room1.getName().compareTo(room2.getName());
       }
     });
   }
+
+
   /**
    * Set the stage to the initial scene (main menu)
    * @parameter primaryStage: The main stage of the application
@@ -83,6 +88,7 @@ public class CentralUIController {
     primaryStage.setTitle("Faulkner Hospital Kiosk");
     primaryStage.show();
   }
+
   /**
    * @parameter primaryStage: The main stage of the application
    * @parameter fxmlpath: the file path of the fxml file to be loaded
