@@ -17,6 +17,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -24,6 +25,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Separator;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
@@ -133,8 +135,6 @@ public class MapViewController extends CentralUIController implements Initializa
   final ToggleGroup typeSelect = new ToggleGroup();
 
   // The pane for text directions
-  @FXML
-  private Pane directionsPane;
   @FXML
   private RadioButton emailButton;
   @FXML
@@ -394,8 +394,6 @@ public class MapViewController extends CentralUIController implements Initializa
   @FXML
   public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
     initializeSearch();
-    directionsPane.setVisible(false);
-
     //mapViewFlag = 3;
     if (mapViewFlag != 3) { // Todo you know
       AdminLogOff.setVisible(false);
@@ -457,6 +455,8 @@ public class MapViewController extends CentralUIController implements Initializa
     repositionResultsList();
     animateUserPane();
     animateTextDirectionsPane();
+    emailPane.setLayoutY(textDirectionsPaneRectangle.getHeight() - emailPane.getHeight() - 5);
+    textDirectionsListView.setPrefHeight(emailPane.getLayoutY() - textDirectionsListView.getLayoutY() - 5);
   }
 
   private void repositionResultsList() {
@@ -624,7 +624,6 @@ public class MapViewController extends CentralUIController implements Initializa
     fixMapDisplayLocation();
     updateUserPane();
     updateTextDirectionsPane();
-    directionsPane.setLayoutY(y_res - 180); // TODO Not constant height
     helpButton.setLayoutY(y_res - 60);
     helpPane.setLayoutY(y_res - 540);
     repositionResultsList();
@@ -1174,7 +1173,6 @@ public class MapViewController extends CentralUIController implements Initializa
 
   @FXML
   private void clearButtonClicked() {
-    directionsPane.setVisible(false);
     pathfinding = false;
     startPoint = null;
     endPoint = null;
@@ -1275,17 +1273,23 @@ public class MapViewController extends CentralUIController implements Initializa
   private double textDirectionsPaneTargetX;
   private int textDirectionsPaneVisible = 0;
 
+  @FXML
+  private Pane emailPane;
+
   private void updateTextDirectionsPane() {
     textDirectionsPaneTargetX =
         x_res - textDirectionsPane.getWidth() * textDirectionsPaneVisible
             - (~textDirectionsPaneVisible & 0x1) * textDirectionsPaneTabImageView
             .getFitWidth();
-    textDirectionsPaneRectangle.setHeight(y_res - bannerView.getImage().getHeight());
+    textDirectionsPaneRectangle.setHeight(y_res - textDirectionsPane.getLayoutY());
     textDirectionsPane
         .setLayoutY(bannerView.getImage().getHeight() + textDirectionsTabRectangle.getHeight());
     textDirectionsPane.setLayoutX(textDirectionsPaneTargetX);
     map_x_max = textDirectionsPaneTargetX + textDirectionsPaneTabImageView.getFitWidth();
     fixZoomPanePos();
+    emailPane.setLayoutY(textDirectionsPaneRectangle.getHeight() - emailPane.getHeight() - 5);
+
+
   }
 
   private void updateUserPane() {
@@ -1336,48 +1340,77 @@ public class MapViewController extends CentralUIController implements Initializa
       switchFloors((int) floorChoiceBox.getValue());
       // Get Text Directions
       pathPoints = allPoints;
-//      displayTextDirections(pathPoints);
-      // Below will be removed
-      FindDirections td = new FindDirections();
-      ArrayList<String> directions = td.getTextDirections(allPoints);
-      String out = "";
-      for (String s : directions) {
-        out += s + ". ";
-      }
-      directionsPane.setVisible(true);
-      textDirectionsBox.setText(out);
+      displayTextDirections(pathPoints);
     }
   }
 
+  @FXML
+  private ListView textDirectionsListView;
+
   private void displayTextDirections(ArrayList<Point> path){
+    directions = "";
     FindDirections td = new FindDirections();
     ArrayList<String> directions = td.getTextDirections(path);
-    for(String s : directions){
+    for(int i = 0; i < directions.size(); i++) {
+      String s = directions.get(i);
+      if (i < directions.size() - 1){
+        this.directions += s + ", ";
+      }else{
+        this.directions += s + ".";
+      }
       // Now add the string and associated icon to an hbox, then add the hbox to the list
+      VBox vbox = new VBox();
       HBox item = new HBox();
+      item.setAlignment(Pos.CENTER);
       Image iconImg = directionToImage(s);
-      ImageView iconView = new ImageView();
+      ImageView iconView = new ImageView(iconImg);
       iconView.setFitWidth(40);
       iconView.setFitHeight(40);
+      String maxString = "" + directions.size() + ". ";
+      String label = (i + 1) + ". ";
+      System.out.println(maxString.length());
+      for(int k = 0; k < maxString.length() - label.length(); k++){
+        label += "  ";
+      }
+      item.setMaxWidth(200);
+      item.getChildren().add(new Label(label));
       item.getChildren().add(iconView);
+      Text step = new Text(s);
+      step.setWrappingWidth(115);
+      Separator sep1 = new Separator();
+      sep1.setVisible(false);
+      item.getChildren().add(sep1);
+      item.getChildren().add(step);
+
+      Separator sep2 = new Separator();
+      sep2.setVisible(false);
+      vbox.getChildren().add(sep2);
+      vbox.getChildren().add(item);
+
+      Separator sep3 = new Separator();
+      sep3.setVisible(false);
+      vbox.getChildren().add(sep3);
+
+
+      textDirectionsListView.getItems().add(vbox);
 
     }
   }
 
   private Image directionToImage(String directions){
-    Image out = new Image("straight");
+    Image out = new Image("/icons/straight.png");
     if(directions.contains("left")){
-      out = new Image("left.png");
+      out = new Image("/icons/left.png");
     }else if(directions.contains("right")){
-      out = new Image("right.png");
+      out = new Image("/icons/right.png");
 
     }else if(directions.contains("straight")){
-      out = new Image("straight.png");
+      out = new Image("/icons/straight.png");
 
     }else if(directions.contains("destination")){
-      out = new Image("destination.png");
+      out = new Image("/icons/destination.png");
     }else if(directions.contains("around")){
-      out = new Image("turn-around.png");
+      out = new Image("/icons/turn-around.png");
     }
     return out;
   }
@@ -2089,13 +2122,20 @@ public class MapViewController extends CentralUIController implements Initializa
     });
   }
 
+  String directions = "";
+
   public void sendDirections() {
     Emailer e = new Emailer();
     if (directionSelect.getSelectedToggle().getUserData().toString().equals("email")) {
-      e.email(detailEntry.getText(), textDirectionsBox.getText());
+      if(!detailEntry.equals("") && !directions.equals("")) {
+        e.email(detailEntry.getText(), directions);
+      }
     } else {
-      e.text(detailEntry.getText(), (Carrier) carrierBox.getSelectionModel().getSelectedItem(),
-          textDirectionsBox.getText());
+      Carrier carrier = (Carrier) carrierBox.getSelectionModel().getSelectedItem();
+      if(carrier != null && !directions.equals("") && !detailEntry.getText().equals("")) {
+        e.text(detailEntry.getText(), carrier,
+            directions);
+      }
     }
   }
 }

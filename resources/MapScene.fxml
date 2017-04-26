@@ -8,7 +8,6 @@
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -682,7 +681,7 @@
       <Pane fx:id="textDirectionsPane" layoutX="1038.0" layoutY="240.0" prefHeight="510.0" prefWidth="262.0">
          <children>
             <Rectangle fx:id="textDirectionsPaneRectangle" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="510.0" layoutX="19.0" stroke="BLACK" strokeType="INSIDE" width="243.0" />
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="150.0" onMouseClicked="#toggleTextDirectionsPane" stroke="BLACK" strokeType="INSIDE" width="20.0">
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff80" height="150.0" onMouseClicked="#toggleTextDirectionsPane" stroke="BLACK" strokeType="INSIDE" width="20.0">
                <cursor>
                   <Cursor fx:constant="CLOSED_HAND" />
                </cursor>
@@ -693,27 +692,25 @@
                </image>
             </ImageView>
             <Label fx:id="textDirectionsTabLabel" layoutX="-38.0" layoutY="78.0" mouseTransparent="true" rotate="90.0" text="Text Directions" />
-            <ListView fx:id="textDirectionsListView" layoutX="41.0" layoutY="75.0" prefHeight="278.0" prefWidth="200.0" />
+            <ListView fx:id="textDirectionsListView" layoutX="26.0" layoutY="75.0" prefHeight="278.0" prefWidth="230.0" />
             <HBox alignment="CENTER" layoutX="19.0" layoutY="18.0" prefHeight="40.0" prefWidth="243.0">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text Directions">
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Textual Directions">
                      <font>
                         <Font size="25.0" />
                      </font>
                   </Text>
                </children>
             </HBox>
-         </children>
-      </Pane>
-      <Pane fx:id="directionsPane" layoutX="150.0" layoutY="570.0" prefHeight="180.0" prefWidth="504.0" style="-fx-background-color: white;">
-         <children>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="181.0" layoutX="252.0" layoutY="-1.0" stroke="BLACK" strokeType="INSIDE" width="252.0" />
-            <TextArea fx:id="textDirectionsBox" editable="false" layoutY="-1.0" prefHeight="180.0" prefWidth="252.0" wrapText="true" />
-            <RadioButton fx:id="emailButton" layoutX="283.0" layoutY="31.0" mnemonicParsing="false" text="Email" />
-            <RadioButton fx:id="textButton" layoutX="283.0" layoutY="5.0" mnemonicParsing="false" text="Text" />
-            <TextField fx:id="detailEntry" layoutX="283.0" layoutY="103.0" prefHeight="31.0" prefWidth="184.0" />
-            <ChoiceBox fx:id="carrierBox" layoutX="283.0" layoutY="62.0" prefHeight="31.0" prefWidth="184.0" />
-            <Button fx:id="sendButton" layoutX="343.0" layoutY="144.0" mnemonicParsing="false" onMouseClicked="#sendDirections" text="Send" />
+            <Pane fx:id="emailPane" layoutX="26.0" layoutY="353.0" prefHeight="157.0" prefWidth="230.0">
+               <children>
+                  <RadioButton fx:id="emailButton" layoutX="23.0" layoutY="4.0" mnemonicParsing="false" text="Email" />
+                  <RadioButton fx:id="textButton" layoutX="112.0" layoutY="4.0" mnemonicParsing="false" text="Text" />
+                  <ChoiceBox fx:id="carrierBox" layoutX="23.0" layoutY="36.0" prefHeight="31.0" prefWidth="184.0" />
+                  <TextField fx:id="detailEntry" layoutX="23.0" layoutY="85.0" prefHeight="31.0" prefWidth="184.0" />
+                  <Button fx:id="sendButton" layoutX="88.0" layoutY="121.0" mnemonicParsing="false" onMouseClicked="#sendDirections" text="Send" />
+               </children>
+            </Pane>
          </children>
       </Pane>
    </children>
