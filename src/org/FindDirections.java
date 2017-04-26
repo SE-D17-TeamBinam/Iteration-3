@@ -65,6 +65,9 @@ public class FindDirections {
 
     }
     count=0;
+  /*  if(directions.size() == 0){//the kiosk is in a direct line with the destination
+      directions.add(straight + " " + path.get(path.size()-1).getName());
+    }*/
     directions.add(finished);
     //start filtering
     while(count != directions.size()-1){
@@ -95,26 +98,28 @@ public class FindDirections {
     if(!next.getName().equals("null")){
       name = next.getName();
     }
-    if(name.equals("INTERSECTION")){
-      hallsPassed++;
-      return;
-    }
     if (CurrentAngle <= 45 && CurrentAngle >= -45) {
+      //if(directions.size() == 1 && directions.get(0).equals(straight))
       //directions.add(straight + " " + name);
+      if(name.equals("INTERSECTION")){
+        hallsPassed++;
+      }
+      return;
     } else if (CurrentAngle < 135 && CurrentAngle > 45) {
       directions.add(right + " after " + hallsPassed + " hallways");
-      directions.add(straight + " " + name);
+     // directions.add(straight + " " + name);
       ChangeDirectionRight(Angle);
     } else if (CurrentAngle >= 135 || CurrentAngle <= -135) {
       directions.add(reverse);
-      directions.add(straight + " " + name);
+      //directions.add(straight + " " + name);
       ChangeDirectionReverse(Angle);
     } else if (CurrentAngle > -135 && CurrentAngle < -45) {
       directions.add(left + " after " + hallsPassed + " hallways");
-      directions.add(straight + " " + name);
+      //directions.add(straight + " " + name);
       ChangeDirectionLeft(Angle);
     }
     hallsPassed = 0;
+
   }
 
     public void ChangeDirectionRight(float Angle){
