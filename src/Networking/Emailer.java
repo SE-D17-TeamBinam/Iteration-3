@@ -78,10 +78,10 @@ public class Emailer implements IEmailer{
    */
   public String format (Carrier c, String number) {
     switch(c) {
-      case att: return number + "@txt.att.net";
-      case sprint: return number + "@messaging.sprintpcs.com";
-      case tmobile: return number + "@tmomail.net";
-      case verizon: return number + "@vtext.com";
+      case ATT: return number + "@txt.ATT.net";
+      case SPRINT: return number + "@messaging.sprintpcs.com";
+      case TMOBILE: return number + "@tmomail.net";
+      case VERIZON: return number + "@vtext.com";
       default:return "Unexpected error" + c.name();
     }
   }

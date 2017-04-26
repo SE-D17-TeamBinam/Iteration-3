@@ -4,16 +4,14 @@ package CredentialManager;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 /**
  * Created by Praneeth Appikatla on 4/25/2017.
  */
 public class CredentialManager implements CredentialInterface{
-  Map<String, String> DB = new HashMap<String, String>();
+  HashMap<HashMap<String, String>, UserType> users = new HashMap <HashMap<String,String>, UserType>();
   private String SALT = getSaltString();
-
   private static CredentialManager instance = new CredentialManager();
 
   public CredentialManager(){}
@@ -23,11 +21,13 @@ public class CredentialManager implements CredentialInterface{
   }
 
   @Override
-  public Boolean signup(String username, String password) {
-    if (!(DB.containsKey(username))) {
+  public Boolean signup(String username, String password, UserType type) {
+    HashMap<String, String> loginInfo = new HashMap<>();
+    if (!(loginInfo.containsKey(username))) {
       String saltedPass = SALT + password;
       String hashedPass = generateHash(saltedPass);
-      DB.put(username.toLowerCase(), hashedPass);
+      loginInfo.put(username, hashedPass);
+      users.put(loginInfo, type);
       return false;
     }
     else {
@@ -37,11 +37,14 @@ public class CredentialManager implements CredentialInterface{
 
   @Override
   public Boolean login(String username, String password) {
+    HashMap<String, String> loginInfo = new HashMap<>();
+    loginInfo.put(username, password);
+    UserType type = users.get(loginInfo);
     Boolean isAuthenticated = false;
     String saltedPass = SALT + password;
     String hashedPass = generateHash(saltedPass);
 
-    String storedHash = DB.get(username);
+    String storedHash = null;
     if(hashedPass.equals(storedHash)){
       isAuthenticated = true;
     } else {

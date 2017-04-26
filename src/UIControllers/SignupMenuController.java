@@ -1,5 +1,6 @@
 package UIControllers;
 
+import CredentialManager.UserType;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -108,12 +109,13 @@ public class SignupMenuController extends CentralUIController implements Initial
   public void signup() {
     String pass = SignupPassField.getText();
     String username = SignupNameField.getText();
+    UserType type = (UserType) SignupBox.getSelectionModel().getSelectedItem();
     if (pass.equals("") || username.equals("")){
       SignupError.setVisible(true);
       UsernameRequired.setTextFill(Paint.valueOf("red"));
       PassRequired.setTextFill(Paint.valueOf("red"));
     }
-    else if (credentialManager.signup(username, pass)){
+    else if (credentialManager.signup(username, pass, type)){
       UsernameExistsError.setVisible(true);
     }
     else {

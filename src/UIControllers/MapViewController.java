@@ -2002,10 +2002,10 @@ public class MapViewController extends CentralUIController implements Initializa
     textButton.setSelected(true);
     emailButton.setUserData("email");
     textButton.setUserData("text");
-    carrierBox.getItems().add(Carrier.att);
-    carrierBox.getItems().add(Carrier.tmobile);
-    carrierBox.getItems().add(Carrier.sprint);
-    carrierBox.getItems().add(Carrier.verizon);
+    carrierBox.getItems().add(Carrier.ATT);
+    carrierBox.getItems().add(Carrier.TMOBILE);
+    carrierBox.getItems().add(Carrier.SPRINT);
+    carrierBox.getItems().add(Carrier.VERIZON);
 
     directionSelect.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
       @Override
@@ -2038,8 +2038,8 @@ public class MapViewController extends CentralUIController implements Initializa
       ArrayList<TextField> aliases = new ArrayList<TextField>();
       Stage primaryStage = (Stage) mapViewPane.getScene().getWindow();
       Stage dialog = new Stage();
-      dialog.setMaxHeight(500);
-      dialog.setMaxWidth(500);
+      dialog.setMinHeight(300);
+      dialog.setMinWidth(400);
       dialog.setTitle("Alias Entry");
       dialog.setResizable(true);
       dialog.initModality(Modality.APPLICATION_MODAL);
@@ -2051,19 +2051,38 @@ public class MapViewController extends CentralUIController implements Initializa
       addButton.setStyle("-fx-background-color:#3255bc");
       addButton.setTextFill(Paint.valueOf("White"));
       Button cancelButton = new Button("Cancel");
-      TextField entry = new TextField();
-      entry.requestFocus();
-      aliases.add(entry);
+      //TextField entry = new TextField();
+      //entry.requestFocus();
+      //aliases.add(entry);
 
       // organize into grid pane
       GridPane grid = new GridPane();
       grid.setHgap(10);
       grid.setVgap(10);
       grid.setPadding(new Insets(40, 0, 10, 10));
-      grid.add(entry, 1, 1);
+      //grid.add(entry, 1, 1);
       grid.add(addButton, 2, 1);
       addButton.setFocusTraversable(false);
-      grid.add(new Label("Add names to selected point."), 1, 0);
+      grid.add(new Label("Add or remove names of selected point."), 1, 0);
+
+      //
+
+      ArrayList<String> currNames = new ArrayList<>();
+      currNames = pointFocus.getNames();
+
+      for (int i = 0; i < currNames.size(); i++) {
+          TextField name = new TextField();
+          String s = currNames.get(i);
+          name.setText(s);
+          aliases.add(name);
+
+      }
+
+      for (int i = 0; i < aliases.size() ; i++) {
+        grid.add(aliases.get(i), 1, grid.getChildren().size()-1);
+      }
+
+
 
       // keep button sizes constant and color uniform with UI
       TilePane tileButtons = new TilePane();
@@ -2105,18 +2124,24 @@ public class MapViewController extends CentralUIController implements Initializa
       saveAliasButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
         @Override
         public void handle(MouseEvent event) {
-          ArrayList<String> aliasList = pointFocus.getNames();
+          ArrayList<String> aliasList = new ArrayList<>();
+
           for (int i = 0; i < aliases.size(); i++) {
-            // doesn't add to list when text field is empty or is that alias already exists for that
-            // point ignoring case
-            if (!(aliases.get(i).getText().equalsIgnoreCase("")) && !(pointFocus.getNames().contains(aliases.get(i).getText()))){
-              aliasList.add(pointFocus.getNames().size() , aliases.get(i).getText().trim());
+            if (!(aliases.get(i).getText().equalsIgnoreCase(""))) {
+              aliasList.add(aliases.get(i).getText().trim());
             }
+          }//&& !(pointFocus.getNames().contains(aliases.get(i).getText())) a thing
+            pointFocus.setNames(aliasList);
+            for (int i = 0; i < pointFocus.getNames().size(); i++) {
+              System.out.println(pointFocus.getNames().get(i));
+            }
+            dialog.close();
           }
-          pointFocus.setNames(aliasList);
-          for (int i = 0; i < pointFocus.getNames().size(); i++) {
-            System.out.println(pointFocus.getNames().get(i));
-          }
+      });
+
+      cancelButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        @Override
+        public void handle(MouseEvent event) {
           dialog.close();
         }
       });
@@ -2124,9 +2149,9 @@ public class MapViewController extends CentralUIController implements Initializa
       dialog.showAndWait();
     }
     else {
-      Dialog alert = new Alert(AlertType.INFORMATION, "Please select a point to add an alias to.");
-      alert.setHeaderText("Information");
-      alert.showAndWait();
+      Dialog alert = new Alert(AlertType.ERROR, "Please select a point to add an alias to.");
+      alert.setHeaderText("Attention");
+      alert.show();
     }
 
 

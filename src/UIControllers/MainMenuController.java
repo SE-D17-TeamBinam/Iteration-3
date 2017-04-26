@@ -63,25 +63,26 @@ public class MainMenuController extends CentralUIController implements Initializ
     MapLabel.setLayoutX(5*(x_res/7) - MapLabel.getPrefWidth()/2);
     MapButton.setLayoutX(5*(x_res/7) - MapButton.getPrefWidth()/2);
     SearchButton.setLayoutX(2*(x_res/7) - SearchButton.getPrefWidth()/2);
-    MainKey.setLayoutX(x_res - MainKey.getFitWidth() - 10);
-    InfoButton.setLayoutX(x_res - InfoButton.getFitWidth());
+    MainKey.setLayoutX(x_res - MainKey.getFitWidth());
+    InfoButton.setLayoutX(x_res - InfoButton.getFitWidth() + 10);
     SearchLabel.setLayoutX(2*(x_res/7) - SearchLabel.getPrefWidth()/2);
   }
 
   @Override
   public void customListenerY () {
-    MainKey.setLayoutY(y_res - MainKey.getFitHeight() - 10);
     MapButton.setLayoutY(6*(y_res/11) - MapButton.getPrefHeight()/2);
     MapLabel.setLayoutY(6*(y_res/11) + 100);
     SearchButton.setLayoutY(6*(y_res/11) - SearchButton.getPrefHeight()/2);
     SearchLabel.setLayoutY(6*(y_res/11) + 100);
     langBox.setLayoutY(y_res - 50);
+    MainKey.setLayoutY(y_res - 50);
   }
 
   public void gotoMap () {
     Stage primaryStage = (Stage) MainMenu.getScene().getWindow();
     try {
-      mapViewFlag = 2;
+      mapViewFlag = 3;
+      //mapViewFlag = 2;
       loadScene(primaryStage, "/MapScene.fxml");
     } catch (Exception e) {
       e.printStackTrace();

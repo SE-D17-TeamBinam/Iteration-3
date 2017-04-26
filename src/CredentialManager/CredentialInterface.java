@@ -5,7 +5,7 @@ package CredentialManager;
  */
 public interface CredentialInterface {
 
-  Boolean signup(String username, String password);
+  Boolean signup(String username, String password, UserType user);
   Boolean login(String username, String password);
   String generateHash(String input);
 
