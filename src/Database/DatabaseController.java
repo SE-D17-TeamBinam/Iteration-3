@@ -558,15 +558,19 @@ public class DatabaseController implements DatabaseInterface {
     //Now convert to real
     ArrayList<Point> ret = new ArrayList<Point>();
     for (int i = 0; i < fakepoints.size(); i++) {
-      ret.add(fakepoints.get(i).toRealPoint());
+      Point point_to_add = fakepoints.get(i).toRealPoint();
+      if(point_to_add.getName().equals("ELEVATOR")){
+        point_to_add = toElevatorPoint(point_to_add);
+      }
+      ret.add(point_to_add);
     }
-    for (int i = 0; i < ret.size(); i++) {
+    /*for (int i = 0; i < ret.size(); i++) {
       if (ret.get(i).getName().equals("ELEVATOR")) {
         Point p = ret.get(i);
         ret.remove(i);
         ret.add(i, toElevatorPoint(p));
       }
-    }
+    }*/
     for (int i = 0; i < ret.size(); i++) {
       ArrayList<Integer> currentNeighbors = findFakePoint(ret.get(i), fakepoints).getNeighbors();
       for (int j = 0; j < currentNeighbors.size(); j++) {
