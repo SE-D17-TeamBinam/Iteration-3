@@ -226,6 +226,36 @@ public class MapViewController extends CentralUIController implements Initializa
   @FXML
   private ImageView textDirectionsPaneTabImageView;
 
+  @FXML
+  private Pane userPane;
+
+  @FXML
+  private ImageView userPaneTabImageView;
+
+  @FXML
+  private Rectangle userPaneRectangle;
+
+  @FXML
+  private Rectangle textDirectionsTabRectangle;
+
+  @FXML
+  private Rectangle textDirectionsPaneRectangle;
+
+  private double textDirectionsPaneTargetX;
+  private int textDirectionsPaneVisible = 0;
+
+  @FXML
+  private Text textDirectionsLabel;
+
+  @FXML
+  private Text sendToMeLabel;
+
+  @FXML
+  private Pane emailPane;
+
+  @FXML
+  private ListView textDirectionsListView;
+
   private int searchType;
 
   private String searchString = "";
@@ -331,10 +361,6 @@ public class MapViewController extends CentralUIController implements Initializa
   // Proxies the images for each floor
   private HashMap<Integer, Image> floorImages = new HashMap<Integer, Image>();
 
-  public boolean viewAll = true;
-
-//  private HashMap<Point, String>
-
 
   private class Connection {
 
@@ -394,8 +420,7 @@ public class MapViewController extends CentralUIController implements Initializa
   @FXML
   public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
     initializeSearch();
-    //mapViewFlag = 3;
-    if (mapViewFlag != 3) { // Todo you know
+    if (mapViewFlag != 3) {
       AdminLogOff.setVisible(false);
       helpButton.setVisible(false);
       initializeLanguageConfigs();
@@ -512,12 +537,15 @@ public class MapViewController extends CentralUIController implements Initializa
 
   private void initializeLanguageConfigs() {
     /* apply language configs */
+    sendToMeLabel.setText(dictionary.getString("Send to Me", currSession.getLanguage()));
     searchGoButton.setText(dictionary.getString("Go", currSession.getLanguage()));
     floorSearchLabel.setText(dictionary.getString("Floor", currSession.getLanguage()));
     hospitalSearchLabel.setText(dictionary.getString("Hospital", currSession.getLanguage()));
     physicianSearchLabel.setText(dictionary.getString("Physicians", currSession.getLanguage()));
     searchLabel.setText(dictionary.getString("Search", currSession.getLanguage()) + ":");
     searchTabLabel.setText(dictionary.getString("Search", currSession.getLanguage()));
+    textDirectionsTabLabel.setText(dictionary.getString("Text Directions", currSession.getLanguage()));
+    textDirectionsLabel.setText(dictionary.getString("Text Directions", currSession.getLanguage()) + ":");
     startLabel.setText(dictionary.getString("Start", currSession.getLanguage()));
     endLabel.setText(dictionary.getString("End", currSession.getLanguage()));
     goButton.setText(dictionary.getString("Go", currSession.getLanguage()));
@@ -1187,6 +1215,7 @@ public class MapViewController extends CentralUIController implements Initializa
     saveButton.setDisable(false);
     goButton.setDisable(false);
     directions = "";
+    textDirectionsListView.getItems().clear();
   }
 
   @FXML
@@ -1253,15 +1282,6 @@ public class MapViewController extends CentralUIController implements Initializa
   }
 
   @FXML
-  private Pane userPane;
-
-  @FXML
-  private ImageView userPaneTabImageView;
-
-  @FXML
-  private Rectangle userPaneRectangle;
-
-  @FXML
   private void toggleUserPane() {
     userPaneVisible = ~userPaneVisible & 0x1; // toggles 1 or 0
     if(userPaneVisible == 1 && textDirectionsPaneVisible == 1){
@@ -1287,19 +1307,6 @@ public class MapViewController extends CentralUIController implements Initializa
             - (~textDirectionsPaneVisible & 0x1) * textDirectionsPaneTabImageView
             .getFitWidth();
   }
-
-
-  @FXML
-  private Rectangle textDirectionsTabRectangle;
-
-  @FXML
-  private Rectangle textDirectionsPaneRectangle;
-
-  private double textDirectionsPaneTargetX;
-  private int textDirectionsPaneVisible = 0;
-
-  @FXML
-  private Pane emailPane;
 
   private void updateTextDirectionsPane() {
     textDirectionsPaneTargetX =
@@ -1348,9 +1355,6 @@ public class MapViewController extends CentralUIController implements Initializa
   }
 
   @FXML
-  private TextArea textDirectionsBox;
-
-  @FXML
   private void drawPathButtonClicked() {
     Point start = (Point) startNodeBox.getSelectionModel().getSelectedItem();
     Point end = (Point) endNodeBox.getSelectionModel().getSelectedItem();
@@ -1371,8 +1375,6 @@ public class MapViewController extends CentralUIController implements Initializa
     }
   }
 
-  @FXML
-  private ListView textDirectionsListView;
 
   private void displayTextDirections(ArrayList<Point> path){
     directions = "";

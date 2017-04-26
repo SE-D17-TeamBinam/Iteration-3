@@ -681,7 +681,7 @@
       <Pane fx:id="textDirectionsPane" layoutX="1038.0" layoutY="240.0" prefHeight="510.0" prefWidth="262.0">
          <children>
             <Rectangle fx:id="textDirectionsPaneRectangle" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="510.0" layoutX="19.0" stroke="BLACK" strokeType="INSIDE" width="243.0" />
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff80" height="150.0" onMouseClicked="#toggleTextDirectionsPane" stroke="BLACK" strokeType="INSIDE" width="20.0">
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff80" height="163.0" onMouseClicked="#toggleTextDirectionsPane" stroke="BLACK" strokeType="INSIDE" width="20.0">
                <cursor>
                   <Cursor fx:constant="CLOSED_HAND" />
                </cursor>
@@ -691,24 +691,36 @@
                   <Image url="@icons/tab0.png" />
                </image>
             </ImageView>
-            <Label fx:id="textDirectionsTabLabel" layoutX="-38.0" layoutY="78.0" mouseTransparent="true" rotate="90.0" text="Text Directions" />
-            <ListView fx:id="textDirectionsListView" layoutX="26.0" layoutY="75.0" prefHeight="278.0" prefWidth="230.0" />
+            <Label fx:id="textDirectionsTabLabel" layoutX="-55.0" layoutY="93.0" mouseTransparent="true" prefHeight="20.0" prefWidth="130.0" rotate="90.0" text="Text Directions">
+               <font>
+                  <Font name="Times New Roman" size="15.0" />
+               </font></Label>
+            <ListView fx:id="textDirectionsListView" layoutX="26.0" layoutY="75.0" prefHeight="225.0" prefWidth="230.0" />
             <HBox alignment="CENTER" layoutX="19.0" layoutY="18.0" prefHeight="40.0" prefWidth="243.0">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Textual Directions">
+                  <Text fx:id="textDirectionsLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="Text Directions:">
                      <font>
                         <Font size="25.0" />
                      </font>
                   </Text>
                </children>
             </HBox>
-            <Pane fx:id="emailPane" layoutX="26.0" layoutY="353.0" prefHeight="157.0" prefWidth="230.0">
+            <Pane fx:id="emailPane" layoutX="26.0" layoutY="310.0" prefHeight="200.0" prefWidth="230.0">
                <children>
-                  <RadioButton fx:id="emailButton" layoutX="23.0" layoutY="4.0" mnemonicParsing="false" text="Email" />
-                  <RadioButton fx:id="textButton" layoutX="112.0" layoutY="4.0" mnemonicParsing="false" text="Text" />
-                  <ChoiceBox fx:id="carrierBox" layoutX="23.0" layoutY="36.0" prefHeight="31.0" prefWidth="184.0" />
-                  <TextField fx:id="detailEntry" layoutX="23.0" layoutY="85.0" prefHeight="31.0" prefWidth="184.0" />
-                  <Button fx:id="sendButton" layoutX="88.0" layoutY="121.0" mnemonicParsing="false" onMouseClicked="#sendDirections" text="Send" />
+                  <RadioButton fx:id="emailButton" layoutX="23.0" layoutY="49.0" mnemonicParsing="false" text="Email" />
+                  <RadioButton fx:id="textButton" layoutX="112.0" layoutY="49.0" mnemonicParsing="false" text="Text" />
+                  <ChoiceBox fx:id="carrierBox" layoutX="23.0" layoutY="81.0" prefHeight="31.0" prefWidth="184.0" />
+                  <TextField fx:id="detailEntry" layoutX="23.0" layoutY="130.0" prefHeight="31.0" prefWidth="184.0" />
+                  <Button fx:id="sendButton" layoutX="88.0" layoutY="166.0" mnemonicParsing="false" onMouseClicked="#sendDirections" text="Send" />
+                  <HBox alignment="CENTER" layoutX="4.0" prefHeight="43.0" prefWidth="223.0">
+                     <children>
+                        <Text fx:id="sendToMeLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="Send to Me">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </HBox>
                </children>
             </Pane>
          </children>
