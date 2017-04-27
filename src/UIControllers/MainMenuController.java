@@ -51,6 +51,7 @@ public class MainMenuController extends CentralUIController implements Initializ
     setBackground(anchorPane);
     CentralController.resetSession();
     applyLanguageConfig();
+    isLoggedIn = false;
   }
 
 

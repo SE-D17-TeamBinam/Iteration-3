@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -57,6 +58,13 @@ public class AdminMenuController extends CentralUIController implements Initiali
     addResolutionListener(anchorPane);
     setBackground(anchorPane);
     LoginLabel.setText(LoginLabel.getText() + currUser);
+    initializeCreationButton();
+  }
+
+  public void initializeCreationButton() {
+    if(!adminPermissions) {
+      CreateAccountButton.setVisible(false);
+    }
   }
 
   @FXML
@@ -107,6 +115,10 @@ public class AdminMenuController extends CentralUIController implements Initiali
       System.out.println("Cannot load signup menu");
       e.printStackTrace();
     }
+  }
+
+  public void verifyCredentials() {
+    Dialog verification = new Dialog();
   }
 
 }

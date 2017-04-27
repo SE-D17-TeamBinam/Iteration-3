@@ -27,6 +27,7 @@ public class CentralUIController {
   protected static Session currSession;
   protected static CredentialManager credentialManager = CredentialManager.getInstance();
   protected static Boolean adminPermissions = false;
+  protected static Boolean isLoggedIn = false;
   protected static String currUser;
   protected static Dictionary dictionary;
   /* resolution */

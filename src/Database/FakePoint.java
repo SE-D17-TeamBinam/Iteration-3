@@ -33,7 +33,7 @@ public class FakePoint {
     this.yCoord = (int) yCoord;
     this.floor = floor;
   }
-
+//probably will not work properly
   public FakePoint(int xCoord, int yCoord, String name, int id, ArrayList<Integer> new_neighbors,
       int floor) {
     this.xCoord = xCoord;
@@ -74,6 +74,8 @@ public class FakePoint {
       this.neighbors.add(equivalent.neighbors.get(i).getId());
     }
     this.name.replace(';','_');
+
+
   }
 
   //Methods

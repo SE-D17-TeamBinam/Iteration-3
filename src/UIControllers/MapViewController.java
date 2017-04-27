@@ -2196,7 +2196,9 @@ public class MapViewController extends CentralUIController implements Initializa
       Stage primaryStage = (Stage) mapViewPane.getScene().getWindow();
       Stage dialog = new Stage();
       dialog.setMinHeight(300);
+      dialog.setMaxHeight(600);
       dialog.setMinWidth(400);
+      dialog.setMaxWidth(400);
       dialog.setTitle("Alias Entry");
       dialog.setResizable(true);
       dialog.initModality(Modality.APPLICATION_MODAL);
@@ -2251,7 +2253,10 @@ public class MapViewController extends CentralUIController implements Initializa
           TextField t = new TextField();
           t.setText(pointFocus.getNames().get(i));
           aliases.add(t);
-          grid.add(t, 1, grid.getChildren().size()-1);
+          grid.add(t, 1, grid.getChildren().size() - 1);
+          if (dialog.getMinHeight() <= 600) {
+            dialog.setMinHeight(dialog.getMinHeight() + 50);
+          }
         }
       } else {
         TextField t = new TextField();
@@ -2259,20 +2264,6 @@ public class MapViewController extends CentralUIController implements Initializa
         grid.add(t, 1, 1);
       }
 
-
-//      if (!pointFocus.getNames().isEmpty()){
-//        for (int i = 0; i < pointFocus.getNames().size() ; i++) {
-//          if (pointFocus.getName().equals("null")){
-//            TextField entry = new TextField();
-//            grid.add(entry, 1, grid.getChildren().size()-1);
-//          }
-//          else {
-//            TextField entry = new TextField();
-//            entry.setText(pointFocus.getNames().get(i));
-//            grid.add(entry, 1, grid.getChildren().size() - 1);
-//          }
-//        }
-//      }
 
       // "+" button functionality: adds a new text field
       addButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -2283,6 +2274,9 @@ public class MapViewController extends CentralUIController implements Initializa
           // keep track of where to add the text field
           grid.add(nextEntry, 1, grid.getChildren().size()-1);
           nextEntry.requestFocus();
+          if (dialog.getHeight() <= dialog.getMaxHeight()) {
+            dialog.setMinHeight(dialog.getHeight() + 50);
+          }
         }
       });
 
@@ -2291,11 +2285,7 @@ public class MapViewController extends CentralUIController implements Initializa
       saveAliasButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
         @Override
         public void handle(MouseEvent event) {
-//          for (int i = 0; i < aliases.size(); i++) {
-//            if (!(aliases.get(i).getText().equals(""))) {
-//              names.add(aliases.get(i).getText().trim());
-//            }
-//          }
+
           for(TextField t: aliases) {
             if (!t.getText().equals("") && !names.contains(t.getText()))
             names.add(t.getText().trim());
@@ -2316,7 +2306,7 @@ public class MapViewController extends CentralUIController implements Initializa
       });
 
 
-      dialog.show();
+      dialog.showAndWait();
 
     }
     else {
@@ -2326,131 +2316,6 @@ public class MapViewController extends CentralUIController implements Initializa
       alert.showAndWait();
 
     }
-
-    // Creates popup window only if point is selected
-//    if (pointFocus != null) {
-//      // initializations
-//      ArrayList<TextField> aliases = new ArrayList<TextField>();
-//      Stage primaryStage = (Stage) mapViewPane.getScene().getWindow();
-//      Stage dialog = new Stage();
-//      dialog.setMinHeight(300);
-//      dialog.setMinWidth(400);
-//      dialog.setTitle("Alias Entry");
-//      dialog.setResizable(true);
-//      dialog.initModality(Modality.APPLICATION_MODAL);
-//      dialog.initOwner(primaryStage);
-//      VBox dialogVbox = new VBox(20);
-//
-//      Button saveAliasButton = new Button("Save");
-//      Button addButton = new Button("+");
-//      addButton.setStyle("-fx-background-color:#3255bc");
-//      addButton.setTextFill(Paint.valueOf("White"));
-//      Button cancelButton = new Button("Cancel");
-//      TextField entry = new TextField();
-//      entry.requestFocus();
-//      aliases.add(entry);
-//
-//      // organize into grid pane
-//      GridPane grid = new GridPane();
-//      grid.setHgap(10);
-//      grid.setVgap(10);
-//      grid.setPadding(new Insets(40, 0, 10, 10));
-//      //grid.add(entry, 1, 1);
-//      grid.add(addButton, 2, 1);
-//      addButton.setFocusTraversable(false);
-//      grid.add(new Label("Add or remove names of selected point."), 1, 0);
-//
-//
-//      // keep button sizes constant and color uniform with UI
-//      TilePane tileButtons = new TilePane();
-//      saveAliasButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-//      cancelButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-//      saveAliasButton.setStyle("-fx-background-color:#3255bc");
-//      cancelButton.setStyle("-fx-background-color:#3255bc");
-//      saveAliasButton.setTextFill(Paint.valueOf("White"));
-//      cancelButton.setTextFill(Paint.valueOf("White"));
-//      tileButtons.setHgap(10);
-//      tileButtons.setVgap(8.0);
-//      tileButtons.setPadding(new Insets(20, 10, 20, 20));
-//      tileButtons.getChildren().addAll(saveAliasButton, cancelButton);
-//
-//      // add to Vbox
-//      dialogVbox.getChildren().addAll(grid, tileButtons);
-//
-//      // wrap into ScrollPane
-//      ScrollPane scroll = new ScrollPane(dialogVbox);
-//      scroll.setHbarPolicy(ScrollBarPolicy.NEVER);
-//      scroll.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
-//      Scene dialogScene = new Scene(scroll, 300, 200);
-//      dialog.setScene(dialogScene);
-//
-//
-//      //
-//      ArrayList<String> currNames = new ArrayList<>();
-//      currNames = pointFocus.getNames();
-//
-//      for (int i = 0; i < currNames.size(); i++) {
-//        if (i == 0) {
-//          entry.setText(currNames.get(i));
-//        }
-//        else {
-//          TextField name = new TextField();
-//          String s = currNames.get(i);
-//          name.setText(s);
-//          aliases.add(name);
-//        }
-//      }
-//
-//      for (int i = 0; i < aliases.size() ; i++) {
-//        grid.add(aliases.get(i), 1, grid.getChildren().size()-1);
-//      }
-//
-//      // "+" button functionality: adds a new text field
-//      addButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-//        @Override
-//        public void handle(MouseEvent event) {
-//          TextField nextEntry = new TextField();
-//          // keep track of where to add the text field
-//          grid.add(nextEntry, 1, grid.getChildren().size()-1);
-//          nextEntry.requestFocus();
-//          aliases.add(nextEntry);
-//        }
-//      });
-//
-//      // "Save" button functionality: sets the names of currently selected point to what's in the
-//      // text fields and closes the text box
-//      saveAliasButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-//        @Override
-//        public void handle(MouseEvent event) {
-//          ArrayList<String> names = new ArrayList<>();
-//          for (int i = 0; i < aliases.size(); i++) {
-//            if (!(aliases.get(i).getText().equals("")) && !pointFocus.getNames().contains(aliases.get(i).getText())) {
-//              names.add(aliases.get(i).getText().trim());
-//            }
-//          }
-//            pointFocus.setNames(names);
-//            for (int i = 0; i < pointFocus.getNames().size(); i++) {
-//              System.out.println(pointFocus.getNames().get(i));
-//            }
-//            dialog.close();
-//          }
-//      });
-//
-//      cancelButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-//        @Override
-//        public void handle(MouseEvent event) {
-//          dialog.close();
-//        }
-//      });
-//
-//      dialog.showAndWait();
-//    }
-//    else {
-//      Dialog alert = new Alert(AlertType.ERROR, "Please select a point to add an alias to.");
-//      alert.setHeaderText("Attention");
-//      alert.show();
-//    }
-
 
   }
 

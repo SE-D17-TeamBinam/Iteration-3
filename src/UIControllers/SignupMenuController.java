@@ -131,12 +131,15 @@ public class SignupMenuController extends CentralUIController implements Initial
 
 
   private Double calculatePassStrength(String pass) {
-    if (pass.length()<1){
-      return 0.0;
+    double strength = 0;
+    if (pass.length()< 1){
+      strength = 0;
     }
     else {
-      return pass.length() * 0.07 ;
+      strength += pass.length() * 0.07;
     }
+    return strength;
+
   }
 
   /**

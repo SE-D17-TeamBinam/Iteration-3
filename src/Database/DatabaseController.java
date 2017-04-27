@@ -1,28 +1,20 @@
 package Database;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeMap;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
-import org.ListPoints;
-import org.apache.commons.codec.EncoderException;
-import org.apache.commons.codec.language.Soundex;
+import Definitions.Physician;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import Definitions.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import org.ElevatorPoint;
+import org.ListPoints;
 import org.Point;
 import org.apache.commons.lang3.StringUtils;
 
@@ -330,7 +322,7 @@ public class DatabaseController implements DatabaseInterface {
     int floor = point.getFloor();
     String name = point.getName().replace(';','_');
     ArrayList<Integer> neighbors = point.getNeighbors();
-
+    System.out.println("name in addpoint " + name);
     dbc.send_Command(
         "insert into Point (x,y,cost,pid,floor,name) values (" + x + ","
             + y + "," + cost + "," + id + "," + floor + ",'" + name + "'); \n");
@@ -354,6 +346,7 @@ public class DatabaseController implements DatabaseInterface {
     int id = point.getId();
     int floor = point.getFloor();
     String name = point.getName().replace(';','_');
+    System.out.println("name in addwithout " + name);
     ArrayList<Integer> neighbors = point.getNeighbors();
 
     dbc.send_Command(
@@ -375,7 +368,7 @@ public class DatabaseController implements DatabaseInterface {
     int floor = point.getFloor();
     String name = point.getName().replace(';','_');
     ArrayList<Integer> neighbors = point.getNeighbors();
-
+    System.out.println("SHOULDNT BE HERE");
     if (name == null) {
       name = "";
     }
@@ -564,13 +557,13 @@ public class DatabaseController implements DatabaseInterface {
     for (int i = 0; i < fakepoints.size(); i++) {
       ret.add(fakepoints.get(i).toRealPoint());
     }
-    for (int i = 0; i < ret.size(); i++) {
-      if (ret.get(i).getName().equals("ELEVATOR")) {
-        Point p = ret.get(i);
-        ret.remove(i);
-        ret.add(i, toElevatorPoint(p));
-      }
-    }
+//    for (int i = 0; i < ret.size(); i++) {
+//      if (ret.get(i).getName().equals("ELEVATOR")) {
+//        Point p = ret.get(i);
+//        ret.remove(i);
+//        ret.add(i, toElevatorPoint(p));
+//      }
+//    }
     for (int i = 0; i < ret.size(); i++) {
       ArrayList<Integer> currentNeighbors = findFakePoint(ret.get(i), fakepoints).getNeighbors();
       for (int j = 0; j < currentNeighbors.size(); j++) {
@@ -799,7 +792,8 @@ public class DatabaseController implements DatabaseInterface {
     for (i = 0; i < localPoints.size(); i++) {
       if (localPoints.get(i).getName() != null && !localPoints.get(i).getName().equals("null")
           && !localPoints.get(i).getName().equals("") && !(
-          localPoints.get(i).getName().replaceAll("\\s", "") == "")) {
+         // localPoints.get(i).getName().replaceAll("\\s", "") == "")) {
+          localPoints.get(i).getName()  == "")) {
         namedPoints.add(localPoints.get(i));
       }
     }
@@ -826,6 +820,7 @@ public class DatabaseController implements DatabaseInterface {
         //do stuff, if neccesary, else, delete
       }
     }
+
     ListPoints lp = new ListPoints(localPoints);
     ListPoints lp2 = lp.deepClone();
 

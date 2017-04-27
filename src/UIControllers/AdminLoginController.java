@@ -90,9 +90,11 @@ public class AdminLoginController extends CentralUIController implements Initial
       if (credentialManager.isAdmin(enteredName, enteredPass)){
         mapViewFlag = 3;
         adminPermissions = true;
+        isLoggedIn = true;
       }
       else {
         mapViewFlag = 2;
+        isLoggedIn = true;
       }
       try {
         loadScene(primaryStage, "/AdminMenu.fxml");
