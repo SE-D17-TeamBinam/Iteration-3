@@ -12,82 +12,82 @@
 
 <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="750.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UIControllers.SettingsMenuController">
    <children>
-      <Pane fx:id="DirectEdit" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750" prefWidth="1300" style="-fx-background-color: transparent;">
+      <Pane fx:id="SettingsMenu" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750" prefWidth="1300" style="-fx-background-color: transparent;">
          <children>
-            <Button fx:id="DirectBack" alignment="CENTER" layoutX="12.0" layoutY="12.0" onMouseClicked="#back" prefHeight="60.0" prefWidth="134.0" text="Back" textFill="WHITE">
+            <Button fx:id="SettingsBack" alignment="CENTER" layoutX="12.0" layoutY="12.0" onMouseClicked="#back" prefHeight="60.0" prefWidth="134.0" text="Back" textFill="WHITE">
                <font>
                   <Font name="Times New Roman" size="24.0" />
                </font>
             </Button>
-            <Button fx:id="DirectLogoff" alignment="CENTER" layoutX="1152.0" layoutY="14.0" onMouseClicked="#logoff" prefHeight="60.0" prefWidth="134.0" text="Log off" textFill="WHITE">
+            <Button fx:id="SettingsLogoff" alignment="CENTER" layoutX="1152.0" layoutY="14.0" onMouseClicked="#logoff" prefHeight="60.0" prefWidth="134.0" text="Log off" textFill="WHITE">
                <font>
                   <Font name="Times New Roman" size="24.0" />
                </font>
             </Button>
-            <Label layoutX="284.0" layoutY="253.0" text="Default Kiosk Location:">
+            <Label fx:id="SettingsLocation" layoutX="284.0" layoutY="253.0" text="Default Kiosk Location:">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label layoutX="284.0" layoutY="353.0" text="Resolution on Startup:">
+            <Label fx:id="SettingsResolution" layoutX="284.0" layoutY="353.0" text="Resolution on Startup:">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label layoutX="284.0" layoutY="453.0" text="Time out after (seconds):">
+            <Label fx:id="SettingsTimeout" layoutX="284.0" layoutY="453.0" text="Time out after (seconds):">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label layoutX="284.0" layoutY="553.0" text="Pathfiding Algorithm: ">
+            <Label fx:id="SettingsAlgorithm" layoutX="284.0" layoutY="553.0" text="Pathfiding Algorithm: ">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <RadioButton layoutX="525.0" layoutY="353.0" mnemonicParsing="false" text="Default">
+            <RadioButton fx:id="defaultResolution" layoutX="525.0" layoutY="353.0" mnemonicParsing="false" text="Default">
                <font>
                   <Font size="18.0" />
                </font>
             </RadioButton>
-            <RadioButton layoutX="688.0" layoutY="353.0" mnemonicParsing="false" text="Full Screen">
+            <RadioButton fx:id="fullscreenResolution" layoutX="688.0" layoutY="353.0" mnemonicParsing="false" text="Full Screen">
                <font>
                   <Font size="18.0" />
                </font>
             </RadioButton>
-            <RadioButton layoutX="860.0" layoutY="353.0" mnemonicParsing="false" text="Full Window">
+            <RadioButton fx:id="fullwindowResolution" layoutX="860.0" layoutY="353.0" mnemonicParsing="false" text="Full Window">
                <font>
                   <Font size="18.0" />
                </font>
             </RadioButton>
-            <RadioButton layoutX="525.0" layoutY="553.0" mnemonicParsing="false" text="BFS">
+            <RadioButton fx:id="bfsAlgorithm" layoutX="525.0" layoutY="553.0" mnemonicParsing="false" text="BFS">
                <font>
                   <Font size="18.0" />
                </font>
             </RadioButton>
-            <RadioButton layoutX="688.0" layoutY="553.0" mnemonicParsing="false" text="DFS">
+            <RadioButton fx:id="dfsAlgorithm" layoutX="688.0" layoutY="553.0" mnemonicParsing="false" text="DFS">
                <font>
                   <Font size="18.0" />
                </font>
             </RadioButton>
-            <RadioButton layoutX="860.0" layoutY="553.0" mnemonicParsing="false" text="A Star">
+            <RadioButton fx:id="astarAlgorithm" layoutX="860.0" layoutY="553.0" mnemonicParsing="false" text="A Star">
                <font>
                   <Font size="18.0" />
                </font>
             </RadioButton>
-            <ChoiceBox layoutX="525.0" layoutY="253.0" prefHeight="32.0" prefWidth="186.0" />
+            <ChoiceBox fx:id="locationsKiosk" layoutX="525.0" layoutY="253.0" prefHeight="40.0" prefWidth="186.0" />
             <Pane layoutX="525.0" layoutY="453.0" prefHeight="40.0" prefWidth="186.0">
                <children>
-                  <TextField alignment="CENTER_RIGHT" prefWidth="151.0">
+                  <TextField fx:id="timeTimeout" alignment="CENTER_RIGHT" prefWidth="151.0">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </TextField>
-                  <Label alignment="CENTER" layoutX="152.0" layoutY="20.0" minHeight="0.0" prefHeight="20.0" prefWidth="35.0" rotate="180.0" style="-fx-background-color: grey; -fx-text-fill: white;" text="^">
+                  <Label fx:id="upTimeout" alignment="CENTER" layoutX="152.0" layoutY="21.0" minHeight="0.0" prefHeight="19.0" prefWidth="35.0" rotate="180.0" style="-fx-background-color: grey; -fx-text-fill: white;" text="^">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
                   </Label>
-                  <Label alignment="CENTER" layoutX="152.0" minHeight="0.0" prefHeight="20.0" prefWidth="35.0" style="-fx-background-color: grey; -fx-text-fill: white;" text="^">
+                  <Label fx:id="downTimeout" alignment="CENTER" layoutX="152.0" minHeight="0.0" prefHeight="19.0" prefWidth="35.0" style="-fx-background-color: grey; -fx-text-fill: white;" text="^">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
