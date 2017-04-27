@@ -63,7 +63,7 @@ public class CentralUIController {
     Collections.sort(docs, new Comparator<Physician>() {
       @Override
       public int compare(Physician doc1, Physician doc2) {
-        return doc1.getLastName().compareTo(doc2.getLastName());
+        return Long.compare(doc1.getID(), doc2.getID());
       }
     });
   }

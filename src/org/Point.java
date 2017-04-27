@@ -260,7 +260,7 @@ public class Point {
         ourNeighbors.add(p.id);
       for (Point p : pobj.neighbors)
         theirNeighbors.add(p.id);
-      System.out.println("ID: " + this.id + " -> " + pobj.id + ".  " + ourNeighbors + "  :  " + theirNeighbors);
+      //System.out.println("ID: " + this.id + " -> " + pobj.id + ".  " + ourNeighbors + "  :  " + theirNeighbors);
 
       for (int i : ourNeighbors){
         if (!theirNeighbors.contains(i)){

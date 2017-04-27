@@ -38,7 +38,7 @@ public class SearchMenuController extends CentralUIController implements Initial
   private ObservableList<Physician> HCOL = FXCollections.observableArrayList();
   private ObservableList<Point> RMOL = FXCollections.observableArrayList();
   private int searchMode = 0;
-
+  private boolean isST = false;
   // define all ui elements
   @FXML
   private TableView<Physician> PhysicianDirectory;
@@ -126,11 +126,15 @@ public class SearchMenuController extends CentralUIController implements Initial
       }
     });
     SearchField.textProperty().addListener((observable, oldValue, newValue) -> {
-      searchString = newValue.toString();
-      if (searchMode == 0){
-        updatePhysicians(docs);
-      } else if (searchMode == 1){
-        updateRooms(rooms);
+      if (!isST) {
+        searchString = SearchField.getText();
+        if (searchMode == 0) {
+          updatePhysicians(docs);
+        } else if (searchMode == 1) {
+          updateRooms(rooms);
+        }
+      } else {
+        isST = false;
       }
     });
     //Platform.runLater(() -> {updatePhysicians(docs);});
@@ -183,6 +187,7 @@ public class SearchMenuController extends CentralUIController implements Initial
     RoomDirectory.setVisible(true);
   }
 
+
   public void updatePhysicians (List<Physician> HCs){
     HCOL.clear();
     /* search by contain string
@@ -196,9 +201,26 @@ public class SearchMenuController extends CentralUIController implements Initial
       HCOL.addAll(HCs);
     }
     */
-    if (searchString == "") {
+    if (searchString.equals("")) {
       HCOL.addAll(HCs);
     } else {
+      String oldSearchString = searchString;
+      for (Physician doc : docs) {
+        String docName = doc.getFirstName() + " " + doc.getLastName();
+        if (docName.length() >= searchString.length() && docName.substring(0, oldSearchString.length()).equals(searchString)){
+          final String newSearchString = doc.getFirstName() + " " + doc.getLastName();
+          isST = true;
+          SearchField.setText(newSearchString);
+          Platform.runLater(() -> {if (SearchField.isFocused()) {
+                SearchField.selectRange(searchString.length(), newSearchString.length());
+              }
+          });
+          //SearchField.selectRange(oldSearchString.length(), SearchField.getText().length());
+          break;
+        }
+      }
+
+
       HCOL.addAll(database.fuzzySearchPhysicians(searchString));
     }
     PhysicianDirectory.setItems(HCOL);

@@ -367,14 +367,16 @@ public class DirectEditController extends CentralUIController implements Initial
           docs.set(i, selectedHP);
           docDisplay.set(selectedHPIndex, selectedHP);
           isNewPhysician = false;
+          database.editPhysician(selectedHP);
           break;
         }
       }
       if (isNewPhysician) {
         docs.add(selectedHP);
         docDisplay.add(selectedHP);
+        database.addPhysician(selectedHP);
       }
-      database.setPhysicians(docs);
+      //database.setPhysicians(docs);
       database.save();
       // refresh the page
       refreshInfo();
@@ -410,11 +412,12 @@ public class DirectEditController extends CentralUIController implements Initial
   }
 
   public void delete () {
+    database.removePhysician(selectedHP.getID());
     docs.remove(selectedHP);
     refreshDir();
     clearLoc();
     clearInfo();
-    database.setPhysicians(docs);
+    //database.setPhysicians(docs);
   }
 
   /////////////////////////////
