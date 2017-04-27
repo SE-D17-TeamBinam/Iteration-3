@@ -3,6 +3,7 @@ package FileController;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -31,15 +32,21 @@ public class SettingsIO {
 
   public SettingsIO(String settingsLoc){
     this.settingsLoc = settingsLoc;
+    settings = new Properties();
+    settingsFile = new File(this.settingsLoc);
+    loadSettings();
   }
 
   public SettingsIO(){
     settingsLoc = "kiosk.properties";
+    settings = new Properties();
+    settingsFile = new File(this.settingsLoc);
+    loadSettings();
   }
 
   private void loadSettings(){
-    settingsFile = new File(this.settingsLoc);
     try{
+      settingsFile.createNewFile();
       FileReader in = new FileReader(settingsFile);
       settings.load(in);
     } catch (FileNotFoundException e) {
@@ -95,7 +102,7 @@ public class SettingsIO {
     settings.setProperty(tag, value);
     try{
       StringWriter out = new StringWriter();
-      settings.store(out, settingsLoc);
+      settings.store(new FileOutputStream(settingsLoc), null);
     } catch (IOException e) {
       return false;
     }
