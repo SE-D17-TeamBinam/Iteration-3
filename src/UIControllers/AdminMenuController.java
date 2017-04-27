@@ -56,7 +56,7 @@ public class AdminMenuController extends CentralUIController implements Initiali
   public void initialize(URL location, ResourceBundle resources) {
     addResolutionListener(anchorPane);
     setBackground(anchorPane);
-    LoginLabel.setText(LoginLabel.getText()+ currentUser);
+    LoginLabel.setText(LoginLabel.getText() + currUser);
   }
 
   @FXML

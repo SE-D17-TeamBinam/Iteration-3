@@ -24,9 +24,10 @@ public class CentralUIController {
     3 for admin map
    */
   protected static int mapViewFlag = 0;
-  protected static String currentUser;
   protected static Session currSession;
   protected static CredentialManager credentialManager = CredentialManager.getInstance();
+  protected static Boolean adminPermissions = false;
+  protected static String currUser;
   protected static Dictionary dictionary;
   /* resolution */
   protected static double x_res = 1300;

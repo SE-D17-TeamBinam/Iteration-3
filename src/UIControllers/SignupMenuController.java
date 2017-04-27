@@ -116,13 +116,13 @@ public class SignupMenuController extends CentralUIController implements Initial
       UsernameRequired.setTextFill(Paint.valueOf("red"));
       PassRequired.setTextFill(Paint.valueOf("red"));
     }
-    else if (credentialManager.signup(username, pass, type)){
+    else if (!credentialManager.signup(username, pass, type)){
       UsernameExistsError.setVisible(true);
     }
     else {
       Stage primaryStage = (Stage) SignupMenu.getScene().getWindow();
       try {
-        loadScene(primaryStage, "/AdminLogin.fxml");
+        loadScene(primaryStage, "/AdminMenu.fxml");
       } catch (Exception e) {
         System.out.println("Cannot load employee login");
         e.printStackTrace();

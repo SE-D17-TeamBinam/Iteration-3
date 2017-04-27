@@ -4,16 +4,20 @@ package CredentialManager;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 /**
  * Created by Praneeth Appikatla on 4/25/2017.
  */
 public class CredentialManager implements CredentialInterface{
-  private HashMap<String, String> credentials = new HashMap<>();
-  private CredentialEntry entries = new CredentialEntry(credentials);
-  private HashMap<CredentialEntry, UserType> users = new HashMap <CredentialEntry, UserType>();
-  private String SALT = getSaltString(20);
+  // outer map to store credentials with permissions levels
+  private Map<HashMap<String, String>, UserType> users = new HashMap<HashMap<String, String>, UserType>();
+  // inner map to store credentials
+  private Map<String, String> credentials = new HashMap<>();
+  // random string formed for another layer of security
+  private static final String SALT = getSaltString(20);
+  // Singleton class
   private static CredentialManager instance = new CredentialManager();
 
   public CredentialManager(){}
@@ -24,29 +28,29 @@ public class CredentialManager implements CredentialInterface{
 
   @Override
   public Boolean signup(String username, String password, UserType type) {
-    if (!(entries.containsUsername(username))){
-      String saltedPass = SALT + password;
-      String hashedPass = generateHash(saltedPass);
-      CredentialEntry loginInfo = new CredentialEntry(new HashMap<>());
-      loginInfo.login.put(username, hashedPass);
-      entries.login.put(username, hashedPass);
-      users.put(loginInfo, type);
-      return false;
+    if (!(credentials.containsKey(username))){
+      HashMap<String, String> login = new HashMap<>();
+      String saltPass = SALT + password;
+      String hashedPass = generateHash(saltPass);
+      login.put(username, hashedPass);
+      this.credentials.put(username, hashedPass);
+      this.users.put(login, type);
+      return true;
     }
     else {
-      return true;
+      return false;
     }
   }
 
   @Override
   public Boolean login(String username, String password) {
-    CredentialEntry login = new CredentialEntry(new HashMap<>());
-    Boolean isAuthenticated = false;
-    String saltedPass = SALT + password;
-    String hashedPass = generateHash(saltedPass);
+    Boolean isAuthenticated = false; // true if credentials are correct
+    String saltPass = SALT + password;
+    String hashedPass = generateHash(saltPass);
 
-    String storedHash = entries.getPass(username);
+    String storedHash = this.credentials.get(username);
 
+    // compare the string to what is stored in
     if(hashedPass.equals(storedHash)){
       isAuthenticated = true;
     } else {
@@ -55,10 +59,23 @@ public class CredentialManager implements CredentialInterface{
     return isAuthenticated;
   }
 
-  @Override
+  public Boolean isAdmin(String username, String password){
+    Boolean isAdmin = false;
+    HashMap<String, String> login = new HashMap<>();
+    String saltPass = SALT + password;
+    String hashedPass = generateHash(saltPass);
+    login.put(username, hashedPass);
+
+    if(this.users.get(login).equals(UserType.ADMIN)){
+      isAdmin = true;
+    }
+    return isAdmin;
+
+  }
+
   public String generateHash(String input) {
     StringBuilder hash = new StringBuilder();
-    // implements Secure Hash Algorithm 1
+    // implements Secure Hash Algorithm 1 (SHA-1)
     try {
       MessageDigest sha = MessageDigest.getInstance("SHA-1");
       byte[] hashedBytes = sha.digest(input.getBytes());
@@ -79,7 +96,7 @@ public class CredentialManager implements CredentialInterface{
    * @param length Specified length of the string you want to create
    * @return A random string of specified length
    */
-  public String getSaltString(int length){
+  public static String getSaltString(int length){
     // helper to generate a random string from certain characters
     String saltChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
     StringBuilder salt = new StringBuilder();

@@ -79,14 +79,17 @@ public class AdminLoginController extends CentralUIController implements Initial
    * TODO: throw an exception in the future.
    */
   public void login () {
-
+    adminPermissions = false;
     Stage primaryStage = (Stage) AdminLogin.getScene().getWindow();
     String enteredName = AdminNameField.getText();
     String enteredPass = AdminPassField.getText();
 
     if (credentialManager.login(enteredName, enteredPass)){
       LoginError.setVisible(false);
-      currentUser = enteredName;
+      currUser = enteredName;
+      if (credentialManager.isAdmin(enteredName, enteredPass)){
+        adminPermissions = true;
+      }
       try {
         loadScene(primaryStage, "/AdminMenu.fxml");
       } catch (Exception e) {
