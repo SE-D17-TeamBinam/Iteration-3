@@ -41,7 +41,7 @@ public class SearchMenuController extends CentralUIController implements Initial
   private ObservableList<Point> RMOL = FXCollections.observableArrayList();
   private int searchMode = 0;
   private boolean isST = false;
-
+  private boolean isBS = false;
   // define all ui elements
   @FXML
   private TableView<Physician> PhysicianDirectory;
@@ -135,9 +135,13 @@ public class SearchMenuController extends CentralUIController implements Initial
           if (SearchField.isFocused()) {
             switch (event.getCode()) {
               case BACK_SPACE:
-                isST = true;
-                SearchField.deleteText(SearchField.getSelection());
-                isST = true;
+                if (!SearchField.getSelectedText().equals("")) {
+                  isST = true;
+                  SearchField.deleteText(SearchField.getSelection());
+                }
+                if (!SearchField.getText().equals("")) {
+                  isBS = true;
+                }
                 break;
               case ENTER:
                 SearchField.deselect();
@@ -150,13 +154,18 @@ public class SearchMenuController extends CentralUIController implements Initial
     });
 
     SearchField.textProperty().addListener((observable, oldValue, newValue) -> {
-      if (!isST) {
+      if (!isST && !isBS) {
         if (searchMode == 0) {
           updatePhysicians(docs);
         } else if (searchMode == 1) {
           updateRooms(rooms);
         }
-      } else if (isST) {
+      } else if (isST && isBS) {
+        isST = false;
+        isBS = false;
+      } else if (isBS) {
+        isBS = false;
+      } else {
         isST = false;
       }
     });
@@ -221,7 +230,7 @@ public class SearchMenuController extends CentralUIController implements Initial
       for (Physician doc : docs) {
         String docName = doc.getFirstName() + " " + doc.getLastName();
         if (docName.length() >= searchString.length()
-            && docName.substring(0, oldSearchString.length()).equals(searchString)){
+            && docName.substring(0, oldSearchString.length()).equalsIgnoreCase(searchString)){
           final String newSearchString = doc.getFirstName() + " " + doc.getLastName();
           isST = true;
           SearchField.setText(newSearchString);
