@@ -108,8 +108,7 @@ public class MapViewController extends CentralUIController implements Initializa
   private Button newButton;
   @FXML
   private Button deleteButton;
-  @FXML
-  private Button updateButton;
+
   @FXML
   private Button saveButton;
   @FXML
@@ -554,7 +553,6 @@ public class MapViewController extends CentralUIController implements Initializa
     selectedNameLabel.setText(dictionary.getString("Name", currSession.getLanguage()) + ":");
     newButton.setText(dictionary.getString("New", currSession.getLanguage()));
     deleteButton.setText(dictionary.getString("Delete", currSession.getLanguage()));
-    updateButton.setText(dictionary.getString("Update Selected", currSession.getLanguage()));
     saveButton.setText(dictionary.getString("Save Map", currSession.getLanguage()));
     mainFloorLabel.setText(dictionary.getString("Floor", currSession.getLanguage()));
 
@@ -686,7 +684,7 @@ public class MapViewController extends CentralUIController implements Initializa
       // Replace the first 'true' with point.shouldOnlyBeSeenByStaff
       // Replace second 'true' with !point.shouldOnlyBeSeenByStaff
       if((true && mapViewFlag >= 2) || (true && mapViewFlag == 1)) {
-        if (p.getFloor() == currentFloor) {
+        if (p.getFloor() == currentFloor && (!pathfinding || (pathfinding && pathPoints.contains(p)))) {
           addVisualNodesForPoint(p, points);
         }
       }
@@ -1090,11 +1088,11 @@ public class MapViewController extends CentralUIController implements Initializa
   private void updateSelected() {
     if (pointFocus != null) {
       pointFocus
-          .setXCoord(xCoordField.getText() == "" ? 0 : Double.parseDouble(xCoordField.getText()));
+          .setXCoord(xCoordField.getLength() == 0 ? 0 : Double.parseDouble(xCoordField.getText()));
       pointFocus
-          .setYCoord(yCoordField.getText() == "" ? 0 : Double.parseDouble(yCoordField.getText()));
+          .setYCoord(yCoordField.getLength() == 0 ? 0 : Double.parseDouble(yCoordField.getText()));
       pointFocus.setFloor(floorField.getText() == "" ? 0 : Integer.parseInt(floorField.getText()));
-      pointFocus.setName(nameField.getText());
+      pointFocus.setName(nameField.getLength() == 0 ? "" : nameField.getText());
       movePoint(pointFocus, new Coordinate(pointFocus.getXCoord(), pointFocus.getYCoord()));
     }
   }
@@ -1536,32 +1534,25 @@ public class MapViewController extends CentralUIController implements Initializa
   private void yCoordFieldKeyTyped(KeyEvent e) {
     if (!Character.isDigit(e.getCharacter().charAt(0))) {
       e.consume(); // throws out the KeyEvent before it can reach the text field
-    } else {
-      yCoordField.appendText(e.getCharacter());
-      e.consume();
-    }
-    if (pointFocus != null) {
-      updateSelected();
     }
   }
 
   @FXML
-  private void floorFieldKeyTyped(KeyEvent e) {
+  private void xCoordFieldKeyTyped(KeyEvent e) {
     if (!Character.isDigit(e.getCharacter().charAt(0))) {
       e.consume(); // throws out the KeyEvent before it can reach the text field
-    } else {
-      floorField.appendText(e.getCharacter());
-      e.consume();
     }
-    if (pointFocus != null) {
+  }
+
+  @FXML
+  private void coordFieldReleased(KeyEvent e) {
+    if(pointFocus != null){
       updateSelected();
     }
   }
 
   @FXML
   private void nameFieldKeyTyped(KeyEvent e) {
-    nameField.appendText(e.getCharacter());
-    e.consume();
     if (pointFocus != null) {
       updateSelected();
       if (nameField.getText() != null && nameField.getText().length() > 0) {
@@ -1612,21 +1603,6 @@ public class MapViewController extends CentralUIController implements Initializa
     }
   }
 
-  @FXML
-  private void updateSelectedButtonClicked() {
-    System.out.println("Update Point button is currently disabled.");
-    /*
-    double x = Double.parseDouble(xCoordField.getText());
-    double y = Double.parseDouble(yCoordField.getText());
-    int floor = Integer.parseInt(floorField.getText());
-    String name = nameField.getText();
-    pointFocus.setFloor(floor);
-    pointFocus.setXCoord(x);
-    pointFocus.setYCoord(y);
-    pointFocus.setName(name);
-    */
-  }
-
   // Navigates back to the main menu
   @FXML
   private void backButtonClicked() {
@@ -1645,29 +1621,20 @@ public class MapViewController extends CentralUIController implements Initializa
 
   @FXML
   private void newButtonClicked() {
-    System.out.println("New Point button is currently disabled");
-    /*
-    double x = Double.parseDouble(xCoordField.getText());
-    double y = Double.parseDouble(yCoordField.getText());
-    int floor = Integer.parseInt(floorField.getText());
-    String name = nameField.getText();
+    double x = xCoordField.getLength() == 0 ? 0 : Double.parseDouble(xCoordField.getText());
+    double y = yCoordField.getLength() == 0 ? 0 : Double.parseDouble(yCoordField.getText());
+    int floor = currentFloor;
+    String name = nameField.getLength() == 0 ? "" : nameField.getText();
     Point newPoint = new Point(x, y, floor);
-    addPoint(x, y, floor);
-    */
+    newPoint.setName(name);
+    allPoints.add(newPoint);
+    floorPoints.add(newPoint);
+    ArrayList<Point> a = new ArrayList<>();
+    a.add(newPoint);
+    displayPoints(a);
   }
 
-  @FXML
-  private void xCoordFieldKeyTyped(KeyEvent e) {
-    if (!Character.isDigit(e.getCharacter().charAt(0))) {
-      e.consume(); // throws out the KeyEvent before it can reach the text field
-    } else {
-      xCoordField.appendText(e.getCharacter());
-      e.consume();
-    }
-    if (pointFocus != null) {
-      updateSelected();
-    }
-  }
+
 
   private void initializeSearch() {
     searchTextField.textProperty().addListener((observable, oldValue, newValue) -> {
