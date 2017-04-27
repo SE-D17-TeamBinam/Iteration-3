@@ -28,7 +28,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Separator;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
@@ -59,9 +58,6 @@ import org.PathfindingStrategy;
 import org.Point;
 import org.StairPoint;
 
-/**
- * Created by Leon Zhang on 2017/4/1.
- */
 public class MapViewController extends CentralUIController implements Initializable {
 
   // define all ui elements
@@ -124,8 +120,6 @@ public class MapViewController extends CentralUIController implements Initializa
   private Pane typeSelectionPane;
 
   @FXML
-  private Pane pathChoicePane;
-  @FXML
   private Rectangle typeSelectionPaneRectangle;
   @FXML
   private RadioButton normalButton;
@@ -134,7 +128,7 @@ public class MapViewController extends CentralUIController implements Initializa
   @FXML
   private RadioButton stairButton;
 
-  final ToggleGroup typeSelect = new ToggleGroup();
+  private final ToggleGroup typeSelect = new ToggleGroup();
 
   // The pane for text directions
   @FXML
@@ -145,10 +139,8 @@ public class MapViewController extends CentralUIController implements Initializa
   private TextField detailEntry;
   @FXML
   private ChoiceBox carrierBox;
-  @FXML
-  private Button sendButton;
 
-  final ToggleGroup directionSelect = new ToggleGroup();
+  private final ToggleGroup directionSelect = new ToggleGroup();
 
   // The pane with the + and - on it
   @FXML
@@ -166,12 +158,12 @@ public class MapViewController extends CentralUIController implements Initializa
   private Button connectButton;
 
   @FXML
-  ChoiceBox startNodeBox; // TODO (re?)move these
+  private ChoiceBox startNodeBox;
   @FXML
-  ChoiceBox endNodeBox;
+  private ChoiceBox endNodeBox;
 
   @FXML
-  ImageView helpButton;
+  private ImageView helpButton;
 
   @FXML
   private Text searchLabel;
@@ -261,10 +253,10 @@ public class MapViewController extends CentralUIController implements Initializa
   private int searchType;
 
   private String searchString = "";
-  private ArrayList<Point> results = new ArrayList<Point>();
+  private ArrayList<Point> results = new ArrayList<>();
   // allPoints
 
-  private HashMap<String, Point> searchPoints = new HashMap<String, Point>();
+  private HashMap<String, Point> searchPoints = new HashMap<>();
 
 
   private int userPaneVisible = 1;
@@ -301,28 +293,25 @@ public class MapViewController extends CentralUIController implements Initializa
   // Where the mouse drag was initiated
   private double mapPressedX;
   private double mapPressedY;
-  // Where the mouse drag was released
-  private double mapReleasedX;
-  private double mapReleasedY;
 
   ////////////////////////
   // Administrator Data //
   ////////////////////////
 
   // ArrayList of Points to maintain in memory
-  private ArrayList<Point> floorPoints = new ArrayList<org.Point>();
+  private ArrayList<Point> floorPoints = new ArrayList<>();
   // ArrayList of Edges to help track for drawing
-  private ArrayList<Connection> connections = new ArrayList<Connection>();
+  private ArrayList<Connection> connections = new ArrayList<>();
 
-  private ArrayList<Point> clipBoard = new ArrayList<Point>();
+  private ArrayList<Point> clipBoard = new ArrayList<>();
 
   // The currently selected point
   private Point pointFocus = null;
 
   // TODO this should be a ListPoints
-  private ArrayList<Point> allPoints = new ArrayList<Point>();
+  private ArrayList<Point> allPoints = new ArrayList<>();
 
-  private ArrayList<Point> secondaryPointFoci = new ArrayList<Point>();
+  private ArrayList<Point> secondaryPointFoci = new ArrayList<>();
 
   private double userPaneTargetX = 0;
 
@@ -357,11 +346,11 @@ public class MapViewController extends CentralUIController implements Initializa
   private boolean mouseDragged = false;
 
   // The circles and lines that are currently drawn
-  private HashMap<Point, Circle> circles = new HashMap<Point, Circle>();
-  private HashMap<Connection, Line> lines = new HashMap<Connection, Line>();
+  private HashMap<Point, Circle> circles = new HashMap<>();
+  private HashMap<Connection, Line> lines = new HashMap<>();
 
   // Proxies the images for each floor
-  private HashMap<Integer, Image> floorImages = new HashMap<Integer, Image>();
+  private HashMap<Integer, Image> floorImages = new HashMap<>();
 
   private int maxID = 0;
 
@@ -450,7 +439,7 @@ public class MapViewController extends CentralUIController implements Initializa
   }
 
   private void initializePathFindingBox() {
-    ArrayList<PathfindingStrategy> strats = new ArrayList<PathfindingStrategy>();
+    ArrayList<PathfindingStrategy> strats = new ArrayList<>();
     PathfindingStrategy as = new Astar();
     strats.add(as);
     strats.add(new DFS());
@@ -668,6 +657,9 @@ public class MapViewController extends CentralUIController implements Initializa
     updateTextDirectionsPane();
   }
 
+  @FXML
+  private HBox pointNameHBox;
+
   @Override
   public void customListenerY() {
     leftBar.setHeight(y_res - banner.getHeight());
@@ -683,6 +675,7 @@ public class MapViewController extends CentralUIController implements Initializa
     helpButton.setLayoutY(y_res - 60);
     helpPane.setLayoutY(y_res - 540);
     repositionResultsList();
+    pointNameHBox.setLayoutY(y_res - pointNameHBox.getPrefHeight() - 2);
   }
 
 
@@ -814,6 +807,7 @@ public class MapViewController extends CentralUIController implements Initializa
     if (!connections.contains(c)) {
       connections.add(c);
       Line l = new Line();
+      l.setStroke(LINE_COLOR);
       lines.put(c, l);
       addLineListeners(l, c);
       updateLineForConnection(c);
@@ -1204,6 +1198,11 @@ public class MapViewController extends CentralUIController implements Initializa
   ///////////////////////
 
   @FXML
+  private void clearSearchField(){
+    searchTextField.clear();
+  }
+
+  @FXML
   private void beginConnectionButtonClicked() {
     setFloorConnectFocus(pointFocus);
   }
@@ -1411,9 +1410,9 @@ public class MapViewController extends CentralUIController implements Initializa
     }
   }
 
-  private ArrayList<Point> pathPoints = new ArrayList<Point>();
-  private ArrayList<Integer> allFloors = new ArrayList<Integer>();
-  private HashSet<Integer> showingFloors = new HashSet<Integer>();
+  private ArrayList<Point> pathPoints = new ArrayList<>();
+  private ArrayList<Integer> allFloors = new ArrayList<>();
+  private HashSet<Integer> showingFloors = new HashSet<>();
 
   @FXML
   private void drawPathButtonClicked() {
@@ -1924,8 +1923,6 @@ public class MapViewController extends CentralUIController implements Initializa
       }
     }
     mapImage.setCursor(Cursor.DEFAULT);
-    mapReleasedX = e.getSceneX();
-    mapReleasedY = e.getSceneY();
   }
 
 
@@ -2230,7 +2227,7 @@ public class MapViewController extends CentralUIController implements Initializa
     mouseDragged = false;
   }
 
-  public void setDirectionsOptions() {
+  private void setDirectionsOptions() {
     textButton.setToggleGroup(directionSelect);
     emailButton.setToggleGroup(directionSelect);
     textButton.setSelected(true);
@@ -2256,10 +2253,11 @@ public class MapViewController extends CentralUIController implements Initializa
 
   private String directions = "";
 
-  public void sendDirections() {
+  @FXML
+  private void sendDirections() {
     Emailer e = new Emailer();
     if (directionSelect.getSelectedToggle().getUserData().toString().equals("email")) {
-      if(!detailEntry.equals("") && !directions.equals("")) {
+      if(!detailEntry.getText().equals("") && !directions.equals("")) {
         e.email(detailEntry.getText(), directions);
       }
     } else {
