@@ -411,7 +411,7 @@ public class MapViewController extends CentralUIController implements Initializa
   @FXML
   public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
     initializeSearch();
-    if (mapViewFlag != 3) {
+    if (mapViewFlag == 1) {
       AdminLogOff.setVisible(false);
       helpButton.setVisible(false);
       initializeLanguageConfigs();
@@ -465,6 +465,16 @@ public class MapViewController extends CentralUIController implements Initializa
             if(first){
               first = false;
               updateUserPane();
+              if (searchingPoint != null) {
+                int ind = allPoints.indexOf(searchingPoint);
+                if(ind > -1) {
+                  Point myPoint = allPoints.get(ind);
+                  searchingPoint = null;
+                  floorChoiceBox.setValue(myPoint.getFloor());
+                  setPointFocus(myPoint);
+                  setEnd(myPoint);
+                }
+              }
             }
             globalTimerActions();
 
@@ -683,7 +693,7 @@ public class MapViewController extends CentralUIController implements Initializa
       // TODO
       // Replace the first 'true' with point.shouldOnlyBeSeenByStaff
       // Replace second 'true' with !point.shouldOnlyBeSeenByStaff
-      if((true && mapViewFlag >= 2) || (true && mapViewFlag == 1)) {
+      if((true && mapViewFlag >= 2) || (true && !p.getBlocked() && mapViewFlag == 1)) {
         if (p.getFloor() == currentFloor && (!pathfinding || (pathfinding && pathPoints.contains(p)))) {
           addVisualNodesForPoint(p, points);
         }
@@ -1078,10 +1088,6 @@ public class MapViewController extends CentralUIController implements Initializa
       for (int k = 0; k < allPoints.get(i).getNeighbors().size(); k++) {
         System.out.println("neighbor id : " + allPoints.get(i).getNeighbors().get(k).getId());
       }
-    }
-    if (searchingPoint != null) {
-      setPointFocus(searchingPoint);
-      searchingPoint = null;
     }
   }
 
