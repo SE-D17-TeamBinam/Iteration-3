@@ -8,6 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
@@ -49,6 +50,8 @@ public class SignupMenuController extends CentralUIController implements Initial
   private Label SignupError;
   @FXML
   private Label UsernameExistsError;
+  @FXML
+  private ProgressBar pwdStrength;
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
@@ -57,6 +60,7 @@ public class SignupMenuController extends CentralUIController implements Initial
     intializeChoiceBox();
     SignupError.setVisible(false);
     UsernameExistsError.setVisible(false);
+    intializeProgressBar();
   }
 
   @Override
@@ -72,6 +76,7 @@ public class SignupMenuController extends CentralUIController implements Initial
     SignupError.setLayoutX(x_res/2 - 125);
     UsernameRequired.setLayoutX(x_res/2 + 160);
     PassRequired.setLayoutX(x_res/2 + 160);
+    pwdStrength.setLayoutX(x_res - pwdStrength.getPrefWidth() - 20);
   }
   @Override
   public void customListenerY () {
@@ -86,11 +91,9 @@ public class SignupMenuController extends CentralUIController implements Initial
     SignupError.setLayoutY(2*y_res/11);
     UsernameRequired.setLayoutY(4.5*y_res/11 - 22);
     PassRequired.setLayoutY(6*y_res/11 - 22);
+    pwdStrength.setLayoutY(6*y_res/11 + pwdStrength.getHeight() + 5);
   }
 
-  /**
-   * initializes choice box for creating admin or staff account
-   */
   public void intializeChoiceBox(){
     SignupBox.getItems().addAll(UserType.STAFF, UserType.ADMIN);
     SignupBox.getSelectionModel().select(UserType.STAFF);
@@ -103,8 +106,41 @@ public class SignupMenuController extends CentralUIController implements Initial
     }
   }
 
+  public void intializeProgressBar() {
+      pwdStrength.setProgress(0F);
+    }
+
+  public void updateProgressBar() {
+      String s = SignupPassField.getText();
+      double d = calculatePassStrength(s);
+      pwdStrength.setProgress(d);
+      if (d < 0.1) {
+        pwdStrength.setStyle("-fx-accent: red");
+      }
+      else if (d >= 0.1 && d < 0.3){
+        pwdStrength.setStyle("-fx-accent: orange");
+      }
+      else if (d >= 0.3 && d < 0.6){
+        pwdStrength.setStyle("-fx-accent: yellow");
+      }
+      else if (d >= 0.6) {
+        pwdStrength.setStyle("-fx-accent: green");
+      }
+
+    }
+
+
+  private Double calculatePassStrength(String pass) {
+    if (pass.length()<1){
+      return 0.0;
+    }
+    else {
+      return pass.length() * 0.07 ;
+    }
+  }
+
   /**
-   * sign up account from text in text fields
+   * sign up account from text in text fields and choice box selection
    */
   public void signup() {
     String pass = SignupPassField.getText();

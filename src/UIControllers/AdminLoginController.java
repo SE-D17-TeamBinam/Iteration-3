@@ -88,7 +88,11 @@ public class AdminLoginController extends CentralUIController implements Initial
       LoginError.setVisible(false);
       currUser = enteredName;
       if (credentialManager.isAdmin(enteredName, enteredPass)){
+        mapViewFlag = 3;
         adminPermissions = true;
+      }
+      else {
+        mapViewFlag = 2;
       }
       try {
         loadScene(primaryStage, "/AdminMenu.fxml");

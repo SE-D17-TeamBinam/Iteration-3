@@ -61,7 +61,6 @@ public class AdminMenuController extends CentralUIController implements Initiali
 
   @FXML
   public void editMap() {
-    mapViewFlag = 3;
     Stage primaryStage = (Stage) AdminMenu.getScene().getWindow();
     try {
       loadScene(primaryStage, "/MapScene.fxml");
