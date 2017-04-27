@@ -43,8 +43,6 @@ public class DirectEditController extends CentralUIController implements Initial
   private String searchString = "";
 
   @FXML
-  private Pane DirectEdit;
-  @FXML
   private Pane DirectSearchPane;
   @FXML
   private TextField FirstName;
@@ -424,7 +422,7 @@ public class DirectEditController extends CentralUIController implements Initial
   //////// scene travel ///////
   /////////////////////////////
   public void back () {
-    Stage primaryStage = (Stage) DirectEdit.getScene().getWindow();
+    Stage primaryStage = (Stage) anchorPane.getScene().getWindow();
     try {
       loadScene(primaryStage, "/AdminMenu.fxml");
     } catch (Exception e) {
@@ -434,7 +432,7 @@ public class DirectEditController extends CentralUIController implements Initial
   }
 
   public void logoff () {
-    Stage primaryStage = (Stage) DirectEdit.getScene().getWindow();
+    Stage primaryStage = (Stage) anchorPane.getScene().getWindow();
     try {
       loadScene(primaryStage, "/MainMenu.fxml");
     } catch (Exception e) {
@@ -445,7 +443,7 @@ public class DirectEditController extends CentralUIController implements Initial
 
   public void editMap(){
     mapViewFlag = 3;
-    Stage primaryStage = (Stage) DirectEdit.getScene().getWindow();
+    Stage primaryStage = (Stage) anchorPane.getScene().getWindow();
     try {
       loadScene(primaryStage, "/MapScene.fxml");
     } catch (Exception e) {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import java.net.URL?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -9,13 +9,12 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
-<?import java.net.URL?>
 
 <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="750.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UIControllers.AdminMenuController">
    <children>
       <Pane fx:id="AdminMenu" prefHeight="750.0" prefWidth="1300.0">
          <children>
-            <ImageView fx:id="MapButton" layoutX="725.0" layoutY="240.0" onMouseClicked="#editMap" fitHeight="351.0" fitWidth="351.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="MapButton" fitHeight="351.0" fitWidth="351.0" layoutX="725.0" layoutY="240.0" onMouseClicked="#editMap" pickOnBounds="true" preserveRatio="true">
                <cursor>
                   <Cursor fx:constant="OPEN_HAND" />
                </cursor>
@@ -23,7 +22,7 @@
                   <Image url="@icons/mapbutton.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="EditButton" layoutX="225.0" layoutY="240.0" onMouseClicked="#editDirectory" fitHeight="351.0" fitWidth="351.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="EditButton" fitHeight="351.0" fitWidth="351.0" layoutX="225.0" layoutY="240.0" onMouseClicked="#editDirectory" pickOnBounds="true" preserveRatio="true">
                <cursor>
                   <Cursor fx:constant="OPEN_HAND" />
                </cursor>
@@ -46,6 +45,7 @@
                   <Font name="Times New Roman" size="24.0" />
                </font>
             </Button>
+            <Button fx:id="Settings" layoutX="1140.0" layoutY="633.0" mnemonicParsing="false" text="Button" onMouseClicked="#settings"/>
          </children>
       </Pane>
    </children>
