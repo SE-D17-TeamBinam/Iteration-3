@@ -438,6 +438,7 @@ public class MapViewController extends CentralUIController implements Initializa
       AdminLogOff.setVisible(false);
       helpButton.setVisible(false);
       initializeLanguageConfigs();
+      aliasButton.setVisible(false);
     } else {
       userPane.setVisible(false);
       textDirectionsPane.setVisible(false);
