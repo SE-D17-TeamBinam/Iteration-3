@@ -24,9 +24,9 @@ public class Emailer implements IEmailer{
    * @param text Message to be sent
    */
   public void email(String email, String text){
-    String from = "testwpiemail@gmail.com"; // from changed accordingly
-    final String username = "testwpiemail"; // username change accordingly
-    final String password = "************"; // password change accordingly
+    String from = "********@********"; // from changed accordingly
+    final String username = "*******"; // username change accordingly
+    final String password = "*******"; // password change accordingly
 
     String host = "smtp.gmail.com"; // Gmail smtp server address
 

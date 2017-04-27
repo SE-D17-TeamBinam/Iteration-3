@@ -60,6 +60,7 @@ public class CentralUIController {
     primaryStage.setScene(new Scene(root, x_res, y_res));
     primaryStage.setTitle("Faulkner Hospital Kiosk");
     primaryStage.show();
+    primaryStage.getIcons().add(new Image("/icons/kioskicon.png"));
   }
   /**
    * @parameter primaryStage: The main stage of the application

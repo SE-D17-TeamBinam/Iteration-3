@@ -43,7 +43,7 @@ public class BFS extends PathfindingStrategy{
       // them to the queue and to visited. Additionally,
       // set their parent to the current node.
       for(Point neighbor: currPoint.getNeighbors()){
-        if(!visited.contains(neighbor)) {
+        if(!visited.contains(neighbor) && !neighbor.isBlocked) {
           neighbor.addParent(currPoint);
           queue.add(neighbor);
           visited.add(neighbor);

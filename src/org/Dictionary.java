@@ -268,6 +268,20 @@ public class Dictionary {
     Entry HCP = new Entry(healthCareLabel);
     this.addEntry("Healthcare Providers" , HCP);
 
+    HashMap<Language, String> textDirectionsLabel = new HashMap<Language, String> ();
+    textDirectionsLabel.put(Language.SPANISH, "Direcciones de texto");
+    textDirectionsLabel.put(Language.ENGLISH, "Text Directions");
+    textDirectionsLabel.put(Language.PORTUGESE, "Instruções de texto");
+    Entry td = new Entry(textDirectionsLabel);
+    this.addEntry("Text Directions" , td);
+
+    HashMap<Language, String> sendToMeLabel = new HashMap<Language, String> ();
+    sendToMeLabel.put(Language.SPANISH, "Envíame");
+    sendToMeLabel.put(Language.ENGLISH, "Send to Me");
+    sendToMeLabel.put(Language.PORTUGESE, "Envie para Mim");
+    Entry stm = new Entry(sendToMeLabel);
+    this.addEntry("Send to Me" , stm);
+
   }
 
   /**
