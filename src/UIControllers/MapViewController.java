@@ -973,12 +973,12 @@ public class MapViewController extends CentralUIController implements Initializa
 
   private void getMap() {
       allPoints = database.getPoints();
-      for(int i = 0;i < allPoints.size();i++){
-        System.out.println("id : " + allPoints.get(i).getId());
-        for(int k = 0;k < allPoints.get(i).getNeighbors().size();k++){
-          System.out.println("neighbor id : " + allPoints.get(i).getNeighbors().get(k).getId());
-        }
-      }
+//      for(int i = 0;i < allPoints.size();i++){
+////        System.out.println("id : " + allPoints.get(i).getId());
+//        for(int k = 0;k < allPoints.get(i).getNeighbors().size();k++){
+////          System.out.println("neighbor id : " + allPoints.get(i).getNeighbors().get(k).getId());
+//        }
+//      }
     if(searchingPoint != null) {
       setPointFocus(searchingPoint);
       searchingPoint = null;

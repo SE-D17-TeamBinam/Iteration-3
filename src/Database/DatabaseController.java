@@ -561,18 +561,19 @@ public class DatabaseController implements DatabaseInterface {
       ret.add(fakepoints.get(i).toRealPoint());
     }
     for (int i = 0; i < ret.size(); i++) {
+      ArrayList<Integer> currentNeighbors = findFakePoint(ret.get(i), fakepoints).getNeighbors();
+      for (int j = 0; j < currentNeighbors.size(); j++) {
+        ret.get(i).connectTo(findRealPoint(currentNeighbors.get(j), ret));
+      }
+      progressBarPercentage = .25 + .2 * i / ret.size();
+    }
+    for (int i = 0; i < ret.size(); i++) {
       if (ret.get(i).getName().equals("ELEVATOR")) {
         Point p = ret.get(i);
         ret.remove(i);
         ret.add(i, toElevatorPoint(p));
       }
-    }
-    for (int i = 0; i < ret.size(); i++) {
-      ArrayList<Integer> currentNeighbors = findFakePoint(ret.get(i), fakepoints).getNeighbors();
-      for (int j = 0; j < currentNeighbors.size(); j++) {
-        ret.get(i).connectTo(findRealPoint(currentNeighbors.get(j), ret));
-      }
-      progressBarPercentage = .25 + .25 * i / ret.size();
+      progressBarPercentage = .45 + .05 * i / ret.size();
     }
     return ret;
   }
@@ -800,7 +801,7 @@ public class DatabaseController implements DatabaseInterface {
       if (localPoints.get(i).getName() != null && !localPoints.get(i).getName().equals("null")
           && !localPoints.get(i).getName().equals("") && !(
           localPoints.get(i).getName().replaceAll("\\s", "") == "")) {
-        namedPoints.add(localPoints.get(i));
+        namedPoints.add((Point)localPoints.get(i).clone());
       }
     }
 
@@ -828,10 +829,8 @@ public class DatabaseController implements DatabaseInterface {
         //do stuff, if neccesary, else, delete
       }
     }
-    ListPoints lp = new ListPoints(localPoints);
-    ListPoints lp2 = lp.deepClone();
 
-    return lp2.getPoints();
+    return FakePoint.deepClone(localPoints);
   }
 
   @Override

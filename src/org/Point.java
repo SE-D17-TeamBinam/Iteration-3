@@ -265,24 +265,8 @@ public class Point {
     return true; // Everything checks out
   }
 
-  /*
-  int xCoord;    //X coordinate
-  int yCoord;    //Y coordinate
-  ArrayList<String> names;  //Name of the room
-  int id;      //Unique Identifier
-  int floor;
-  public ArrayList<Point> neighbors = new ArrayList<>();
-   */
-
   @Override
   public Object clone()  {
     return new Point(xCoord,yCoord,names,id,neighbors, floor);
   }
 }
-
-//  int xCoord;    //X coordinate
-//  int yCoord;    //Y coordinate
-//  ArrayList<String> names;  //Name of the room
-//  int id;      //Unique Identifier
-//  int floor;
-//  public ArrayList<Point> neighbors = new ArrayList<>();
