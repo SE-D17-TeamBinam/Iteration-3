@@ -151,9 +151,4 @@ public class CentralUIController {
     backgroundView.toBack();
   }
 
-  public void addDB(DatabaseInterface db){
-//    this.database = db;
-
-    System.out.println(db == null);
-  }
 }

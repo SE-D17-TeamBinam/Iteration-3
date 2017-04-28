@@ -1,6 +1,5 @@
 package UIControllers;
 
-import Definitions.Physician;
 import FileController.DefaultKioskNotInMemoryException;
 import FileController.SettingsIO;
 import java.net.URL;
@@ -9,8 +8,6 @@ import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -119,11 +116,15 @@ public class SettingsMenuController extends CentralUIController implements Initi
       public void changed(ObservableValue<? extends String> observable, String oldValue,
           String newValue) {
         try {
-          Integer.parseInt(newValue);
-          settings.updateSetting("timeoutLength", newValue);
-          System.out.println("changed timeout length to " + newValue);
+          if (Integer.parseInt(newValue) < 0) {
+            timeTimeout.setText(Integer.toString(0));
+          } else {
+            System.out.println("changed timeout length to " + newValue);
+            settings.updateSetting("timeoutLength", newValue);
+          }
         } catch (NumberFormatException e) {
           System.out.println("Please enter something legit");
+          timeTimeout.setText(oldValue);
         }
       }
     });
@@ -155,6 +156,14 @@ public class SettingsMenuController extends CentralUIController implements Initi
       System.out.println("changed algorithm to astar");
     });
 
+  }
+
+  public void increaseTimeout () {
+    timeTimeout.setText(Integer.toString(Integer.parseInt(timeTimeout.getText()) + 1));
+  }
+
+  public void decreaseTimeout() {
+    timeTimeout.setText(Integer.toString(Integer.parseInt(timeTimeout.getText()) - 1));
   }
 
   public void back () {
