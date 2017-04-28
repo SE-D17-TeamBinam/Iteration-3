@@ -846,7 +846,16 @@ public class DatabaseController implements DatabaseInterface {
       }
     }
 
-    return FakePoint.deepClone(localPoints);
+    ArrayList<Point> ret = FakePoint.deepClone(localPoints);
+
+    for (int i = 0; i < ret.size(); i++){
+      if (ret.get(i).getName().equals("ELEVATOR")){
+        Point tempPoint = ret.get(i);
+        ret.remove(i);
+        ret.add(i, toElevatorPoint(tempPoint));
+      }
+    }
+    return ret;
   }
 
   @Override
