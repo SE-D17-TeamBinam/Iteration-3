@@ -30,7 +30,7 @@ import org.Point;
  * Created by Leon Zhang on 4/27/2017.
  */
 public class SettingsMenuController extends CentralUIController implements Initializable {
-  private ArrayList<Point> points;
+  private ArrayList<Point> rooms;
   SettingsIO settings = new SettingsIO();
 
   @FXML
@@ -58,7 +58,10 @@ public class SettingsMenuController extends CentralUIController implements Initi
   public void initialize(URL location, ResourceBundle resources) {
     addResolutionListener(anchorPane);
     setBackground(anchorPane);
-    points = database.getPoints();
+    rooms = database.getNamedPoints();
+    sortRooms(rooms);
+
+    /* initialize radio buttons */
     final ToggleGroup resolution = new ToggleGroup();
     defaultResolution.setToggleGroup(resolution);
     fullscreenResolution.setToggleGroup(resolution);
@@ -83,24 +86,35 @@ public class SettingsMenuController extends CentralUIController implements Initi
       astarAlgorithm.setSelected(true);
     }
 
-    ArrayList<Integer> pids = new ArrayList<>();
-    for (Point point : points) {
-      pids.add(point.getId());
-    }
-    locationsKiosk.setItems(FXCollections.observableList(pids));
+    /* initialize kiosk location */
+    locationsKiosk.setItems(FXCollections.observableList(rooms));
     try {
-      locationsKiosk.getSelectionModel().select(settings.getDefaultKiosk(new ListPoints(points)).getId());
+      locationsKiosk.getSelectionModel().select(settings.getDefaultKiosk(new ListPoints(rooms)));
     } catch (DefaultKioskNotInMemoryException e) {
       System.out.println("Default kiosk location is not set");
     }
 
+    /* initialize timeout */
     timeTimeout.setText(Integer.toString(settings.getTimeout()));
 
+    /* kiosk location listener */
     locationsKiosk.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
       public void changed(ObservableValue ov, Number old_value, Number new_value) {
-        settings.updateSetting("startingKiosk", Integer.toString((Integer)locationsKiosk.getValue()));
+        if ((Integer) new_value >= 0) {
+          settings.updateSetting("startingKiosk", Integer
+              .toString(((Point) locationsKiosk.getItems().get((Integer) new_value)).getId()));
+          try {
+            System.out.println(
+                "changed kiosk location to " + settings.getDefaultKiosk(new ListPoints(rooms))
+                    .toString());
+          } catch (DefaultKioskNotInMemoryException e) {
+
+          }
+        }
       }
     });
+
+    /* radio button listeners */
     defaultResolution.setOnAction(event -> {
       settings.updateSetting("resolution", "default");
       System.out.println("changed resolution to default");
@@ -149,15 +163,4 @@ public class SettingsMenuController extends CentralUIController implements Initi
     }
   }
 
-  public void selectResolution () {
-  }
-  public void selectLocation () {
-
-  }
-  public void selectAlgorithm () {
-
-  }
-  public void setTimeout () {
-
-  }
 }

@@ -45,7 +45,7 @@
                   <Font name="Times New Roman" size="24.0" />
                </font>
             </Button>
-            <Button fx:id="Settings" layoutX="1140.0" layoutY="633.0" mnemonicParsing="false" text="Button" onMouseClicked="#settings"/>
+            <Button fx:id="Settings" layoutX="1140.0" layoutY="633.0" mnemonicParsing="false" text="Settings" onMouseClicked="#settings"/>
          </children>
       </Pane>
    </children>
