@@ -26,6 +26,9 @@ public class Point {
   int cost;
   boolean isBlocked;
 
+  // Arbitrarily Large, number of Points should never exceed this amount
+  public static final int ID_MAX = 3000001;
+
   //Constructor
   public Point(double xCoord, double yCoord, ArrayList<String> names) {
     this.xCoord = (int) xCoord;
@@ -89,6 +92,10 @@ public class Point {
       point.getNeighbors().remove(this);
       this.neighbors.remove(point);
     }
+  }
+
+  public String toString(){
+    return this.getName();
   }
 
   public ArrayList<Point> getNeighbors() {
