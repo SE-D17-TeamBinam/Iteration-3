@@ -4,3 +4,4 @@
 out/
 testDB/
 derby.log
+users.txt

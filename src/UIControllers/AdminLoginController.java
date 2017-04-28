@@ -88,7 +88,8 @@ public class AdminLoginController extends CentralUIController implements Initial
 
     if (credentialManager.login(enteredName, enteredPass)){
       LoginError.setVisible(false);
-      currUser = enteredName;
+      currUsername = enteredName;
+      currentUser.put(enteredName, enteredPass);
       if (credentialManager.userIsAdmin(enteredName)){
         mapViewFlag = 3;
         adminPermissions = true;
@@ -98,6 +99,7 @@ public class AdminLoginController extends CentralUIController implements Initial
         mapViewFlag = 2;
         isLoggedIn = true;
       }
+
       try {
         loadScene(primaryStage, "/AdminMenu.fxml");
       } catch (Exception e) {

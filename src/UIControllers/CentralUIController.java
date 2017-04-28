@@ -6,6 +6,7 @@ import Definitions.Physician;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
@@ -32,7 +33,8 @@ public class CentralUIController {
   protected static CredentialManager credentialManager = CredentialManager.getInstance();
   protected static Boolean adminPermissions = false;
   protected static Boolean isLoggedIn = false;
-  protected static String currUser;
+  protected static String currUsername;
+  protected static HashMap<String, String> currentUser = new HashMap<>();
   protected static Dictionary dictionary;
   /* resolution */
   protected static double x_res = 1300;

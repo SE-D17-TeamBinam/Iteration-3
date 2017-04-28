@@ -3,7 +3,6 @@ package Database;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import org.ListPoints;
 import org.Point;
 
 /**
@@ -157,7 +156,7 @@ public class FakePoint {
   public static ArrayList<Point> deepClone(ArrayList<Point> points){
     HashMap<Point, Point> newPoints = new HashMap<Point, Point>();
     for(Point p : points){
-      newPoints.put(p, new Point(p.getXCoord(), p.getYCoord(), p.getName(), p.getId(), new ArrayList<Point>(), p.getFloor()));
+      newPoints.put(p, new Point(p.getXCoord(), p.getYCoord(), p.getNames(), p.getId(), new ArrayList<Point>(), p.getFloor()));
     }
     for(Point p : points){
       Point p2 = newPoints.get(p);

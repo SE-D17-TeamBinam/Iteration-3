@@ -3,17 +3,25 @@ package UIControllers;
 import CredentialManager.UserType;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
@@ -41,9 +49,9 @@ public class SignupMenuController extends CentralUIController implements Initial
   @FXML
   private ComboBox SignupBox;
   @FXML
-  private Label SignupBack;
+  private Button SignupBack;
   @FXML
-  private Label SignupButton;
+  private Button SignupButton;
   @FXML
   private Label UsernameRequired;
   @FXML
@@ -55,7 +63,7 @@ public class SignupMenuController extends CentralUIController implements Initial
   @FXML
   private ProgressBar pwdStrength;
   @FXML
-  private Label progressLabel;
+  private Label ProgressLabel;
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
@@ -81,7 +89,7 @@ public class SignupMenuController extends CentralUIController implements Initial
     UsernameRequired.setLayoutX(x_res/2 + 160);
     PassRequired.setLayoutX(x_res/2 + 160);
     pwdStrength.setLayoutX(x_res/2 + pwdStrength.getPrefWidth()*1.5);
-    progressLabel.setLayoutX(x_res/2 + pwdStrength.getPrefWidth()*1.5 + pwdStrength.getPrefWidth()/2 - 15);
+    ProgressLabel.setLayoutX(x_res/2 + pwdStrength.getPrefWidth()*1.5 + pwdStrength.getPrefWidth()/2 - 15);
   }
   @Override
   public void customListenerY () {
@@ -97,7 +105,7 @@ public class SignupMenuController extends CentralUIController implements Initial
     UsernameRequired.setLayoutY(4.5*y_res/11 - 22);
     PassRequired.setLayoutY(6*y_res/11 - 22);
     pwdStrength.setLayoutY(6*y_res/11 + pwdStrength.getHeight()/2 +5);
-    progressLabel.setLayoutY(6*y_res/11 + pwdStrength.getHeight()/2 - 20);
+    ProgressLabel.setLayoutY(6*y_res/11 + pwdStrength.getHeight()/2 - 20);
   }
 
   public void intializeChoiceBox(){
@@ -114,38 +122,37 @@ public class SignupMenuController extends CentralUIController implements Initial
 
   public void intializeProgressBar() {
       pwdStrength.setProgress(0.02F);
-      progressLabel.setVisible(false);
+      ProgressLabel.setVisible(false);
       pwdStrength.setVisible(false);
-      pwdStrength.setTooltip(new Tooltip("• Use 6 to 64 characters.\n• Besides letters, include at least a number or symbol\n (!@$%^*-_+=).\n• Password is case sensitive."));
-    }
+  }
 
   public void updateProgressBar() {
     if (!SignupPassField.getText().equals("")) {
       pwdStrength.setVisible(true);
-      progressLabel.setVisible(true);
+      ProgressLabel.setVisible(true);
     }
     else {
       pwdStrength.setVisible(false);
-      progressLabel.setVisible(false);
+      ProgressLabel.setVisible(false);
     }
     String s = SignupPassField.getText();
     double d = calculatePassStrength(s);
     pwdStrength.setProgress(d);
       if (d < 0.1) {
         pwdStrength.setStyle("-fx-accent: red");
-        progressLabel.setText("Weak");
+        ProgressLabel.setText("Weak");
       }
       else if (d >= 0.1 && d < 0.3){
         pwdStrength.setStyle("-fx-accent: orange");
-        progressLabel.setText("Weak");
+        ProgressLabel.setText("Weak");
       }
       else if (d >= 0.3 && d < 0.6){
         pwdStrength.setStyle("-fx-accent: yellow");
-        progressLabel.setText("Fair");
+        ProgressLabel.setText("Fair");
       }
       else if (d >= 0.6) {
         pwdStrength.setStyle("-fx-accent: green");
-        progressLabel.setText("Strong");
+        ProgressLabel.setText("Strong");
       }
     }
 
@@ -179,6 +186,7 @@ public class SignupMenuController extends CentralUIController implements Initial
       UsernameExistsError.setVisible(true);
     }
     else {
+      verifyCreation();
       Stage primaryStage = (Stage) SignupMenu.getScene().getWindow();
       try {
         loadScene(primaryStage, "/AdminMenu.fxml");
@@ -200,5 +208,50 @@ public class SignupMenuController extends CentralUIController implements Initial
       System.out.println("Cannot load main menu");
       e.printStackTrace();
     }
+  }
+
+  public void verifyCreation() {
+    Dialog verification = new Dialog();
+    verification.setHeaderText("Authenticate");
+    verification.setContentText("Please verify your credentials.");
+    GridPane grid = new GridPane();
+    grid.setPadding(new Insets(20, 10, 10, 10));
+    TextField username = new TextField();
+    TextField pass = new TextField();
+
+    ArrayList<TextField> credentials = new ArrayList<>();
+    credentials.add(username);
+    credentials.add(pass);
+
+
+    grid.add(username, 1 , 1);
+    grid.add(pass, 1, 2);
+
+    Button verify = new Button("OK");
+    Button cancel = new Button("Cancel");
+
+    verify.setOnMouseClicked(new EventHandler<MouseEvent>() {
+      @Override
+      public void handle(MouseEvent event) {
+        String thisUser = credentials.get(0).getText();
+        String thisPass = credentials.get(1).getText();
+        if (thisUser.equals(currUsername) && thisPass.equals(currentUser.get(currUsername))){
+          verification.close();
+        }
+        else {
+          Dialog verifyError = new Alert(AlertType.ERROR);
+          verifyError.setContentText("The username or password you have entered is incorrect.");
+        }
+      }
+    });
+
+    cancel.setOnMouseClicked(new EventHandler<MouseEvent>() {
+      @Override
+      public void handle(MouseEvent event) {
+        verification.close();
+      }
+    });
+
+    verification.showAndWait();
   }
 }

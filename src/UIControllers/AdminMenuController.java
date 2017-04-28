@@ -5,7 +5,6 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -33,7 +32,7 @@ public class AdminMenuController extends CentralUIController implements Initiali
   @FXML
   private Label LoginLabel;
   @FXML
-  private Label CreateAccountButton;
+  private Button CreateAccountButton;
   @FXML
   private Button LogOffButton;
 
@@ -44,6 +43,8 @@ public class AdminMenuController extends CentralUIController implements Initiali
     EditButton.setLayoutX(2 * (x_res / 7) - 175);
     DirectEditLabel.setLayoutX(2 * (x_res / 7) - 105);
     MapLabel.setLayoutX(5 * (x_res / 7) - 95);
+    CreateAccountButton.setLayoutX(x_res - CreateAccountButton.getPrefWidth() - 12);
+    LoginLabel.setLayoutX(x_res/2 - LoginLabel.getPrefWidth()/2 + 70);
   }
 
   @Override
@@ -52,7 +53,8 @@ public class AdminMenuController extends CentralUIController implements Initiali
     EditButton.setLayoutY(6 * (y_res / 11) - 160);
     DirectEditLabel.setLayoutY(6 * (y_res / 11) + 120);
     MapLabel.setLayoutY(6 * (y_res / 11) + 120);
-
+    CreateAccountButton.setLayoutY(y_res - CreateAccountButton.getPrefWidth()/2);
+    LoginLabel.setLayoutY(y_res - LoginLabel.getPrefHeight());
   }
 
   @Override
@@ -66,7 +68,7 @@ public class AdminMenuController extends CentralUIController implements Initiali
     }
     addResolutionListener(anchorPane);
     setBackground(anchorPane);
-    LoginLabel.setText(LoginLabel.getText() + currUser);
+    LoginLabel.setText(LoginLabel.getText() + currUsername);
     initializeCreationButton();
   }
 
@@ -125,10 +127,6 @@ public class AdminMenuController extends CentralUIController implements Initiali
       System.out.println("Cannot load signup menu");
       e.printStackTrace();
     }
-  }
-
-  public void verifyCredentials() {
-    Dialog verification = new Dialog();
   }
 
   public void settings () {
