@@ -49,4 +49,7 @@ public class ElevatorPoint extends VerticalPoint {
       return false;
     }
   }
+  public String toStringMoreInfo(){
+    return "Elevator Point!: " + this.getName() + "(" + this.id + ") at x:" + xCoord + ", y:" + yCoord + " on floor " + this.floor;
+  }
 }

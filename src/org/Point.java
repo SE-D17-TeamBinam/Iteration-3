@@ -35,6 +35,8 @@ public class Point {
     this.yCoord = (int) yCoord;
     this.names = names;
     this.isBlocked = false;
+    this.names = new ArrayList<String>();
+
   }
 
   public Point(double xCoord, double yCoord, int floor) {
@@ -259,7 +261,7 @@ public class Point {
       return false;
 
     // next test the list of names
-    if (!pobj.names.equals(this.names))
+    if (pobj.names != null && this.names!= null && !pobj.names.equals(this.names))
       return false;
 
     //test the neighbors of each point
@@ -275,4 +277,11 @@ public class Point {
   public Object clone()  {
     return new Point(xCoord,yCoord,names,id,neighbors, floor);
   }
+
+
+  public String toStringMoreInfo(){
+    return this.getName() + "(" + this.id + ") at x:" + xCoord + ", y:" + yCoord + " on floor " + this.floor;
+  }
+
 }
+
