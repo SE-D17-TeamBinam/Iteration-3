@@ -23,8 +23,10 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Separator;
@@ -1285,6 +1287,7 @@ public class MapViewController extends CentralUIController implements Initializa
 
   private void setEnd(Point newEnd){
     if(newEnd != null){
+      endNodeBox.getSelectionModel().clearSelection();
       if(newEnd.getFloor() == currentFloor){
         endNodeBox.setValue(newEnd);
       }else{
@@ -1297,6 +1300,7 @@ public class MapViewController extends CentralUIController implements Initializa
 
   private void setStart(Point newStart){
     if(newStart != null){
+      startNodeBox.getSelectionModel().clearSelection();
       if(newStart.getFloor() == currentFloor){
         startNodeBox.setValue(newStart);
       }else{
@@ -1930,6 +1934,8 @@ public class MapViewController extends CentralUIController implements Initializa
             removeVisualConnection(new Connection(p, pointFocus));
           }
         }
+      }else{
+        displayContextMenu(adminMapMenu, (Point) circles.keySet().toArray()[0], e.getScreenX(), e.getScreenY());
       }
     }
   }
@@ -1970,37 +1976,45 @@ public class MapViewController extends CentralUIController implements Initializa
       }
       if (e.isControlDown()) {
         if (e.getCode().toString().equals("C")) {
-          mapViewPane.setCursor(Cursor.WAIT);
-          // Cloned once here because the points could be changed after being copied, which is bad
-          ListPoints lp = new ListPoints(secondaryPointFoci);
-          clipBoard = lp.deepClone().getPoints();
-          mapViewPane.setCursor(Cursor.DEFAULT);
+          copy();
         }
         if (e.getCode().toString().equals("X")) {
         }
         if (e.getCode().toString().equals("V")) {
-          if (clipBoard.isEmpty()) {
-          } else {
-            mapViewPane.setCursor(Cursor.WAIT);
-            floorPoints.addAll(clipBoard);
-            allPoints.addAll(clipBoard);
-            clearSecondaryPointFoci();
-            displayPoints(clipBoard);
-            for (Point p : clipBoard) {
-              p.setFloor(currentFloor);
-              addPointToSecondarySelection(p);
-            }
-
-            // Cloned again, after being pasted, because they could be pasted more than once
-            ListPoints lp = new ListPoints(clipBoard);
-            clipBoard = lp.deepClone().getPoints();
-            mapViewPane.setCursor(Cursor.DEFAULT);
-          }
+          paste();
         }
         if (e.getCode().toString().equals("S")) {
           saveMapButtonClicked();
         }
       }
+    }
+  }
+
+  private void copy(){
+    // Cloned once here because the points could be changed after being copied, which is bad
+    ListPoints lp = new ListPoints(secondaryPointFoci);
+    clipBoard = lp.deepClone().getPoints();
+
+    mapViewPane.setCursor(Cursor.DEFAULT);
+  }
+
+  private void paste(){
+    if (clipBoard.isEmpty()) {
+    } else {
+      mapViewPane.setCursor(Cursor.WAIT);
+      floorPoints.addAll(clipBoard);
+      allPoints.addAll(clipBoard);
+      clearSecondaryPointFoci();
+      displayPoints(clipBoard);
+      for (Point p : clipBoard) {
+        p.setFloor(currentFloor);
+        addPointToSecondarySelection(p);
+      }
+
+      // Cloned again, after being pasted, because they could be pasted more than once
+      ListPoints lp = new ListPoints(clipBoard);
+      clipBoard = lp.deepClone().getPoints();
+      mapViewPane.setCursor(Cursor.DEFAULT);
     }
   }
 
@@ -2083,9 +2097,9 @@ public class MapViewController extends CentralUIController implements Initializa
       }
     } else {
       if (mapViewFlag == 3) {
-
+        displayContextMenu(adminPointMenu, p, e.getScreenX(), e.getScreenY());
       } else {
-
+        displayContextMenu(userMapMenu, p, e.getScreenX(), e.getScreenY());
       }
     }
   }
@@ -2241,4 +2255,84 @@ public class MapViewController extends CentralUIController implements Initializa
       }
     }
   }
+
+  //Testing Context Menus
+
+  /** User Context Menu for the map:
+   * This menu is displayed when the user right clicks on a point while viewing the navigation
+   * map. It has two MenuItem options, startingLocation and destination, which allow the user
+   * to set the starting location and destination for navigation if they choose to.
+   */
+  MenuItem startingLocation = new MenuItem("Set as Current Location");
+  MenuItem destination = new MenuItem("Set as Destination");
+  ContextMenu userMapMenu = new ContextMenu(startingLocation, destination);
+
+  /** Admin Context Menu for the map:
+   *
+   */
+  MenuItem deletePoint = new MenuItem("Delete");
+  MenuItem copyPoint = new MenuItem("Copy");
+  MenuItem deleteAllPoints = new MenuItem("Delete All");
+  ContextMenu adminPointMenu = new ContextMenu(copyPoint, deletePoint, deleteAllPoints);
+
+  //Admin Map Menu
+  MenuItem pastePoint = new MenuItem("Paste");
+  ContextMenu adminMapMenu = new ContextMenu(pastePoint);
+
+
+  /**
+   * Sets the actions of startingLocation and destination MenuItems to set the starting and ending
+   * locations respectively.
+   * @param point: The point that has been called by the ContextMenu.
+   */
+  public void handlePoint(Point point){
+    startingLocation.setOnAction(new EventHandler<ActionEvent>() {
+      @Override public void handle(ActionEvent e) {
+        setStart(point); //Sets the starting location as the point if MenuItem is startingLocation
+      }
+    });
+    destination.setOnAction(new EventHandler<ActionEvent>() {
+      @Override public void handle(ActionEvent e) {
+        setEnd(point); //Sets the destination as the point if MenuItem is destination.
+      }
+    });
+    deletePoint.setOnAction(new EventHandler<ActionEvent>() {
+      @Override public void handle(ActionEvent e) {
+        setPointFocus(point);
+        deletePoints(false); //Removes the one point selected.
+      }
+    });
+    deleteAllPoints.setOnAction(new EventHandler<ActionEvent>() {
+      @Override public void handle(ActionEvent e) {
+        addPointToSecondarySelection(point);
+        deletePoints(true); //Removes all points selected.
+      }
+    });
+    copyPoint.setOnAction(new EventHandler<ActionEvent>() {
+      @Override public void handle(ActionEvent e) {
+        addPointToSecondarySelection(point);
+        copy(); //Copies a single point.
+      }
+    });
+    pastePoint.setOnAction(new EventHandler<ActionEvent>() {
+      @Override public void handle(ActionEvent e) {
+        paste(); //Pastes all points in the queue.
+      }
+    });
+  }
+
+  /**
+   * Shows a new context menu at a location when a point is clicked. Passes the point to the context
+   * menu event handling function handlePoint.
+   * @param contextMenu: The type of contextMenu to display.
+   * @param point: The point that was selected.
+   * @param xLocation: The xLocation of the click mouseEvent.
+   * @param yLocation: The yLocation of the click mouseEvent.
+   */
+  public void displayContextMenu(ContextMenu contextMenu, Point point, double xLocation, double yLocation){
+    contextMenu.show(circles.get(point).getScene().getWindow(),xLocation,yLocation);
+    handlePoint(point);
+  }
+
+  //End Context Menu Testing
 }
