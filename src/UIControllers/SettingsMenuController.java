@@ -6,6 +6,8 @@ import FileController.SettingsIO;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -18,6 +20,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import org.Astar;
+import org.BFS;
+import org.DFS;
 import org.ListPoints;
 import org.Point;
 
@@ -25,7 +30,7 @@ import org.Point;
  * Created by Leon Zhang on 4/27/2017.
  */
 public class SettingsMenuController extends CentralUIController implements Initializable {
-  private ArrayList<Point> rooms;
+  private ArrayList<Point> points;
   SettingsIO settings = new SettingsIO();
 
   @FXML
@@ -53,6 +58,7 @@ public class SettingsMenuController extends CentralUIController implements Initi
   public void initialize(URL location, ResourceBundle resources) {
     addResolutionListener(anchorPane);
     setBackground(anchorPane);
+    points = database.getPoints();
     final ToggleGroup resolution = new ToggleGroup();
     defaultResolution.setToggleGroup(resolution);
     fullscreenResolution.setToggleGroup(resolution);
@@ -61,15 +67,66 @@ public class SettingsMenuController extends CentralUIController implements Initi
     bfsAlgorithm.setToggleGroup(algorithm);
     dfsAlgorithm.setToggleGroup(algorithm);
     astarAlgorithm.setToggleGroup(algorithm);
-    rooms = database.getNamedPoints();
-    locationsKiosk.setItems(FXCollections.observableList(rooms));
+
+    if (settings.getScreenPreference() == 1){
+      defaultResolution.setSelected(true);
+    } else if (settings.getScreenPreference() == 2) {
+      fullscreenResolution.setSelected(true);
+    } else if (settings.getScreenPreference() == 3) {
+      fullwindowResolution.setSelected(true);
+    }
+    if (settings.getAlgorithm().getClass() == DFS.class) {
+      dfsAlgorithm.setSelected(true);
+    } else if (settings.getAlgorithm().getClass() == BFS.class) {
+      bfsAlgorithm.setSelected(true);
+    } else if (settings.getAlgorithm().getClass() == Astar.class) {
+      astarAlgorithm.setSelected(true);
+    }
+
+    ArrayList<Integer> pids = new ArrayList<>();
+    for (Point point : points) {
+      pids.add(point.getId());
+    }
+    locationsKiosk.setItems(FXCollections.observableList(pids));
     try {
-      locationsKiosk.getSelectionModel().select(settings.getDefaultKiosk(new ListPoints(rooms)));
+      locationsKiosk.getSelectionModel().select(settings.getDefaultKiosk(new ListPoints(points)).getId());
     } catch (DefaultKioskNotInMemoryException e) {
       System.out.println("Default kiosk location is not set");
     }
+
     timeTimeout.setText(Integer.toString(settings.getTimeout()));
-    defaultResolution.setOnAction(event -> {});
+
+    locationsKiosk.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+      public void changed(ObservableValue ov, Number old_value, Number new_value) {
+        settings.updateSetting("startingKiosk", Integer.toString((Integer)locationsKiosk.getValue()));
+      }
+    });
+    defaultResolution.setOnAction(event -> {
+      settings.updateSetting("resolution", "default");
+      System.out.println("changed resolution to default");
+    });
+    fullscreenResolution.setOnAction(event -> {
+      settings.updateSetting("resolution", "fullscreen");
+      System.out.println("changed resolution to fullscreen");
+    });
+    fullwindowResolution.setOnAction(event -> {
+      settings.updateSetting("resolution", "fullwindow");
+      System.out.println("changed resolution to fullwindow");
+    });
+
+    bfsAlgorithm.setOnAction(event -> {
+      settings.updateSetting("algorithm", "bfs");
+      System.out.println("changed algorithm to bfs");
+    });
+    dfsAlgorithm.setOnAction(event -> {
+      settings.updateSetting("algorithm", "dfs");
+      System.out.println("changed algorithm to dfs");
+    });
+    astarAlgorithm.setOnAction(event -> {
+      settings.updateSetting("algorithm", "astar");
+      System.out.println("changed algorithm to astar");
+    });
+
   }
 
   public void back () {
