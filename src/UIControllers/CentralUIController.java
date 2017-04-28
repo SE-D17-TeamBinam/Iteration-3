@@ -83,7 +83,7 @@ public class CentralUIController {
    * @parameter primaryStage: The main stage of the application
    */
   public void restartUI(Stage primaryStage) throws Exception {
-    Parent root = FXMLLoader.load(getClass().getResource("/SettingsMenu.fxml"));
+    Parent root = FXMLLoader.load(getClass().getResource("/MainMenu.fxml"));
     primaryStage.setScene(new Scene(root, x_res, y_res));
     primaryStage.setTitle("Faulkner Hospital Kiosk");
     primaryStage.show();

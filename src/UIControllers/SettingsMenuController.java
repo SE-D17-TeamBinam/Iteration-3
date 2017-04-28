@@ -1,7 +1,11 @@
 package UIControllers;
 
+import Definitions.Physician;
+import FileController.SettingsIO;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -13,11 +17,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import org.Point;
 
 /**
  * Created by Leon Zhang on 4/27/2017.
  */
 public class SettingsMenuController extends CentralUIController implements Initializable {
+  private ArrayList<Point> rooms;
+
   @FXML
   private AnchorPane anchorPane;
   @FXML
@@ -51,6 +58,10 @@ public class SettingsMenuController extends CentralUIController implements Initi
     bfsAlgorithm.setToggleGroup(algorithm);
     dfsAlgorithm.setToggleGroup(algorithm);
     astarAlgorithm.setToggleGroup(algorithm);
+    rooms = database.getNamedPoints();
+    locationsKiosk.setItems(FXCollections.observableList(rooms));
+    //SettingsIO settings = new SettingsIO();
+    //timeTimeout.setText(Integer.toString(settings.getTimeout()));
   }
 
   public void back () {
@@ -62,8 +73,8 @@ public class SettingsMenuController extends CentralUIController implements Initi
       e.printStackTrace();
     }
   }
-  public void logoff () {
 
+  public void logoff () {
     Stage primaryStage = (Stage) anchorPane.getScene().getWindow();
     try {
       loadScene(primaryStage, "/MainMenu.fxml");

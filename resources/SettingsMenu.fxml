@@ -74,8 +74,8 @@
                   <Font size="18.0" />
                </font>
             </RadioButton>
-            <ChoiceBox fx:id="locationsKiosk" layoutX="525.0" layoutY="253.0" prefHeight="40.0" prefWidth="186.0" />
-            <Pane layoutX="525.0" layoutY="453.0" prefHeight="40.0" prefWidth="186.0">
+            <ChoiceBox fx:id="locationsKiosk" layoutX="525.0" layoutY="247.0" prefHeight="40.0" prefWidth="186.0" />
+            <Pane layoutX="525.0" layoutY="447.0" prefHeight="40.0" prefWidth="186.0">
                <children>
                   <TextField fx:id="timeTimeout" alignment="CENTER_RIGHT" prefWidth="151.0">
                      <font>
