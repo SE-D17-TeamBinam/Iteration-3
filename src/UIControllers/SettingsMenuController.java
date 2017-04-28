@@ -65,6 +65,7 @@ public class SettingsMenuController extends CentralUIController implements Initi
     bfsAlgorithm.setToggleGroup(algorithm);
     dfsAlgorithm.setToggleGroup(algorithm);
     astarAlgorithm.setToggleGroup(algorithm);
+    
     ArrayList<Integer> pids = new ArrayList<>();
     for (Point point : points) {
       pids.add(point.getId());
@@ -72,15 +73,17 @@ public class SettingsMenuController extends CentralUIController implements Initi
     locationsKiosk.setItems(FXCollections.observableList(pids));
     try {
       locationsKiosk.getSelectionModel().select(settings.getDefaultKiosk(new ListPoints(points)).getId());
-      locationsKiosk.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-        public void changed(ObservableValue ov, Number old_value, Number new_value) {
-          settings.updateSetting("startingKiosk", Integer.toString((Integer) locationsKiosk.getValue()));
-        }
-      });
     } catch (DefaultKioskNotInMemoryException e) {
       System.out.println("Default kiosk location is not set");
     }
+
     timeTimeout.setText(Integer.toString(settings.getTimeout()));
+
+    locationsKiosk.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+      public void changed(ObservableValue ov, Number old_value, Number new_value) {
+        settings.updateSetting("startingKiosk", Integer.toString((Integer)locationsKiosk.getValue()));
+      }
+    });
     defaultResolution.setOnAction(event -> {
       settings.updateSetting("resolution", "default");
       System.out.println("changed resolution to default");
@@ -93,6 +96,7 @@ public class SettingsMenuController extends CentralUIController implements Initi
       settings.updateSetting("resolution", "fullwindow");
       System.out.println("changed resolution to fullwindow");
     });
+
     bfsAlgorithm.setOnAction(event -> {
       settings.updateSetting("algorithm", "bfs");
       System.out.println("changed algorithm to bfs");
@@ -106,7 +110,7 @@ public class SettingsMenuController extends CentralUIController implements Initi
       System.out.println("changed algorithm to astar");
     });
 
-    }
+  }
 
   public void back () {
     Stage primaryStage = (Stage) anchorPane.getScene().getWindow();
