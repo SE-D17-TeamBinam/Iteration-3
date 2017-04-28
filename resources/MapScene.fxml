@@ -63,11 +63,11 @@
       <Pane fx:id="adminPane" layoutX="431.0" layoutY="311.0" prefHeight="295.0" prefWidth="230.0">
          <children>
             <Rectangle fx:id="adminPaneRectangle" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="295.0" stroke="BLACK" strokeType="INSIDE" width="230.0" />
-            <TextField layoutX="34.0" layoutY="25.0" onKeyReleased="#xCoordFieldKeyTyped" prefHeight="31.0" prefWidth="65.0" fx:id="xCoordField" />
-            <TextField fx:id="yCoordField" layoutX="135.0" layoutY="25.0" onKeyReleased="#yCoordFieldKeyTyped" prefHeight="31.0" prefWidth="65.0" />
+            <TextField layoutX="34.0" layoutY="25.0" onKeyReleased="#coordFieldReleased" onKeyTyped="#xCoordFieldKeyTyped" prefHeight="31.0" prefWidth="65.0" fx:id="xCoordField" />
+            <TextField fx:id="yCoordField" layoutX="135.0" layoutY="25.0" onKeyReleased="#coordFieldReleased" onKeyTyped="#yCoordFieldKeyTyped" prefHeight="31.0" prefWidth="65.0" />
             <Text layoutX="20.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="x:" />
             <Text layoutX="124.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="y:" />
-            <TextField fx:id="floorField" disable="true" layoutX="46.0" layoutY="73.0" onKeyReleased="#floorFieldKeyTyped" prefHeight="21.0" prefWidth="53.0" />
+            <TextField fx:id="floorField" disable="true" layoutX="46.0" layoutY="73.0" prefHeight="21.0" prefWidth="53.0" />
             <Text fx:id="floorSelectLabel" layoutX="5.0" layoutY="94.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Floor:" />
             <Button fx:id="newButton" layoutX="31.0" layoutY="159.0" mnemonicParsing="false" onMouseClicked="#newButtonClicked" prefHeight="31.0" prefWidth="65.0" style="-fx-background-color: #3255bc;" text="New" textFill="WHITE">
                <font>
@@ -77,11 +77,7 @@
                <font>
                   <Font name="Times New Roman" size="15.0" />
                </font></Button>
-            <Button fx:id="updateButton" disable="true" layoutX="31.0" layoutY="198.0" mnemonicParsing="false" onMouseClicked="#updateSelectedButtonClicked" prefHeight="31.0" prefWidth="168.0" style="-fx-background-color: #3255bc;" text="Update Selected" textFill="WHITE">
-               <font>
-                  <Font name="Times New Roman" size="15.0" />
-               </font></Button>
-            <TextField fx:id="nameField" layoutX="46.0" layoutY="117.0" onKeyReleased="#nameFieldKeyTyped" prefHeight="31.0" prefWidth="153.0" />
+            <TextField fx:id="nameField" layoutX="46.0" layoutY="117.0" onKeyTyped="#nameFieldKeyTyped" prefHeight="31.0" prefWidth="153.0" />
             <Text fx:id="nameLabel" layoutX="4.0" layoutY="142.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name:">
                <font>
                   <Font size="14.0" />
@@ -571,11 +567,11 @@
             <Font name="Times New Roman" size="26.0" />
          </font>
       </Button>
-      <HBox layoutX="10.0" layoutY="716.0" prefHeight="29.0" prefWidth="130.0">
+      <HBox fx:id="pointNameHBox" alignment="BOTTOM_LEFT" layoutX="150.0" layoutY="725.0" prefHeight="23.0" prefWidth="322.0">
          <children>
-            <Label fx:id="selectedNameLabel" layoutX="76.0" text="Name:">
+            <Label fx:id="selectedNameLabel" layoutX="76.0" style="-fx-background-color: white; -fx-border-color: black;" text="Name:">
                <font>
-                  <Font name="Times New Roman" size="15.0" />
+                  <Font name="Times New Roman" size="20.0" />
                </font></Label>
          </children>
       </HBox>
@@ -642,7 +638,7 @@
                   <HBox prefHeight="30.0" prefWidth="200.0">
                      <children>
                         <TextField fx:id="searchTextField" prefHeight="31.0" prefWidth="171.0" />
-                        <ImageView fitHeight="31.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="31.0" fitWidth="31.0" onMouseClicked="#clearSearchField" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@icons/x.png" />
                            </image>
@@ -711,7 +707,7 @@
                   <RadioButton fx:id="textButton" layoutX="112.0" layoutY="49.0" mnemonicParsing="false" text="Text" />
                   <ChoiceBox fx:id="carrierBox" layoutX="23.0" layoutY="81.0" prefHeight="31.0" prefWidth="184.0" />
                   <TextField fx:id="detailEntry" layoutX="23.0" layoutY="130.0" prefHeight="31.0" prefWidth="184.0" />
-                  <Button fx:id="sendButton" layoutX="88.0" layoutY="166.0" mnemonicParsing="false" onMouseClicked="#sendDirections" text="Send" />
+                  <Button layoutX="88.0" layoutY="166.0" mnemonicParsing="false" onMouseClicked="#sendDirections" text="Send" />
                   <HBox alignment="CENTER" layoutX="4.0" prefHeight="43.0" prefWidth="223.0">
                      <children>
                         <Text fx:id="sendToMeLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="Send to Me">
