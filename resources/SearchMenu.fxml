@@ -9,28 +9,30 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
+<?import java.net.URL?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1300.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UIControllers.SearchMenuController">
+<?import javafx.scene.control.Button?>
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="750.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UIControllers.SearchMenuController">
    <children>
       <Pane id="SearchMenu" prefHeight="750.0" prefWidth="1300.0">
          <children>
-            <Label fx:id="SearchInfo" alignment="CENTER" layoutX="831.0" layoutY="666.0" mnemonicParsing="false" onMouseClicked="#viewInfo" prefHeight="50.0" prefWidth="157.0" style="-fx-background-color: #3255bc;" text="  View Details" textFill="WHITE">
+            <Button fx:id="SearchInfo" alignment="CENTER" layoutX="831.0" layoutY="666.0" mnemonicParsing="false" onMouseClicked="#viewInfo" prefHeight="50.0" prefWidth="157.0" text="  View Details" textFill="WHITE">
                <font>
                   <Font name="Times New Roman" size="16.0" />
                </font>
-            </Label>
-            <Label fx:id="SearchMap" alignment="CENTER" layoutX="657.0" layoutY="666.0" mnemonicParsing="false" onMouseClicked="#viewMap" prefHeight="50.0" prefWidth="157.0" style="-fx-background-color: #3255bc;" text="Show on Map" textFill="WHITE" visible="false">
+            </Button>
+            <Button fx:id="SearchMap" alignment="CENTER" layoutX="657.0" layoutY="666.0" mnemonicParsing="false" onMouseClicked="#viewMap" prefHeight="50.0" prefWidth="157.0" text="Show on Map" textFill="WHITE" visible="false">
                <font>
                   <Font name="Times New Roman" size="16.0" />
                </font>
-            </Label>
-            <TableView fx:id="RoomDirectory" editable="true" layoutX="313.0" layoutY="250.0" prefHeight="405.0" prefWidth="675.0">
+            </Button>
+            <TableView fx:id="RoomDirectory" editable="true" layoutX="313.0" layoutY="250.0" prefHeight="405.0" prefWidth="675.0" style="-fx-font-size: 16px">
                <columns>
                   <TableColumn fx:id="roomNumber" prefWidth="223.0" text="Room Number" />
                   <TableColumn fx:id="roomPhysicians" prefWidth="426.0" text="Doctors" />
                </columns>
             </TableView>
-            <TableView fx:id="PhysicianDirectory" editable="true" layoutX="313.0" layoutY="250.0" prefHeight="405.0" prefWidth="675.0">
+            <TableView fx:id="PhysicianDirectory" editable="true" layoutX="313.0" layoutY="250.0" prefHeight="405.0" prefWidth="675.0" style="-fx-font-size: 16px">
                <columns>
                   <TableColumn fx:id="firstName" prefWidth="150.0" text="First Name" />
                   <TableColumn fx:id="lastName" prefWidth="150.0" text="Last Name" />
@@ -43,25 +45,30 @@
                   <Font name="System Italic" size="24.0" />
                </font>
             </TextField>
-            <Label fx:id="SearchBack" alignment="CENTER" layoutX="12.0" layoutY="12.0" mnemonicParsing="false" onMouseClicked="#back" prefHeight="60.0" prefWidth="134.0" style="-fx-background-color: #3255bc;" text="Back" textFill="WHITE">
+            <Button fx:id="SearchBack" alignment="CENTER" layoutX="12.0" layoutY="12.0" mnemonicParsing="false" onMouseClicked="#back" prefHeight="60.0" prefWidth="134.0" text="Back" textFill="WHITE">
                <font>
                   <Font name="Times New Roman" size="26.0" />
                </font>
-            </Label>
+            </Button>
             <ImageView fx:id="SearchClear" fitHeight="40.0" fitWidth="40.0" layoutX="944.0" layoutY="194.0" onMouseClicked="#clear" opacity="0.7" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@icons/x.png" />
                </image>
             </ImageView>
-            <Label fx:id="SearchDoc" alignment="CENTER" layoutX="315.0" layoutY="146.0" onMouseClicked="#toggleDoc" prefHeight="33.0" prefWidth="76.0" style="-fx-background-color: grey;" text="Doctors" textFill="WHITE">
+            <Label fx:id="SearchDoc" alignment="CENTER" layoutX="315.0" layoutY="146.0" onMouseClicked="#toggleDoc" prefHeight="33.0" prefWidth="76.0" text="Doctors" textFill="WHITE">
                <font>
                   <Font name="Times New Roman" size="15.0" />
-               </font></Label>
-            <Label fx:id="SearchRoom" alignment="CENTER" layoutX="403.0" layoutY="146.0" onMouseClicked="#toggleRoom" prefHeight="33.0" prefWidth="76.0" style="-fx-background-color: f7f7f7;" text="Rooms">
+               </font>
+            </Label>
+            <Label fx:id="SearchRoom" alignment="CENTER" layoutX="403.0" layoutY="146.0" onMouseClicked="#toggleRoom" prefHeight="33.0" prefWidth="76.0" text="Rooms">
                <font>
                   <Font name="Times New Roman" size="15.0" />
-               </font></Label>
+               </font>
+            </Label>
          </children>
       </Pane>
    </children>
+   <stylesheets>
+      <URL value="@General.css" />
+   </stylesheets>
 </AnchorPane>
