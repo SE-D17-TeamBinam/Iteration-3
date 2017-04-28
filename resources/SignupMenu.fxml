@@ -62,10 +62,7 @@
             </Label>
             <ComboBox fx:id="SignupBox" layoutX="562.0" layoutY="184.0" prefHeight="31.0" prefWidth="251.0" />
             <ProgressBar fx:id="pwdStrength" layoutX="867.0" layoutY="431.0" prefWidth="200.0" progress="0.0" />
-            <Label layoutX="867.0" layoutY="482.0" prefHeight="21.0" prefWidth="200.0" text="• Use 6 to 64 characters." />
-            <Label layoutX="867.0" layoutY="502.0" prefHeight="23.0" prefWidth="368.0" text="• Besides letters, include at least a number or symbol " />
-            <Label layoutX="876.0" layoutY="525.0" prefHeight="21.0" prefWidth="183.0" text="(!@$%^*-_+=)." />
-            <Label layoutX="867.0" layoutY="550.0" text="• Password is case sensitive." />
+            <Label fx:id="progressLabel" layoutX="944.0" layoutY="401.0" prefHeight="21.0" prefWidth="46.0" />
          </children>
       </Pane>
    </children>

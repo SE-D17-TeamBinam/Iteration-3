@@ -1,5 +1,6 @@
 package UIControllers;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -68,7 +69,7 @@ public class AdminLoginController extends CentralUIController implements Initial
   // Detects if a key is pressed when the username, password, or login button are highlighted
   // If the key pressed is the ENTER key, then it attempts to login with the current input
   @FXML
-  private void tryLogin(KeyEvent e){
+  private void tryLogin(KeyEvent e) throws IOException {
     if(e.getCode().toString().equals("ENTER")){
       login();
     }
@@ -78,7 +79,7 @@ public class AdminLoginController extends CentralUIController implements Initial
    * checks login credential. If pass, log into directory editor; if fail, show an error message
    * TODO: throw an exception in the future.
    */
-  public void login () {
+  public void login () throws IOException {
     adminPermissions = false;
     Stage primaryStage = (Stage) AdminLogin.getScene().getWindow();
     String enteredName = AdminNameField.getText();
@@ -87,7 +88,7 @@ public class AdminLoginController extends CentralUIController implements Initial
     if (credentialManager.login(enteredName, enteredPass)){
       LoginError.setVisible(false);
       currUser = enteredName;
-      if (credentialManager.isAdmin(enteredName, enteredPass)){
+      if (credentialManager.userIsAdmin(enteredName)){
         mapViewFlag = 3;
         adminPermissions = true;
         isLoggedIn = true;

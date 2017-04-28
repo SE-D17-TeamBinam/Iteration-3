@@ -1,6 +1,7 @@
 package UIControllers;
 
 import CredentialManager.UserType;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -10,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -52,6 +54,8 @@ public class SignupMenuController extends CentralUIController implements Initial
   private Label UsernameExistsError;
   @FXML
   private ProgressBar pwdStrength;
+  @FXML
+  private Label progressLabel;
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
@@ -76,7 +80,8 @@ public class SignupMenuController extends CentralUIController implements Initial
     SignupError.setLayoutX(x_res/2 - 125);
     UsernameRequired.setLayoutX(x_res/2 + 160);
     PassRequired.setLayoutX(x_res/2 + 160);
-    pwdStrength.setLayoutX(x_res - pwdStrength.getPrefWidth() - 20);
+    pwdStrength.setLayoutX(x_res/2 + pwdStrength.getPrefWidth()*1.5);
+    progressLabel.setLayoutX(x_res/2 + pwdStrength.getPrefWidth()*1.5 + pwdStrength.getPrefWidth()/2 - 15);
   }
   @Override
   public void customListenerY () {
@@ -91,7 +96,8 @@ public class SignupMenuController extends CentralUIController implements Initial
     SignupError.setLayoutY(2*y_res/11);
     UsernameRequired.setLayoutY(4.5*y_res/11 - 22);
     PassRequired.setLayoutY(6*y_res/11 - 22);
-    pwdStrength.setLayoutY(6*y_res/11 + pwdStrength.getHeight() + 5);
+    pwdStrength.setLayoutY(6*y_res/11 + pwdStrength.getHeight()/2 +5);
+    progressLabel.setLayoutY(6*y_res/11 + pwdStrength.getHeight()/2 - 20);
   }
 
   public void intializeChoiceBox(){
@@ -100,33 +106,47 @@ public class SignupMenuController extends CentralUIController implements Initial
   }
 
   @FXML
-  private void trySignup(KeyEvent e){
+  private void trySignup(KeyEvent e) throws IOException {
     if(e.getCode().toString().equals("ENTER")){
       signup();
     }
   }
 
   public void intializeProgressBar() {
-      pwdStrength.setProgress(0F);
+      pwdStrength.setProgress(0.02F);
+      progressLabel.setVisible(false);
+      pwdStrength.setVisible(false);
+      pwdStrength.setTooltip(new Tooltip("• Use 6 to 64 characters.\n• Besides letters, include at least a number or symbol\n (!@$%^*-_+=).\n• Password is case sensitive."));
     }
 
   public void updateProgressBar() {
-      String s = SignupPassField.getText();
-      double d = calculatePassStrength(s);
-      pwdStrength.setProgress(d);
+    if (!SignupPassField.getText().equals("")) {
+      pwdStrength.setVisible(true);
+      progressLabel.setVisible(true);
+    }
+    else {
+      pwdStrength.setVisible(false);
+      progressLabel.setVisible(false);
+    }
+    String s = SignupPassField.getText();
+    double d = calculatePassStrength(s);
+    pwdStrength.setProgress(d);
       if (d < 0.1) {
         pwdStrength.setStyle("-fx-accent: red");
+        progressLabel.setText("Weak");
       }
       else if (d >= 0.1 && d < 0.3){
         pwdStrength.setStyle("-fx-accent: orange");
+        progressLabel.setText("Weak");
       }
       else if (d >= 0.3 && d < 0.6){
         pwdStrength.setStyle("-fx-accent: yellow");
+        progressLabel.setText("Fair");
       }
       else if (d >= 0.6) {
         pwdStrength.setStyle("-fx-accent: green");
+        progressLabel.setText("Strong");
       }
-
     }
 
 
@@ -145,7 +165,7 @@ public class SignupMenuController extends CentralUIController implements Initial
   /**
    * sign up account from text in text fields and choice box selection
    */
-  public void signup() {
+  public void signup() throws IOException {
     String pass = SignupPassField.getText();
     String username = SignupNameField.getText();
     UserType type = (UserType) SignupBox.getSelectionModel().getSelectedItem();

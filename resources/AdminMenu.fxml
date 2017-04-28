@@ -59,7 +59,7 @@
                   <Font name="Times New Roman" size="26.0" />
                </font>
             </Label>
-            <Label fx:id="LoginLabel" layoutX="490.0" layoutY="696.0" prefHeight="40.0" prefWidth="363.0" text="You are logged in as: ">
+            <Label fx:id="LoginLabel" layoutX="490.0" layoutY="696.0" prefHeight="40.0" prefWidth="350.0" text="You are logged in as: ">
                <font>
                   <Font name="Times New Roman" size="21.0" />
                </font>

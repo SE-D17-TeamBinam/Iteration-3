@@ -1,5 +1,6 @@
 package UIControllers;
-import CredentialManager.UserType;
+
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
@@ -98,11 +99,10 @@ public class MainMenuController extends CentralUIController implements Initializ
     }
   }
 
-  public void gotoAdmin () {
+  public void gotoAdmin () throws IOException {
     // for now sign up admin when loaded so people can get to admin view
-    credentialManager.signup("admin", "admin", UserType.ADMIN);
+    //credentialManager.signup("admin", "admin", UserType.ADMIN);
     // sign up staff when loaded for testing purposes
-    credentialManager.signup("staff", "staff", UserType.STAFF);
     Stage primaryStage = (Stage) MainMenu.getScene().getWindow();
     try {
       loadScene(primaryStage, "/AdminLogin.fxml");
