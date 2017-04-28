@@ -1329,7 +1329,7 @@ public class MapViewController extends CentralUIController implements Initializa
     displayPoints(floorPoints);
     startNodeBox.setDisable(false);
     endNodeBox.setDisable(false);
-    for(int i : allFloors){
+    for(int i : buildingFloors.get(currentBuilding)){
       if(!floorChoiceBox.getItems().contains(i)){
         floorChoiceBox.getItems().add(i);
       }
@@ -1462,21 +1462,20 @@ public class MapViewController extends CentralUIController implements Initializa
     if (currentFloor >= (int) floorChoiceBox.getItems().get(0)) { // TODO Shouldn't hard code this
       floorChoiceBox.setValue(currentFloor);
     } else {
-      floorChoiceBox.setValue(currentFloor + 1);
+      floorChoiceBox.setValue(floorChoiceBox.getItems().get(floorChoiceBox.getSelectionModel().getSelectedIndex() - 1));
     }
   }
 
   @FXML
   private void decreaseFloorButtonClicked() {
-    if (currentFloor <= 1) { // TODO shouldn't hard code this - could go higher
+    if (currentFloor <= (int) floorChoiceBox.getItems().get(floorChoiceBox.getItems().size() - 1)) { // TODO shouldn't hard code this - could go higher
       floorChoiceBox.setValue(1);
     } else {
-      floorChoiceBox.setValue(currentFloor - 1);
+      floorChoiceBox.setValue(floorChoiceBox.getItems().get(floorChoiceBox.getSelectionModel().getSelectedIndex() + 1));
     }
   }
 
   private ArrayList<Point> pathPoints = new ArrayList<>();
-  private ArrayList<Integer> allFloors = new ArrayList<>();
   private HashSet<Integer> showingFloors = new HashSet<>();
 
   @FXML
