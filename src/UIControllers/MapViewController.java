@@ -5,6 +5,7 @@ import Definitions.Coordinate;
 import Definitions.Physician;
 import Networking.Carrier;
 import Networking.Emailer;
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -15,6 +16,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -350,9 +352,6 @@ public class MapViewController extends CentralUIController implements Initializa
   private HashMap<Point, Circle> circles = new HashMap<>();
   private HashMap<Connection, Line> lines = new HashMap<>();
 
-  // Proxies the images for each floor
-  private HashMap<Integer, Image> floorImages = new HashMap<>();
-
   private int maxID = 0;
 
   private class Connection {
@@ -429,6 +428,8 @@ public class MapViewController extends CentralUIController implements Initializa
     selectionRectangle.setFill(SELECTION_RECTANGLE_FILL);
     mapViewPane.getChildren().add(selectionRectangle);
     initializeScene();
+    initializeChoiceBoxes();
+    initializeBuildingChoiceBox();
     initializeFloorChoiceBox();
     initializeMapImage();
     initializeGlobalTimer();
@@ -437,6 +438,72 @@ public class MapViewController extends CentralUIController implements Initializa
     repositionResultsList();
     initializePathFindingBox();
     findMaxID();
+  }
+
+  @FXML
+  private ChoiceBox buildingChoiceBox;
+
+
+  private HashMap<String, ArrayList<Integer>> buildingFloors = new HashMap<>();
+
+  private void initializeBuildingChoiceBox(){
+// Add options to change floors
+    buildingChoiceBox.getItems().addAll(buildingFloors.keySet());
+    // Add a ChangeListener to the floorChoiceBox
+    buildingChoiceBox.getSelectionModel().selectedIndexProperty().addListener(
+        new ChangeListener<Number>() {
+          public void changed(ObservableValue ov, Number old_value, Number new_value) {
+            // Change the image that's being displayed when the input changes
+            currentBuilding = (String) buildingChoiceBox.getItems().get((int) new_value);
+            ObservableList<Object> items = floorChoiceBox.getItems();
+            // Add any new floors to the choice box
+            for(int i : buildingFloors.get(currentBuilding)){
+              if(!items.contains(i)){
+                items.add(i);
+              }
+            }
+            ArrayList<Object> toRemove = new ArrayList<>();
+            // Remove any unneeded floors from the choice box
+            for(Object o : items){
+              if(!buildingFloors.get(currentBuilding).contains(o)){
+                toRemove.add(o);
+              }
+            }
+            items.removeAll(toRemove);
+
+//            floorChoiceBox.getItems().setAll(buildingFloors.get(currentBuilding));
+
+
+            floorChoiceBox.setValue(currentFloor);
+          }
+        });
+    buildingChoiceBox.setValue(buildingChoiceBox.getItems().get(buildingChoiceBox.getItems().size()-1));
+  }
+
+  private void initializeChoiceBoxes(){
+    File dir = new File(getClass().getResource("/floor_plans/").getFile());
+    String[] floorImageNames = dir.list();
+    for(String s : floorImageNames){
+      String[] building_floors = s.split("-");
+      String buildingName = building_floors[0];
+      if(!buildingFloors.keySet().contains(buildingName)) {
+        buildingFloors.put(buildingName, new ArrayList<Integer>());
+      }
+      int floor = Integer.parseInt(building_floors[1].substring(0,building_floors[1].length() - 4));
+      buildingFloors.get(buildingName).add(floor);
+      buildingFloors.get(buildingName).sort(new Comparator<Integer>() {
+        @Override
+        public int compare(Integer o1, Integer o2) {
+          if(o1 < o2){
+            return 1;
+          }else if(o1 == o2){
+            return 0;
+          }else{
+            return -1;
+          }
+        }
+      });
+    }
   }
 
   private void initializePathFindingBox() {
@@ -703,40 +770,30 @@ public class MapViewController extends CentralUIController implements Initializa
     }
   }
 
-  private int currentFloor = 1;
+  private int currentFloor;
+  private String currentBuilding = "campus";
+
 
   // Add values to the floor selector, add a listener, and set its default value
   private void initializeFloorChoiceBox() {
     // Add options to change floors
-    allFloors.add(7);
-    allFloors.add(6);
-    allFloors.add(5);
-    allFloors.add(4);
-    allFloors.add(3);
-    allFloors.add(2);
-    allFloors.add(1);
-    floorChoiceBox.getItems().addAll(allFloors);
     // Add a ChangeListener to the floorChoiceBox
     floorChoiceBox.getSelectionModel().selectedIndexProperty().addListener(
         new ChangeListener<Number>() {
           public void changed(ObservableValue ov, Number old_value, Number new_value) {
             // Change the image that's being displayed when the input changes
             currentFloor = (int) floorChoiceBox.getItems().get((int) new_value);
-            Image new_img;
-            Image floorImg = floorImages.get(currentFloor);
-            if (floorImages.get(currentFloor) == null) {
-              new_img = new Image(
-                  "/floor_plans/" + currentFloor
-                      + "floor.png");
-              floorImages.put(currentFloor, new_img);
-            } else {
-              new_img = floorImg;
-            }
+            Image new_img = new Image(
+                  "/floor_plans/" + currentBuilding + "-" + currentFloor + ".png");
+
             mapImage.setImage(new_img);
             switchFloors(currentFloor);
           }
         });
-    floorChoiceBox.setValue(1);
+    ObservableList<Integer> flrs = floorChoiceBox.getItems();
+    if(flrs.size() != 0) {
+      floorChoiceBox.setValue(flrs.get(flrs.size() - 1));
+    }
   }
 
 

@@ -61,6 +61,27 @@ public class ListPoints {
   }
 
   /**
+   * Creates a HashMap that maps the names of buildings, as Strings, to the list of Points that
+   * are contained by each building. This method assumes that every point's last alias is the name
+   * of the building in which it resides.
+   * @return A HashMap mapping the names of the buildings to an ArrayList of Points in each building
+   */
+  public HashMap<String, ArrayList<Point>> separateIntoBuildings(){
+    HashMap<String, ArrayList<Point>> out = new HashMap<>();
+    for(Point p : points){
+      String buildingName = p.getNames().get(p.getNames().size() - 1);
+      if(out.keySet().contains(buildingName)){
+        out.get(buildingName).add(p);
+      }else{
+        ArrayList<Point> buildingPoints = new ArrayList<>();
+        buildingPoints.add(p);
+        out.put(buildingName, buildingPoints);
+      }
+    }
+    return out;
+  }
+
+  /**
    * Attempts to generate a unique ID
    * This method should probably be rewritten more reliably, as this could theoretically repeat
    * @return a unique ID as an integer
