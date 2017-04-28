@@ -157,12 +157,11 @@ public class SearchMenuController extends CentralUIController implements Initial
 
     SearchField.textProperty().addListener((observable, oldValue, newValue) -> {
       if (!isST && !isBS) {
+        searchString = SearchField.getText();
         if (searchMode == 0) {
-          searchString = SearchField.getText();
           autoCompleteDoc();
           updatePhysicians(docs);
         } else if (searchMode == 1) {
-          searchString = SearchField.getText();
           autoCompleteRoom();
           updateRooms(rooms);
         }
