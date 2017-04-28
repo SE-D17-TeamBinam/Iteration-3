@@ -1,6 +1,7 @@
 package UIControllers;
 
 import Definitions.Physician;
+import FileController.DefaultKioskNotInMemoryException;
 import FileController.SettingsIO;
 import java.net.URL;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import org.ListPoints;
 import org.Point;
 
 /**
@@ -24,6 +26,7 @@ import org.Point;
  */
 public class SettingsMenuController extends CentralUIController implements Initializable {
   private ArrayList<Point> rooms;
+  SettingsIO settings = new SettingsIO();
 
   @FXML
   private AnchorPane anchorPane;
@@ -60,8 +63,13 @@ public class SettingsMenuController extends CentralUIController implements Initi
     astarAlgorithm.setToggleGroup(algorithm);
     rooms = database.getNamedPoints();
     locationsKiosk.setItems(FXCollections.observableList(rooms));
-    //SettingsIO settings = new SettingsIO();
-    //timeTimeout.setText(Integer.toString(settings.getTimeout()));
+    try {
+      locationsKiosk.getSelectionModel().select(settings.getDefaultKiosk(new ListPoints(rooms)));
+    } catch (DefaultKioskNotInMemoryException e) {
+      System.out.println("Default kiosk location is not set");
+    }
+    timeTimeout.setText(Integer.toString(settings.getTimeout()));
+    defaultResolution.setOnAction(event -> {});
   }
 
   public void back () {
