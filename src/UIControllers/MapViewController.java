@@ -282,8 +282,8 @@ public class MapViewController extends CentralUIController implements Initializa
         return false;
       } else {
         Connection c = (Connection) o;
-        boolean b = ((c.getStart().equals(this.getStart()) && c.getEnd().equals(this.getEnd())) ||
-            (c.getEnd().equals(this.getStart()) && c.getStart().equals(this.getEnd())));
+        boolean b = ((c.getStart().hashCode() == this.getStart().hashCode() && c.getEnd().hashCode() == this.getEnd().hashCode()) ||
+            (c.getEnd().hashCode() == this.getStart().hashCode() && c.getStart().hashCode() == this.getEnd().hashCode()));
         return b;
       }
     }
@@ -973,12 +973,12 @@ public class MapViewController extends CentralUIController implements Initializa
 
   private void getMap() {
       allPoints = database.getPoints();
-      for(int i = 0;i < allPoints.size();i++){
-        System.out.println("id : " + allPoints.get(i).getId());
-        for(int k = 0;k < allPoints.get(i).getNeighbors().size();k++){
-          System.out.println("neighbor id : " + allPoints.get(i).getNeighbors().get(k).getId());
-        }
-      }
+//      for(int i = 0;i < allPoints.size();i++){
+////        System.out.println("id : " + allPoints.get(i).getId());
+//        for(int k = 0;k < allPoints.get(i).getNeighbors().size();k++){
+////          System.out.println("neighbor id : " + allPoints.get(i).getNeighbors().get(k).getId());
+//        }
+//      }
     if(searchingPoint != null) {
       setPointFocus(searchingPoint);
       searchingPoint = null;
