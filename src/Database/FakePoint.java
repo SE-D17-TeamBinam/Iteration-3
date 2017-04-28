@@ -2,6 +2,8 @@ package Database;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import org.ListPoints;
 import org.Point;
 
 /**
@@ -148,6 +150,29 @@ public class FakePoint {
 
   public void setYCoord(double yCoord) {
     this.yCoord = (int) yCoord;
+  }
+
+
+
+  public static ArrayList<Point> deepClone(ArrayList<Point> points){
+    HashMap<Point, Point> newPoints = new HashMap<Point, Point>();
+    for(Point p : points){
+      newPoints.put(p, new Point(p.getXCoord(), p.getYCoord(), p.getName(), p.getId(), new ArrayList<Point>(), p.getFloor()));
+    }
+    for(Point p : points){
+      Point p2 = newPoints.get(p);
+      for(Point pN : p.getNeighbors()){
+        Point newNeighbor = newPoints.get(pN);
+        if(newNeighbor != null) {
+          p2.connectTo(newPoints.get(pN));
+        }
+      }
+    }
+    ArrayList<Point> out = new ArrayList<Point>();
+    for(Point p : newPoints.values()){
+      out.add(p);
+    }
+    return out;
   }
 
 }
