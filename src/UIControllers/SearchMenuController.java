@@ -42,6 +42,7 @@ public class SearchMenuController extends CentralUIController implements Initial
   private int searchMode = 0;
   private boolean isST = false;
   private boolean isBS = false;
+
   // define all ui elements
   @FXML
   private TableView<Physician> PhysicianDirectory;
@@ -152,7 +153,6 @@ public class SearchMenuController extends CentralUIController implements Initial
             }
           }
         }
-
     });
 
     SearchField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -166,13 +166,13 @@ public class SearchMenuController extends CentralUIController implements Initial
           autoCompleteRoom();
           updateRooms(rooms);
         }
-      } else if (isST && isBS) {
-        isST = false;
-        isBS = false;
       } else if (isBS) {
         searchString = SearchField.getText();
-        updatePhysicians(docs);
-        updateRooms(rooms);
+        if (searchMode == 0) {
+          updatePhysicians(docs);
+        } else if (searchMode == 1) {
+          updateRooms(rooms);
+        }
         isBS = false;
       } else {
         isST = false;

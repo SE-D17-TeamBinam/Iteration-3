@@ -74,11 +74,7 @@ public class SettingsMenuController extends CentralUIController implements Initi
       locationsKiosk.getSelectionModel().select(settings.getDefaultKiosk(new ListPoints(points)).getId());
       locationsKiosk.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
         public void changed(ObservableValue ov, Number old_value, Number new_value) {
-          for (Point point : points) {
-            if ((Integer) locationsKiosk.getItems().get((Integer)new_value) == (point.getId())) {
-
-            }
-          }
+          settings.updateSetting("startingKiosk", Integer.toString((Integer) locationsKiosk.getValue()));
         }
       });
     } catch (DefaultKioskNotInMemoryException e) {
