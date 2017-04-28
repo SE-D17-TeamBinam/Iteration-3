@@ -6,6 +6,7 @@ import Definitions.Physician;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
@@ -59,16 +60,16 @@ public class CentralUIController {
   }
 
 
-  public void sortDocs (ArrayList<Physician> docs) {
+  public void sortDocs (List<Physician> docs) {
     Collections.sort(docs, new Comparator<Physician>() {
       @Override
       public int compare(Physician doc1, Physician doc2) {
-        return Long.compare(doc1.getID(), doc2.getID());
+        return doc1.getLastName().compareToIgnoreCase(doc2.getLastName());
       }
     });
   }
 
-  public void sortRooms (ArrayList<Point> rooms) {
+  public void sortRooms (List<Point> rooms) {
     Collections.sort(rooms, new Comparator<Point>() {
       @Override
       public int compare(Point room1, Point room2) {

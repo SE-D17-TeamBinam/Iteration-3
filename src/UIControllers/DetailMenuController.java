@@ -125,8 +125,6 @@ public class DetailMenuController extends CentralUIController implements Initial
         ILabel.setMinWidth(50);
         ILabel.setFont(Font.font("Times New Roman", 30));
         ILabel.setText(txt);
-        //Platform.runLater(() -> {ILabel.setPrefWidth(ILabel.getWidth() + 15);});
-
 
         Button Goto = new Button();
         Goto.setPrefHeight(46);

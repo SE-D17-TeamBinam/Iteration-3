@@ -16,7 +16,7 @@
          <children>
             <ImageView fx:id="MapButton" fitHeight="351.0" fitWidth="351.0" layoutX="725.0" layoutY="240.0" onMouseClicked="#editMap" pickOnBounds="true" preserveRatio="true">
                <cursor>
-                  <Cursor fx:constant="OPEN_HAND" />
+                  <Cursor fx:constant="HAND" />
                </cursor>
                <image>
                   <Image url="@icons/mapbutton.png" />
@@ -24,7 +24,7 @@
             </ImageView>
             <ImageView fx:id="EditButton" fitHeight="351.0" fitWidth="351.0" layoutX="225.0" layoutY="240.0" onMouseClicked="#editDirectory" pickOnBounds="true" preserveRatio="true">
                <cursor>
-                  <Cursor fx:constant="OPEN_HAND" />
+                  <Cursor fx:constant="HAND" />
                </cursor>
                <image>
                   <Image url="@icons/directory.png" />

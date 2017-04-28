@@ -159,11 +159,11 @@ public class SearchMenuController extends CentralUIController implements Initial
       if (!isST && !isBS) {
         searchString = SearchField.getText();
         if (searchMode == 0) {
-          autoCompleteDoc();
           updatePhysicians(docs);
+          autoCompleteDoc();
         } else if (searchMode == 1) {
-          autoCompleteRoom();
           updateRooms(rooms);
+          autoCompleteRoom();
         }
       } else if (isBS) {
         searchString = SearchField.getText();
