@@ -6,12 +6,14 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750" prefWidth="1300" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="750" prefWidth="1300" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
   <children>
       <Pane fx:id="DetailDoc" prefHeight="750.0" prefWidth="1300.0" style="-fx-background-color: transparent;" visible="false">
          <children>
-            <ScrollPane fx:id="DocPane" layoutX="494.0" layoutY="457.0" prefHeight="247.0" prefWidth="520.0" style="-fx-background-color: transparent;" stylesheets="@DetailScroll.css">
+            <ScrollPane fx:id="DocPane" layoutX="494.0" layoutY="457.0" prefHeight="247.0" prefWidth="520.0" style="-fx-background-color: transparent;">
                <content>
                   <VBox fx:id="DocLocations" prefWidth="500.0" style="-fx-background-color: transparent;" />
                </content></ScrollPane>
@@ -86,22 +88,25 @@
                   <Font name="Times New Roman" size="30.0" />
                </font>
             </Label>
-            <ScrollPane fx:id="RoomPane" layoutX="494.0" layoutY="400.0" prefHeight="304.0" prefWidth="520.0" style="-fx-background-color: transparent;" stylesheets="@DetailScroll.css">
+            <ScrollPane fx:id="RoomPane" layoutX="494.0" layoutY="400.0" prefHeight="304.0" prefWidth="520.0" style="-fx-background-color: transparent;">
                <content>
                   <VBox fx:id="RoomHPs" prefWidth="500.0" style="-fx-background-color: transparent;" />
                </content>
             </ScrollPane>
          </children>
       </Pane>
-      <Label fx:id="DetailBack" alignment="CENTER" layoutX="12.0" layoutY="12.0" mnemonicParsing="false" onMouseClicked="#back" prefHeight="60.0" prefWidth="134.0" style="-fx-background-color: #3255bc;" text="Back" textFill="WHITE">
+      <Button fx:id="DetailBack" alignment="CENTER" layoutX="12.0" layoutY="12.0" mnemonicParsing="false" onMouseClicked="#back" prefHeight="60.0" prefWidth="134.0" text="Back">
          <font>
             <Font name="Times New Roman" size="26.0" />
          </font>
-      </Label>
-      <Label fx:id="DetailDone" alignment="CENTER" layoutX="1154.0" layoutY="12.0" mnemonicParsing="false" onMouseClicked="#quit" prefHeight="60.0" prefWidth="134.0" style="-fx-background-color: #3255bc;" text="Done" textFill="WHITE">
+      </Button>
+      <Button id="button" fx:id="DetailDone" alignment="CENTER" layoutX="1154.0" layoutY="12.0" mnemonicParsing="false" onMouseClicked="#quit" prefHeight="60.0" prefWidth="134.0" text="Done">
          <font>
             <Font name="Times New Roman" size="26.0" />
          </font>
-      </Label>
+      </Button>
    </children>
+   <stylesheets>
+      <URL value="@General.css" />
+   </stylesheets>
 </AnchorPane>
