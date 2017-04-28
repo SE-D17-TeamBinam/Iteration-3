@@ -565,6 +565,15 @@ public class DatabaseController implements DatabaseInterface {
       ret.add(point_to_add);
     }
     /*for (int i = 0; i < ret.size(); i++) {
+
+    for (int i = 0; i < ret.size(); i++) {
+      ArrayList<Integer> currentNeighbors = findFakePoint(ret.get(i), fakepoints).getNeighbors();
+      for (int j = 0; j < currentNeighbors.size(); j++) {
+        ret.get(i).connectTo(findRealPoint(currentNeighbors.get(j), ret));
+      }
+      progressBarPercentage = .25 + .2 * i / ret.size();
+    }
+    for (int i = 0; i < ret.size(); i++) {
       if (ret.get(i).getName().equals("ELEVATOR")) {
         Point p = ret.get(i);
         ret.remove(i);
@@ -576,7 +585,7 @@ public class DatabaseController implements DatabaseInterface {
       for (int j = 0; j < currentNeighbors.size(); j++) {
         ret.get(i).connectTo(findRealPoint(currentNeighbors.get(j), ret));
       }
-      progressBarPercentage = .25 + .25 * i / ret.size();
+      progressBarPercentage = .45 + .05 * i / ret.size();
     }
     return ret;
   }
@@ -728,11 +737,11 @@ public class DatabaseController implements DatabaseInterface {
 
   @Override
   public void load() throws SQLException {
-    loadThread.start();
+//    loadThread.start();
     progressBarPercentage = 0;
-//    localPoints = getAllPoints();
-//    localPhysicians = getAllPhysicians();
-//    progressBarPercentage = 1;
+    localPoints = getAllPoints();
+    localPhysicians = getAllPhysicians();
+    progressBarPercentage = 1;
   }
 
   @Override
@@ -748,15 +757,15 @@ public class DatabaseController implements DatabaseInterface {
       for (Point p : diffPoints) {
         System.out.println("Diff point updating " + p.getId());
         this.removePoint(p.getId());
-        this.addPointWithoutNeighbors(p);
+        this.addPoint(p);
+//        this.addPointWithoutNeighbors(p);
       }
-      for (Point p : diffPoints) {
-        for (int i = 0; i < p.neighbors.size(); i++) {
-          System.out.println(
-              "Diff neighbor point updating " + p.getId() + " -> " + p.neighbors.get(i).getId());
-          this.addNeighbor(p.getId(), p.neighbors.get(i).getId());
-        }
-      }
+//      for(Point p : diffPoints){
+//        for (int i = 0; i < p.neighbors.size(); i++){
+////          System.out.println("Diff neighbor point updating " + p.getId() + " -> "  + p.neighbors.get(i).getId());
+//          this.addNeighbor(p.getId(), p.neighbors.get(i).getId());
+//        }
+//      }
 
       diffPoints = null;
     }
@@ -770,7 +779,7 @@ public class DatabaseController implements DatabaseInterface {
     }
     if (diffPhysicians != null) {
       for (Physician p : diffPhysicians) {
-        System.out.println("Diff Physician updating " + p.getID() + ": " + p.getFirstName());
+        System.out.println("Diff Physician updating " + p.getID());
         this.removePhysician(p.getID());
         this.addPhysician(p);
       }
@@ -782,9 +791,20 @@ public class DatabaseController implements DatabaseInterface {
   //TODO Filter special nodes like ELEVATOR or STAIRS etc.
   @Override
   public ArrayList<Point> getNamedPoints() {
-    if (!(loadThread.running || saveThread.running)) {
-      progressBarPercentage = 0;
-      loadThread.start();
+    while (saveThread.running || loadThread.running) {
+      ;
+    }
+    try {
+      load();
+    } catch (SQLException e) {
+      Alert alert = new Alert(AlertType.ERROR,
+          "Message. Bad Things Happened! : " + "DB ERROR: failed to load in getNamedPoints method: "
+              + e.getMessage()); //can add buttons if you want, or change to different popup types
+      alert.showAndWait(); //this puts it in focus
+      if (alert.getResult() == ButtonType.YES) {
+        //do stuff, if neccesary, else, delete
+      }
+      e.printStackTrace();
     }
     System.out.println("trying to get Points with names");
     ArrayList<Point> namedPoints = new ArrayList<Point>();
@@ -793,40 +813,36 @@ public class DatabaseController implements DatabaseInterface {
       if (localPoints.get(i).getName() != null && !localPoints.get(i).getName().equals("null")
           && !localPoints.get(i).getName().equals("") && !(
           localPoints.get(i).getName().replaceAll("\\s", "") == "")) {
-        namedPoints.add(localPoints.get(i));
+        namedPoints.add((Point)localPoints.get(i).clone());
       }
     }
 
-    ListPoints lp = new ListPoints(namedPoints);
-    ListPoints lp2 = lp.deepClone();
-    ArrayList<Point> copy = new ArrayList<Point>();
-    for (Point p : lp2.getPoints()) {
-      if (p.getName().equals("ELEVATOR")) {
-        copy.add(toElevatorPoint(p));
-      } else {
-        copy.add(p);
-      }
-    }
-    return copy;
+    return namedPoints;
   }
 
   @Override
   public ArrayList<Point> getPoints() {
-    if (!(loadThread.running || saveThread.running)) {
-      progressBarPercentage = 0;
-      loadThread.start();
+    while (saveThread.running || loadThread.running) {
+      ;
     }
-    ListPoints lp = new ListPoints(localPoints);
-    ListPoints lp2 = lp.deepClone();
-    ArrayList<Point> copy = new ArrayList<Point>();
-    for (Point p : lp2.getPoints()) {
-      if (p.getName() != null && p.getName().equals("ELEVATOR")) {
-        copy.add(toElevatorPoint(p));
-      } else {
-        copy.add(p);
+    try {
+      System.out.println("requesting points from DB, trying to load");
+      load();
+    } catch (SQLException e) {
+      //e.printStackTrace();
+      System.out.println(
+          "Error Getting Data From The Database, failed to load, will return DB local points copy \n Query/Connection Error : "
+              + e.getMessage());
+      Alert alert = new Alert(AlertType.ERROR, "Message. Bad Things Happened! : "
+          + "DB ERROR:  failed to load, will return DB local points copy \n Query/Connection Error "
+          + e.getMessage()); //can add buttons if you want, or change to different popup types
+      alert.showAndWait(); //this puts it in focus
+      if (alert.getResult() == ButtonType.YES) {
+        //do stuff, if neccesary, else, delete
       }
     }
-    return copy;
+
+    return FakePoint.deepClone(localPoints);
   }
 
   @Override
@@ -836,39 +852,55 @@ public class DatabaseController implements DatabaseInterface {
     }
     progressBarPercentage = 0;
     System.out.println("Setting the DB local points copy");
-    diffPoints = new ArrayList<Point>(points);
-    System.out.println("" + diffPoints + "  :  " + localPoints);
 
-    for (int i = 0; i < diffPoints.size(); i++) {
-      if (localPoints.contains(diffPoints.get(i))) {
-        System.out.println("Removing " + diffPoints.get(i).getId() + " from diff");
-        diffPoints.remove(i);
-        i--;
-      }
-    }
-    remPoints = new ArrayList<Point>(localPoints);
-    for (int i = 0; i < remPoints.size(); i++) {
-      if (points.contains(remPoints.get(i)) || diffPoints.contains(remPoints.get(i))) {
-        remPoints.remove(i);
-        i--;
+    diffPoints = new ArrayList<>();
+    for (Point p : points) {
+      Point localP = findRealPoint(p.getId(), localPoints);
+      if (localP == null) {
+        diffPoints.add(p);
+      } else if (!p.equals(localP)) {
+        System.out.println(p.toString() + " : " + localP.toString());
+        diffPoints.add(p);
       }
     }
 
-    localPoints = (ArrayList<Point>) points.clone();
-    //save_and_verify();
-    saveThread.start();
-//    save();
+    if (localPoints.size() > points.size()) {
+      remPoints = new ArrayList<>();
+      for (Point localP : localPoints) {
+        Point p = findRealPoint(localP.getId(), points);
+        if (p == null) {
+          remPoints.add(localP);
+        }
+      }
+    }
+
+    save();
     progressBarPercentage = 1;
   }
 
 
   @Override
   public ArrayList<Physician> getPhysicians() {
-    if (!(loadThread.running || saveThread.running)) {
-      progressBarPercentage = 0;
-      loadThread.start();
+    while (saveThread.running || loadThread.running) {
+      ;
     }
+    try {
+      System.out.println("requesting physicians from DB, trying to load");
+      load();
+    } catch (SQLException e) {
+      System.out.println(
+          "Error Getting Data From The Database, failed to load, will return DB local physicians copy \n Query/Connection Error : "
+              + e.getMessage());
+      Alert alert = new Alert(AlertType.ERROR, "Message. Bad Things Happened! : "
+          + "DB ERROR:  failed to load, will return DB local physicians copy \n Query/Connection Error "
+          + e.getMessage()); //can add buttons if you want, or change to different popup types
+      alert.showAndWait(); //this puts it in focus
+      if (alert.getResult() == ButtonType.YES) {
+        //do stuff, if neccesary, else, delete
+      }
 
+      //e.printStackTrace();
+    }
     ArrayList<Physician> copyOfPhysicians = new ArrayList<Physician>();
     for (Physician p : localPhysicians) {
       copyOfPhysicians.add((Physician) p.clone());
@@ -889,7 +921,6 @@ public class DatabaseController implements DatabaseInterface {
         diffPhysicians.remove(i);
         i--;
       }
-      progressBarPercentage = .25 * i / diffPhysicians.size();
     }
     System.out.println(diffPhysicians);
     remPhysicians = new ArrayList<Physician>(localPhysicians);
@@ -899,16 +930,15 @@ public class DatabaseController implements DatabaseInterface {
         remPhysicians.remove(i);
         i--;
       }
-      progressBarPercentage = .25 + .25 * i / remPhysicians.size();
     }
 
     System.out.println("Setting the DB local physicians copy");
     localPhysicians = (ArrayList<Physician>) physicians.clone();
 
     //save_and_verify();
-    saveThread.start();
-//    save();
-//    progressBarPercentage = 1;
+//    saveThread.start();
+    save();
+    progressBarPercentage = 1;
   }
 
   ElevatorPoint toElevatorPoint(Point p) {
