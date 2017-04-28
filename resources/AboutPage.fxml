@@ -5,8 +5,10 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
+<?import java.net.URL?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1300.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UIControllers.AboutPageController">
+<?import javafx.scene.control.Button?>
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="750.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UIControllers.AboutPageController">
    <children>
       <Pane fx:id="AboutPage" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750" prefWidth="1300">
          <children>
@@ -27,10 +29,13 @@
             </Label>
          </children>
       </Pane>
-      <Label fx:id="AboutBack" alignment="CENTER" layoutX="12.0" layoutY="12.0" mnemonicParsing="false" onMouseClicked="#back" prefHeight="60.0" prefWidth="134.0" style="-fx-background-color: #3255bc;" text="Back" textFill="WHITE">
+      <Button fx:id="AboutBack" alignment="CENTER" layoutX="12.0" layoutY="12.0" mnemonicParsing="false" onMouseClicked="#back" prefHeight="60.0" prefWidth="134.0" text="Back" textFill="WHITE">
          <font>
             <Font name="Times New Roman" size="26.0" />
          </font>
-      </Label>
+      </Button>
    </children>
+   <stylesheets>
+      <URL value="@General.css" />
+   </stylesheets>
 </AnchorPane>

@@ -2,6 +2,10 @@ package UIControllers;
 
 import CredentialManager.CredentialManager;
 import Database.DatabaseInterface;
+import Definitions.Physician;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
@@ -10,9 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import org.Dictionary;
 import org.Point;
 import org.Session;
@@ -45,12 +47,37 @@ public class CentralUIController {
   protected static Point searchingPoint;
 
 
-  public void setSession (Session s, DatabaseInterface dbe) {
-    this.currSession = s;
-    this.credentialManager = s.credentialManager;
-    this.dictionary = s.dictionary;
-    this.database = dbe;
+  public void setSession (Session session, DatabaseInterface dbInterface) {
+    this.currSession = session;
+    this.credentialManager = session.credentialManager;
+    this.dictionary = session.dictionary;
+    this.database = dbInterface;
+    try {
+      database.load();
+    } catch (Exception e) {
+    }
   }
+
+
+  public void sortDocs (ArrayList<Physician> docs) {
+    Collections.sort(docs, new Comparator<Physician>() {
+      @Override
+      public int compare(Physician doc1, Physician doc2) {
+        return Long.compare(doc1.getID(), doc2.getID());
+      }
+    });
+  }
+
+  public void sortRooms (ArrayList<Point> rooms) {
+    Collections.sort(rooms, new Comparator<Point>() {
+      @Override
+      public int compare(Point room1, Point room2) {
+        return room1.getName().compareTo(room2.getName());
+      }
+    });
+  }
+
+
   /**
    * Set the stage to the initial scene (main menu)
    * @parameter primaryStage: The main stage of the application
@@ -60,7 +87,9 @@ public class CentralUIController {
     primaryStage.setScene(new Scene(root, x_res, y_res));
     primaryStage.setTitle("Faulkner Hospital Kiosk");
     primaryStage.show();
+    primaryStage.getIcons().add(new Image("/icons/kioskicon.png"));
   }
+
   /**
    * @parameter primaryStage: The main stage of the application
    * @parameter fxmlpath: the file path of the fxml file to be loaded

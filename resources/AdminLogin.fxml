@@ -6,8 +6,10 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
+<?import java.net.URL?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750" prefWidth="1300" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UIControllers.AdminLoginController">
+<?import javafx.scene.control.Button?>
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="750" prefWidth="1300" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UIControllers.AdminLoginController">
    <children>
       <Pane fx:id="AdminLogin" prefHeight="750" prefWidth="1300" style="-fx-background-color: transparent;">
          <children>
@@ -27,21 +29,24 @@
                <font>
                   <Font name="Times New Roman" size="20.0" />
                </font></PasswordField>
-            <Label fx:id="AdminLoginButton" alignment="CENTER" layoutX="575.0" layoutY="550.0" mnemonicParsing="false" onKeyPressed="#tryLogin" onMouseClicked="#login" prefHeight="65.0" prefWidth="150.0" style="-fx-background-color: #3255bc;" text="Login" textFill="WHITE">
+            <Button fx:id="AdminLoginButton" alignment="CENTER" layoutX="575.0" layoutY="550.0" mnemonicParsing="false" onKeyPressed="#tryLogin" onMouseClicked="#login" prefHeight="65.0" prefWidth="160.0" text="Login" textFill="WHITE">
                <font>
-                  <Font name="Times New Roman" size="20.0" />
-               </font></Label>
+                  <Font name="Times New Roman" size="24.0" />
+               </font></Button>
             <Label fx:id="LoginError" alignment="CENTER" contentDisplay="CENTER" layoutX="478.0" layoutY="478.0" prefWidth="400.0" text="Error: Incorrect username/password combination" textFill="RED" visible="false">
                <font>
                   <Font size="16.0" />
                </font>
             </Label>
-            <Label fx:id="AdminBack" alignment="CENTER" layoutX="12.0" layoutY="12.0" onMouseClicked="#back" prefHeight="60.0" prefWidth="134.0" style="-fx-background-color: #3255bc;" text="Back" textFill="WHITE">
+            <Button fx:id="AdminBack" alignment="CENTER" layoutX="12.0" layoutY="12.0" onMouseClicked="#back" prefHeight="60.0" prefWidth="134.0" text="Back" textFill="WHITE">
                <font>
                   <Font name="Times New Roman" size="24.0" />
                </font>
-            </Label>
+            </Button>
          </children>
       </Pane>
    </children>
+   <stylesheets>
+      <URL value="@General.css" />
+   </stylesheets>
 </AnchorPane>

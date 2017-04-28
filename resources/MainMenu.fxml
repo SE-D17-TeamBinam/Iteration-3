@@ -10,8 +10,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
+<?import java.net.URL?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1300.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UIControllers.MainMenuController">
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="750.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UIControllers.MainMenuController">
    <children>
       <Pane fx:id="MainMenu" prefHeight="750.0" prefWidth="1300.0">
          <children>
@@ -20,36 +21,22 @@
                   <Image url="@icons/adminlock.png" />
                </image>
             </ImageView>
-            <Button fx:id="MapButton" contentDisplay="GRAPHIC_ONLY" layoutX="725.0" layoutY="240.0" mnemonicParsing="false" onMouseClicked="#gotoMap" prefHeight="350.0" prefWidth="350.0" style="-fx-background-radius: 175;" text="Map">
+            <ImageView fx:id="MapButton" fitHeight="351.0" fitWidth="351.0" pickOnBounds="true" preserveRatio="true" layoutX="725.0" layoutY="240.0" onMouseClicked="#gotoMap">
                <cursor>
                   <Cursor fx:constant="OPEN_HAND" />
                </cursor>
-               <padding>
-                  <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
-               </padding>
-               <graphic>
-                  <ImageView fitHeight="351.0" fitWidth="351.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@icons/mapbutton.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Button>
-            <Button fx:id="SearchButton" contentDisplay="GRAPHIC_ONLY" layoutX="225.0" layoutY="240.0" mnemonicParsing="false" onMouseClicked="#gotoSearch" prefHeight="350.0" prefWidth="350.0" style="-fx-background-radius: 175;" text="Search">
+               <image>
+                  <Image url="@icons/mapbutton.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="SearchButton" fitHeight="351.0" fitWidth="351.0" pickOnBounds="true" preserveRatio="true" layoutX="225.0" layoutY="240.0" onMouseClicked="#gotoSearch">
                <cursor>
                   <Cursor fx:constant="OPEN_HAND" />
                </cursor>
-               <graphic>
-                  <ImageView fitHeight="351.0" fitWidth="351.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@icons/searchbutton.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-               <padding>
-                  <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
-               </padding>
-            </Button>
+               <image>
+                  <Image url="@icons/searchbutton.png" />
+               </image>
+            </ImageView>
             <ChoiceBox fx:id="langBox" layoutX="32.0" layoutY="690.0" prefWidth="150.0" />
             <Label fx:id="SearchLabel" alignment="TOP_CENTER" layoutX="307.0" layoutY="509.0" mouseTransparent="true" prefHeight="53.0" prefWidth="190.0" text="Search">
                <font>
@@ -69,4 +56,7 @@
          </children>
       </Pane>
    </children>
+   <stylesheets>
+      <URL value="@General.css" />
+   </stylesheets>
 </AnchorPane>
