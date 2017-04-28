@@ -17,7 +17,7 @@ public class Point {
 
   int xCoord;    //X coordinate
   int yCoord;    //Y coordinate
-  ArrayList<String> names;  //Name of the room
+  private ArrayList<String> names;  //Name of the room
   int id;      //Unique Identifier
   int floor;
   public ArrayList<Point> neighbors = new ArrayList<>();
@@ -34,6 +34,9 @@ public class Point {
     this.xCoord = (int) xCoord;
     this.yCoord = (int) yCoord;
     this.names = names;
+    if(names.size() == 0) {
+      this.setName("");
+    }
     this.isBlocked = false;
   }
 
@@ -42,6 +45,8 @@ public class Point {
     this.yCoord = (int) yCoord;
     this.floor = floor;
     this.isBlocked = false;
+    names = new ArrayList<String>();
+    this.setName("");
   }
 
   public Point(int xCoord, int yCoord, ArrayList<String> names, int id,
@@ -50,6 +55,9 @@ public class Point {
     this.xCoord = xCoord;
     this.yCoord = yCoord;
     this.names = names;
+    if(names.size() == 0){
+      setName("");
+    }
     this.id = id;
     this.parent = null;
     this.neighbors = new_neighbors;
@@ -128,6 +136,23 @@ public class Point {
   public String getName() {
     if (names != null && names.size() > 0) {
       return names.get(0);
+    }
+    return null;
+  }
+
+  public void setBuilding(String building){
+    String lastName = names.get(names.size() - 1);
+    if(lastName.contains("BUILDING=")){
+      names.set(names.size() - 1, "BUILDING=" + building);
+    }else{
+      names.add("BUILDING=" + building);
+    }
+  }
+
+  public String getBuilding(){
+    String lastName = names.get(names.size() - 1);
+    if(lastName.contains("BUILDING=")){
+      return lastName.split("=")[1];
     }
     return null;
   }

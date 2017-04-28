@@ -42,7 +42,7 @@ public class ListPoints {
   public ListPoints deepClone(){
     HashMap<Point, Point> newPoints = new HashMap<Point, Point>();
     for(Point p : points){
-      newPoints.put(p, new Point(p.getXCoord(), p.getYCoord(), p.getName(), generateUniqueID(), new ArrayList<Point>(), p.getFloor()));
+      newPoints.put(p, new Point(p.getXCoord(), p.getYCoord(), p.getName(), 0, new ArrayList<Point>(), p.getFloor()));
     }
     for(Point p : points){
       Point p2 = newPoints.get(p);
@@ -79,15 +79,6 @@ public class ListPoints {
       }
     }
     return out;
-  }
-
-  /**
-   * Attempts to generate a unique ID
-   * This method should probably be rewritten more reliably, as this could theoretically repeat
-   * @return a unique ID as an integer
-   */
-  public int generateUniqueID(){
-    return (int) Math.random()*Integer.MAX_VALUE;
   }
 
   /**
