@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javax.swing.plaf.nimbus.State;
 
 /**
  * Registers, Connects to, and sends commands to a database
@@ -84,7 +85,20 @@ public class DatabaseDriver {
     return listrs;
   }
 
-  private boolean registerDriver() throws ClassNotFoundException {
+  public void send_Commands(ArrayList<String> commands) {
+    try {
+      this.stmt = this.conn.createStatement();
+      for (String command : commands) {
+        this.stmt.addBatch(command);
+      }
+      stmt.executeBatch();
+    } catch (SQLException e) {
+      System.out.println("There was a problem sending a bach of commands to the database");
+    }
+  }
+
+
+    private boolean registerDriver() throws ClassNotFoundException {
     Class.forName(driver);
     return true;
   }
