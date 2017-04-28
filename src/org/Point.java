@@ -261,7 +261,7 @@ public class Point {
       return false;
 
     // next test the list of names
-    if (!pobj.names.equals(this.names))
+    if (pobj.names != null && this.names!= null && !pobj.names.equals(this.names))
       return false;
 
     //test the neighbors of each point

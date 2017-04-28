@@ -71,6 +71,7 @@ public class DatabaseController implements DatabaseInterface {
 
     //ArrayList<Physician> new_physicians = localPhysicians;
     Physician old_physician = findRealPhysician((int) pid, localPhysicians);
+
     localPhysicians.remove(old_physician);
     //setPhysicians(new_physicians);
 
@@ -343,27 +344,33 @@ public class DatabaseController implements DatabaseInterface {
       this.addNeighbor(point.getId(), neighbors.get(k));
     }
 
-    localPoints.add(realpoint);
+    for (Point neighbor : realpoint.getNeighbors()) {
+      realpoint.connectTo(neighbor);
+    }
+    if (check_points(localPoints, realpoint)) {
+      localPoints.add(realpoint);
+    }
     return true;
   }
 
-  public boolean addPointWithoutNeighbors(Point realpoint) {
-    FakePoint point = new FakePoint(realpoint);
-    int cost = point.getCost();
-    int x = point.getXCoord();
-    int y = point.getYCoord();
-    int id = point.getId();
-    int floor = point.getFloor();
-    String name = point.getName().replace(';', '_');
-    ArrayList<Integer> neighbors = point.getNeighbors();
-
-    dbc.send_Command(
-        "insert into Point (x,y,cost,pid,floor,name) values (" + x + ","
-            + y + "," + cost + "," + id + "," + floor + ",'" + name + "'); \n");
-
-    localPoints.add(realpoint);
-    return true;
-  }
+  // These 2 functions are depreciated
+//  public boolean addPointWithoutNeighbors(Point realpoint) {
+//    FakePoint point = new FakePoint(realpoint);
+//    int cost = point.getCost();
+//    int x = point.getXCoord();
+//    int y = point.getYCoord();
+//    int id = point.getId();
+//    int floor = point.getFloor();
+//    String name = point.getName().replace(';', '_');
+//    ArrayList<Integer> neighbors = point.getNeighbors();
+//
+//    dbc.send_Command(
+//        "insert into Point (x,y,cost,pid,floor,name) values (" + x + ","
+//            + y + "," + cost + "," + id + "," + floor + ",'" + name + "'); \n");
+//
+//    localPoints.add(realpoint);
+//    return true;
+//  }
 
   //PREFERABLY NOT USE FOR SINGLE ADDING, BECAUSE IT CANNNOT ADD THE POIN TO THE LOCAL COPY
 //  public boolean addPoint(FakePoint point) {
@@ -445,6 +452,13 @@ public class DatabaseController implements DatabaseInterface {
         "delete from Point where pid = " + pid + ";");
 
     Point old_point = findRealPoint((int) pid, localPoints);
+    ArrayList<Point> neighbors = old_point.getNeighbors();
+    for (int i = 0; i < neighbors.size(); i ++) {
+      if (neighbors.get(i) != null){
+        old_point.severFrom(neighbors.get(i));
+        i--;
+      }
+    }
     localPoints.remove(old_point);
     return true;
   }
@@ -769,15 +783,7 @@ public class DatabaseController implements DatabaseInterface {
         System.out.println("Diff point updating " + p.getId());
         this.removePoint(p.getId());
         this.addPoint(p);
-//        this.addPointWithoutNeighbors(p);
       }
-//      for(Point p : diffPoints){
-//        for (int i = 0; i < p.neighbors.size(); i++){
-////          System.out.println("Diff neighbor point updating " + p.getId() + " -> "  + p.neighbors.get(i).getId());
-//          this.addNeighbor(p.getId(), p.neighbors.get(i).getId());
-//        }
-//      }
-
       diffPoints = null;
     }
 
@@ -1133,7 +1139,7 @@ public class DatabaseController implements DatabaseInterface {
     searchTerm = searchTerm.toLowerCase();
     LinkedHashMap<Integer,Double> length_map = make_length_map(20);
     for (Point p : named_points) {
-      boolean worthit = false;
+        boolean worthit = false;
 //      System.out.println("here");
       ArrayList<String> names = p.getNames();
       ArrayList<String> lc_names = new ArrayList<String>();
