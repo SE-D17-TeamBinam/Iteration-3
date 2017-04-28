@@ -815,7 +815,6 @@ public class DatabaseController implements DatabaseInterface {
         }
     }
 
-    //TODO Filter special nodes like ELEVATOR or STAIRS etc.
     @Override
     public ArrayList<Point> getNamedPoints() {
         while (saveThread.running || loadThread.running) {
@@ -893,6 +892,7 @@ public class DatabaseController implements DatabaseInterface {
         }
         for (int i = 0; i < points.size(); i++) {
             if (points.get(i) == null) {
+                System.out.println(i + " was null");
                 points.remove(i);
                 i--;
             }
@@ -991,8 +991,12 @@ public class DatabaseController implements DatabaseInterface {
     }
 
     ElevatorPoint toElevatorPoint(Point p) {
-        ElevatorPoint ep = new ElevatorPoint(p.getXCoord(), p.getYCoord(), p.getName(), p.getId(),
+        ElevatorPoint ep = new ElevatorPoint(p.getXCoord(), p.getYCoord(), p.getNames(), p.getId(),
                 p.getNeighbors(), p.getFloor());
+        for (int i = 0; i < ep.neighbors.size(); i ++){
+            ep.neighbors.get(i).neighbors.remove(p);
+            ep.connectTo(ep.neighbors.get(i));
+        }
         return ep;
     }
 
