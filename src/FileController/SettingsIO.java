@@ -27,7 +27,7 @@ public class SettingsIO {
   private File settingsFile;
   private Properties settings;
   private static final HashSet<String> SETTINGS_KEYS = new HashSet<>(Arrays.asList(
-      "startingKiosk", "algorithm", "timeoutLength", "fullscreen", "genericPointColor",
+      "startingKiosk", "algorithm", "timeoutLength", "screenSize", "genericPointColor",
       "stairPointColor", "elevatorPointColor"));
 
   public SettingsIO(String settingsLoc){
@@ -44,6 +44,9 @@ public class SettingsIO {
     loadSettings();
   }
 
+  /**
+   * Populate the settings in memory
+   */
   private void loadSettings(){
     try{
       settingsFile.createNewFile();
@@ -56,6 +59,12 @@ public class SettingsIO {
     }
   }
 
+  /**
+   * Search for the point that should be default by their ID
+   * @param graph: list of points to search through
+   * @return the point that should be set as default
+   * @throws DefaultKioskNotInMemoryException
+   */
   public Point getDefaultKiosk(ListPoints graph) throws DefaultKioskNotInMemoryException{
     int kioskID = Integer.parseInt(settings.getProperty("startingKiosk"));
     for(Point p : graph.getPoints()){
@@ -66,9 +75,12 @@ public class SettingsIO {
     throw new DefaultKioskNotInMemoryException(kioskID);
   }
 
-  public boolean fullscreenPreference(){
-    boolean fs = Boolean.parseBoolean(settings.getProperty("fullscreen", "false"));
-    return fs;
+  /**
+   * Give the screen type
+   * @return 1 for default 2 for fullscreen 3 for full window
+   */
+  public int getScreenPreference(){
+    return Integer.parseInt(settings.getProperty("fullscreen", "1"));
   }
 
   public int getTimeout(){

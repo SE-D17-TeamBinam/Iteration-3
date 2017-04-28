@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.Astar;
 import org.DFS;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -38,11 +37,11 @@ class SettingsIOTest {
     s.updateSetting("startingKiosk", "1");
     s.updateSetting("algorithm", "dfs");
     s.updateSetting("timeoutLength", "30");
-    s.updateSetting("fullscreen", "false");
+    s.updateSetting("screenSize", "1");
 
     assertEquals(DFS.class, s.getAlgorithm().getClass());
     assertEquals(30, s.getTimeout());
-    assertEquals(false, s.fullscreenPreference());
+    assertEquals(1, s.getScreenPreference());
 
     s.updateSetting("algorithm", "astar");
 
