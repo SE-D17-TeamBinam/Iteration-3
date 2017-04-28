@@ -35,6 +35,8 @@ public class Point {
     this.yCoord = (int) yCoord;
     this.names = names;
     this.isBlocked = false;
+    this.names = new ArrayList<String>();
+
   }
 
   public Point(double xCoord, double yCoord, int floor) {
@@ -42,6 +44,7 @@ public class Point {
     this.yCoord = (int) yCoord;
     this.floor = floor;
     this.isBlocked = false;
+    this.names = new ArrayList<String>();
   }
 
   public Point(int xCoord, int yCoord, ArrayList<String> names, int id,
@@ -251,7 +254,7 @@ public class Point {
       return false;
 
     // test if the object isn't even the same type of class
-    if (obj.getClass() != this.getClass())
+    if (obj.getClass() != this.getClass() && obj.getClass() != ElevatorPoint.class)
       return false;
 
     Point pobj = (Point) obj; // we can now safely assume that obj is a Point and not null
@@ -276,4 +279,11 @@ public class Point {
   public Object clone()  {
     return new Point(xCoord,yCoord,names,id,neighbors, floor);
   }
+
+
+  public String toStringMoreInfo(){
+    return this.getName() + "(" + this.id + ") at x:" + xCoord + ", y:" + yCoord + " on floor " + this.floor;
+  }
+
 }
+

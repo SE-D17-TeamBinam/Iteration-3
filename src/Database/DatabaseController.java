@@ -339,10 +339,7 @@ public class DatabaseController implements DatabaseInterface {
       this.addNeighbor(point.getId(), neighbors.get(k));
     }
 
-    if (check_points(localPoints, realpoint)) {
-      localPoints.add(realpoint);
-    }
-
+    localPoints.add(realpoint);
     return true;
   }
 
@@ -360,40 +357,38 @@ public class DatabaseController implements DatabaseInterface {
         "insert into Point (x,y,cost,pid,floor,name) values (" + x + ","
             + y + "," + cost + "," + id + "," + floor + ",'" + name + "'); \n");
 
-    if (check_points(localPoints, realpoint)) {
-      localPoints.add(realpoint);
-    }
+    localPoints.add(realpoint);
     return true;
   }
 
   //PREFERABLY NOT USE FOR SINGLE ADDING, BECAUSE IT CANNNOT ADD THE POIN TO THE LOCAL COPY
-  public boolean addPoint(FakePoint point) {
-    int cost = point.getCost();
-    int x = point.getXCoord();
-    int y = point.getYCoord();
-    int id = point.getId();
-    int floor = point.getFloor();
-    String name = point.getName().replace(';', '_');
-    ArrayList<Integer> neighbors = point.getNeighbors();
-
-    if (name == null) {
-      name = "";
-    }
-
-    dbc.send_Command(
-        "insert into Point (x,y,cost,pid,floor,name) values (" + x + ","
-            + y + "," + cost + "," + id + "," + floor + ",'" + name + "'); \n");
-
-    for (int k = 0; k < neighbors.size(); k++) {
-      this.addNeighbor(point.getId(), neighbors.get(k));
-    }
-
-    if (check_points(localPoints, id)) {
-      //localPoints.add(realpoint);
-    }
-
-    return true;
-  }
+//  public boolean addPoint(FakePoint point) {
+//    int cost = point.getCost();
+//    int x = point.getXCoord();
+//    int y = point.getYCoord();
+//    int id = point.getId();
+//    int floor = point.getFloor();
+//    String name = point.getName().replace(';', '_');
+//    ArrayList<Integer> neighbors = point.getNeighbors();
+//
+//    if (name == null) {
+//      name = "";
+//    }
+//
+//    dbc.send_Command(
+//        "insert into Point (x,y,cost,pid,floor,name) values (" + x + ","
+//            + y + "," + cost + "," + id + "," + floor + ",'" + name + "'); \n");
+//
+//    for (int k = 0; k < neighbors.size(); k++) {
+//      this.addNeighbor(point.getId(), neighbors.get(k));
+//    }
+//
+//    if (check_points(localPoints, id)) {
+//      //localPoints.add(realpoint);
+//    }
+//
+//    return true;
+//  }
 
 
   public boolean editPoint(
@@ -446,7 +441,7 @@ public class DatabaseController implements DatabaseInterface {
         "delete from Point where pid = " + pid + ";");
 
     Point old_point = findRealPoint((int) pid, localPoints);
-    localPhysicians.remove(old_point);
+    localPoints.remove(old_point);
     return true;
   }
 
@@ -459,7 +454,7 @@ public class DatabaseController implements DatabaseInterface {
     dbc.send_Command("DELETE from Point where 1=1;DELETE from Neighbor where 1=1;");
     int i;
     for (i = 0; i < al.size(); i++) {
-      this.addPoint(al.get(i));
+      this.addPoint(rpal.get(i));
       progressBarPercentage = .25 * i / al.size();
     }
     //int i;
@@ -589,9 +584,21 @@ public class DatabaseController implements DatabaseInterface {
   }
 
   private Point findRealPoint(int p, ArrayList<Point> pts) {
-    for (int i = 0; i < pts.size(); i++) {
-      if (p == pts.get(i).getId()) {
-        return pts.get(i);
+//    for (int i = 0; i < pts.size(); i++) {
+//      try {
+//        if (p == pts.get(i).getId()) {
+//          return pts.get(i);
+//        }
+//      }
+//      catch (NullPointerException e){
+//        System.out.println("Null PTR");
+//      }
+    for (Point point : pts){
+      if (point == null) {
+        System.out.println("The thing");
+      }
+      if (p == point.getId()){
+        return point;
       }
     }
     return null;
@@ -782,17 +789,20 @@ public class DatabaseController implements DatabaseInterface {
     while (saveThread.running || loadThread.running) {
       ;
     }
-    try {
-      load();
-    } catch (SQLException e) {
-      Alert alert = new Alert(AlertType.ERROR,
-          "Message. Bad Things Happened! : " + "DB ERROR: failed to load in getNamedPoints method: "
-              + e.getMessage()); //can add buttons if you want, or change to different popup types
-      alert.showAndWait(); //this puts it in focus
-      if (alert.getResult() == ButtonType.YES) {
-        //do stuff, if neccesary, else, delete
+    if (localPoints.size() < 1) {
+      try {
+        load();
+      } catch (SQLException e) {
+        Alert alert = new Alert(AlertType.ERROR,
+            "Message. Bad Things Happened! : "
+                + "DB ERROR: failed to load in getNamedPoints method: "
+                + e.getMessage()); //can add buttons if you want, or change to different popup types
+        alert.showAndWait(); //this puts it in focus
+        if (alert.getResult() == ButtonType.YES) {
+          //do stuff, if neccesary, else, delete
+        }
+        e.printStackTrace();
       }
-      e.printStackTrace();
     }
     System.out.println("trying to get Points with names");
     ArrayList<Point> namedPoints = new ArrayList<Point>();
@@ -813,20 +823,22 @@ public class DatabaseController implements DatabaseInterface {
     while (saveThread.running || loadThread.running) {
       ;
     }
-    try {
-      System.out.println("requesting points from DB, trying to load");
-      load();
-    } catch (SQLException e) {
-      //e.printStackTrace();
-      System.out.println(
-          "Error Getting Data From The Database, failed to load, will return DB local points copy \n Query/Connection Error : "
-              + e.getMessage());
-      Alert alert = new Alert(AlertType.ERROR, "Message. Bad Things Happened! : "
-          + "DB ERROR:  failed to load, will return DB local points copy \n Query/Connection Error "
-          + e.getMessage()); //can add buttons if you want, or change to different popup types
-      alert.showAndWait(); //this puts it in focus
-      if (alert.getResult() == ButtonType.YES) {
-        //do stuff, if neccesary, else, delete
+    if (localPoints.size() < 1) {
+      try {
+        System.out.println("requesting points from DB, trying to load");
+        load();
+      } catch (SQLException e) {
+        //e.printStackTrace();
+        System.out.println(
+            "Error Getting Data From The Database, failed to load, will return DB local points copy \n Query/Connection Error : "
+                + e.getMessage());
+        Alert alert = new Alert(AlertType.ERROR, "Message. Bad Things Happened! : "
+            + "DB ERROR:  failed to load, will return DB local points copy \n Query/Connection Error "
+            + e.getMessage()); //can add buttons if you want, or change to different popup types
+        alert.showAndWait(); //this puts it in focus
+        if (alert.getResult() == ButtonType.YES) {
+          //do stuff, if neccesary, else, delete
+        }
       }
     }
 
@@ -838,6 +850,12 @@ public class DatabaseController implements DatabaseInterface {
     while (saveThread.running || loadThread.running) {
       ;
     }
+    for (int i = 0; i < points.size(); i ++){
+      if (points.get(i) == null){
+        points.remove(i);
+        i--;
+      }
+    }
     progressBarPercentage = 0;
     System.out.println("Setting the DB local points copy");
 
@@ -847,7 +865,7 @@ public class DatabaseController implements DatabaseInterface {
       if (localP == null) {
         diffPoints.add(p);
       } else if (!p.equals(localP)) {
-        System.out.println(p.toString() + " : " + localP.toString());
+        System.out.println(p.toStringMoreInfo() + " : " + localP.toStringMoreInfo());
         diffPoints.add(p);
       }
     }
@@ -872,22 +890,24 @@ public class DatabaseController implements DatabaseInterface {
     while (saveThread.running || loadThread.running) {
       ;
     }
-    try {
-      System.out.println("requesting physicians from DB, trying to load");
-      load();
-    } catch (SQLException e) {
-      System.out.println(
-          "Error Getting Data From The Database, failed to load, will return DB local physicians copy \n Query/Connection Error : "
-              + e.getMessage());
-      Alert alert = new Alert(AlertType.ERROR, "Message. Bad Things Happened! : "
-          + "DB ERROR:  failed to load, will return DB local physicians copy \n Query/Connection Error "
-          + e.getMessage()); //can add buttons if you want, or change to different popup types
-      alert.showAndWait(); //this puts it in focus
-      if (alert.getResult() == ButtonType.YES) {
-        //do stuff, if neccesary, else, delete
-      }
+    if (localPhysicians.size() < 1) {
+      try {
+        System.out.println("requesting physicians from DB, trying to load");
+        load();
+      } catch (SQLException e) {
+        System.out.println(
+            "Error Getting Data From The Database, failed to load, will return DB local physicians copy \n Query/Connection Error : "
+                + e.getMessage());
+        Alert alert = new Alert(AlertType.ERROR, "Message. Bad Things Happened! : "
+            + "DB ERROR:  failed to load, will return DB local physicians copy \n Query/Connection Error "
+            + e.getMessage()); //can add buttons if you want, or change to different popup types
+        alert.showAndWait(); //this puts it in focus
+        if (alert.getResult() == ButtonType.YES) {
+          //do stuff, if neccesary, else, delete
+        }
 
-      //e.printStackTrace();
+        //e.printStackTrace();
+      }
     }
     ArrayList<Physician> copyOfPhysicians = new ArrayList<Physician>();
     for (Physician p : localPhysicians) {
