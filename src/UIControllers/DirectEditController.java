@@ -266,18 +266,26 @@ public class DirectEditController extends CentralUIController implements Initial
 
   private void refreshLoc () {
     locations.clear();
-    for (Point p : selectedHP.getLocations()) {
-      ChoiceBox<Point> cb = new ChoiceBox<>();
-      cb.setItems(FXCollections.observableList(rooms));
-      cb.setValue(p);
-      locations.add(cb);
+    if (selectedHP != null) {
+      for (Point p : selectedHP.getLocations()) {
+        ChoiceBox<Point> cb = new ChoiceBox<>();
+        cb.setItems(FXCollections.observableList(rooms));
+        cb.setValue(p);
+        locations.add(cb);
+      }
     }
   }
 
   private void refreshInfo () {
-    LastName.setText(selectedHP.getLastName());
-    FirstName.setText(selectedHP.getFirstName());
-    Title.setText(selectedHP.getTitle());
+    if (selectedHP != null) {
+      LastName.setText(selectedHP.getLastName());
+      FirstName.setText(selectedHP.getFirstName());
+      Title.setText(selectedHP.getTitle());
+    } else {
+      LastName.setText("");
+      FirstName.setText("");
+      Title.setText("");
+    }
   }
 
 
@@ -288,15 +296,6 @@ public class DirectEditController extends CentralUIController implements Initial
     DirectSearch.setText("");
   }
 
-  private void clearLoc () {
-    Locations.setItems(FXCollections.observableList(new ArrayList<>()));
-  }
-
-  private void clearInfo () {
-    LastName.setText("");
-    FirstName.setText("");
-    Title.setText("");
-  }
 
   /////////////////////////////
   /// location manipulation ///
@@ -319,27 +318,12 @@ public class DirectEditController extends CentralUIController implements Initial
     ArrayList<Point> ret = new ArrayList<>();
     for (ChoiceBox cb : locations) {
       if (cb.getValue() != null) {
-        //addtoFinalLocs(ret, cb);
         ret.add((Point) cb.getValue());
       }
     }
     return ret;
   }
 
-  /*
-  private void addtoFinalLocs(ArrayList<Point> ret, ChoiceBox L) {
-    for (Point n : rooms) {
-      try {
-        if (n.getName().equals(L.getValue().toString())) {
-          ret.add(n);
-          break;
-        }
-      } catch (NullPointerException e) {
-        continue;
-      }
-    }
-  }
-  */
 
   /////////////////////////////
   ///// data manipulation /////
@@ -409,9 +393,10 @@ public class DirectEditController extends CentralUIController implements Initial
   public void delete () {
     database.removePhysician(selectedHP.getID());
     docs.remove(selectedHP);
+    selectedHP = null;
     refreshDir();
-    clearLoc();
-    clearInfo();
+    refreshLoc();
+    refreshInfo();
     //database.setPhysicians(docs);
   }
 

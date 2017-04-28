@@ -325,8 +325,6 @@ public class SearchMenuController extends CentralUIController implements Initial
 
   public void clear () {
     SearchField.setText("");
-    updatePhysicians(docs);
-    updateRooms(rooms);
   }
 
   public void viewMap () {
