@@ -114,17 +114,31 @@ public class SettingsMenuController extends CentralUIController implements Initi
       }
     });
 
+    timeTimeout.textProperty().addListener(new ChangeListener<String>() {
+      @Override
+      public void changed(ObservableValue<? extends String> observable, String oldValue,
+          String newValue) {
+        try {
+          Integer.parseInt(newValue);
+          settings.updateSetting("timeoutLength", newValue);
+          System.out.println("changed timeout length to " + newValue);
+        } catch (NumberFormatException e) {
+          System.out.println("Please enter something legit");
+        }
+      }
+    });
+
     /* radio button listeners */
     defaultResolution.setOnAction(event -> {
-      settings.updateSetting("resolution", "default");
+      settings.updateSetting("screenSize", "1");
       System.out.println("changed resolution to default");
     });
     fullscreenResolution.setOnAction(event -> {
-      settings.updateSetting("resolution", "fullscreen");
+      settings.updateSetting("screenSize", "2");
       System.out.println("changed resolution to fullscreen");
     });
     fullwindowResolution.setOnAction(event -> {
-      settings.updateSetting("resolution", "fullwindow");
+      settings.updateSetting("screenSize", "3");
       System.out.println("changed resolution to fullwindow");
     });
 

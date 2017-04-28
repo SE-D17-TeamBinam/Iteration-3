@@ -80,7 +80,7 @@ public class SettingsIO {
    * @return 1 for default 2 for fullscreen 3 for full window
    */
   public int getScreenPreference(){
-    return Integer.parseInt(settings.getProperty("fullscreen", "1"));
+    return Integer.parseInt(settings.getProperty("screenSize", "1"));
   }
 
   public int getTimeout(){
@@ -93,7 +93,7 @@ public class SettingsIO {
     switch (strat) {
       case "dfs":
         return new DFS();
-      case "bsf":
+      case "bfs":
         return new BFS();
       default:
         return new Astar();
