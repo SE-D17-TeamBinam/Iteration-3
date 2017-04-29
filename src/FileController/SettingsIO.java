@@ -66,7 +66,7 @@ public class SettingsIO {
    * @throws DefaultKioskNotInMemoryException
    */
   public Point getDefaultKiosk(ListPoints graph) throws DefaultKioskNotInMemoryException{
-    int kioskID = Integer.parseInt(settings.getProperty("startingKiosk"));
+    int kioskID = Integer.parseInt(settings.getProperty("startingKiosk", "1"));
     for(Point p : graph.getPoints()){
       if(p.getId() == kioskID){
         return p;
@@ -89,7 +89,7 @@ public class SettingsIO {
 
 
   public PathfindingStrategy getAlgorithm(){
-    String strat = settings.getProperty("algorithm");
+    String strat = settings.getProperty("algorithm", "astar");
     switch (strat) {
       case "dfs":
         return new DFS();
