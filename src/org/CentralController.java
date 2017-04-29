@@ -17,8 +17,6 @@ public class CentralController {
   }
 
   public void startUI (Stage primaryStage, DatabaseInterface dbe) throws Exception {
-    //primaryStage.setFullScreen(true);
-    //primaryStage.setMaximized(true);
     primaryStage.setMinHeight(790);
     primaryStage.setMinWidth(1300);
     this.uiController = new CentralUIController();

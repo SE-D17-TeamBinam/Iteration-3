@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
@@ -87,8 +88,8 @@ public class CentralUIController {
     Parent root = FXMLLoader.load(getClass().getResource("/MainMenu.fxml"));
     primaryStage.setScene(new Scene(root, x_res, y_res));
     primaryStage.setTitle("Faulkner Hospital Kiosk");
-    primaryStage.show();
     primaryStage.getIcons().add(new Image("/icons/kioskicon.png"));
+    primaryStage.show();
   }
 
   /**
@@ -110,7 +111,8 @@ public class CentralUIController {
         x_res = (double) newSceneWidth;
         bannerView.setFitWidth(x_res);
         backgroundView.setFitWidth(x_res);
-        logoView.setLayoutX(x_res/2 - 240);
+        logoView.setFitWidth(350*x_res/1300);
+        logoView.setLayoutX(x_res/2 - logoView.getFitWidth()/2);
         customListenerX();
       }
     });
@@ -118,7 +120,10 @@ public class CentralUIController {
       @Override
       public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
         y_res = (double) newSceneHeight;
+        bannerView.setFitHeight(120*y_res/750);
         backgroundView.setLayoutY(y_res/2.5);
+        logoView.setLayoutY(14*y_res/750);
+        logoView.setFitHeight(60*y_res/750);
         customListenerY();
       }
     });
@@ -134,16 +139,11 @@ public class CentralUIController {
 
   public void setBackground (AnchorPane anchorPane) {
     bannerView.setImage(banner);
-    bannerView.setFitWidth(x_res);
     backgroundView.setImage(background);
-    backgroundView.setFitWidth(x_res);
     backgroundView.setPreserveRatio(true);
-    backgroundView.setLayoutY(y_res/2.5);
     logoView.setImage(logo);
-    logoView.setFitWidth(480);
-    logoView.setPreserveRatio(true);
-    logoView.setLayoutX(x_res/2 - 240);
-    logoView.setLayoutY(-1);
+    logoView.setFitHeight(60);
+    logoView.setFitWidth(350);
     anchorPane.getChildren().add(bannerView);
     anchorPane.getChildren().add(backgroundView);
     anchorPane.getChildren().add(logoView);
@@ -152,9 +152,4 @@ public class CentralUIController {
     backgroundView.toBack();
   }
 
-  public void addDB(DatabaseInterface db){
-//    this.database = db;
-
-    System.out.println(db == null);
-  }
 }
