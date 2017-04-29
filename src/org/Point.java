@@ -251,6 +251,11 @@ public class Point {
   }
 
 
+  /**
+   * Checks all attributes, primitive and non
+   * @param obj The object to compare to
+   * @return true if they're equivalent, false otherwise
+   */
   @Override
   public boolean equals(Object obj) {
     // test if the obj is null
