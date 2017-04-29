@@ -249,35 +249,41 @@ public class SearchMenuController extends CentralUIController implements Initial
   }
 
   public void autoCompleteDoc () {
-    for (Physician doc : docs) {
-      String docName = doc.getFirstName() + " " + doc.getLastName();
-      if (docName.length() >= searchString.length()
-          && docName.substring(0, searchString.length()).equalsIgnoreCase(searchString)){
-        final String newSearchString = doc.getFirstName() + " " + doc.getLastName();
-        isST = true;
-        SearchField.setText(newSearchString);
-        Platform.runLater(() -> {if (SearchField.isFocused()) {
-          SearchField.selectRange(searchString.length(), newSearchString.length());
+    if (!searchString.equals("")) {
+      for (Physician doc : docs) {
+        String docName = doc.getFirstName() + " " + doc.getLastName();
+        if (docName.length() >= searchString.length()
+            && docName.substring(0, searchString.length()).equalsIgnoreCase(searchString)) {
+          final String newSearchString = doc.getFirstName() + " " + doc.getLastName();
+          isST = true;
+          SearchField.setText(newSearchString);
+          Platform.runLater(() -> {
+            if (SearchField.isFocused()) {
+              SearchField.selectRange(searchString.length(), newSearchString.length());
+            }
+          });
+          break;
         }
-        });
-        break;
       }
     }
   }
 
   public void autoCompleteRoom () {
-    for (Point room : rooms) {
-      String roomName = room.getName();
-      if (roomName.length() >= searchString.length()
-        && roomName.substring(0, searchString.length()).equalsIgnoreCase(searchString)) {
-        final String newSearchString = room.getName();
-        isST = true;
-        SearchField.setText(newSearchString);
-        Platform.runLater(() -> {if (SearchField.isFocused()) {
-          SearchField.selectRange(searchString.length(), newSearchString.length());
+    if (!searchString.equals("")) {
+      for (Point room : rooms) {
+        String roomName = room.getName();
+        if (roomName.length() >= searchString.length()
+            && roomName.substring(0, searchString.length()).equalsIgnoreCase(searchString)) {
+          final String newSearchString = room.getName();
+          isST = true;
+          SearchField.setText(newSearchString);
+          Platform.runLater(() -> {
+            if (SearchField.isFocused()) {
+              SearchField.selectRange(searchString.length(), newSearchString.length());
+            }
+          });
+          break;
         }
-        });
-        break;
       }
     }
   }

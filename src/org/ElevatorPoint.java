@@ -10,6 +10,9 @@ public class ElevatorPoint extends VerticalPoint {
   public ElevatorPoint(int xCoord, int yCoord, String name, int id, ArrayList<Point> new_neighbors, int floor){
     super(xCoord, yCoord, name, id, new_neighbors, floor);
   }
+  public ElevatorPoint(int xCoord, int yCoord, ArrayList<String> names, int id, ArrayList<Point> new_neighbors, int floor){
+    super(xCoord, yCoord, names, id, new_neighbors, floor);
+  }
   public ElevatorPoint(double xCoord, double yCoord, int floor) {
     super((int)xCoord, (int)yCoord, floor);
   }
@@ -48,5 +51,8 @@ public class ElevatorPoint extends VerticalPoint {
       //reaches here if for loop doesnt work, so no more vertical points with desried floor
       return false;
     }
+  }
+  public String toStringMoreInfo(){
+    return "Elevator Point!: " + this.getName() + "(" + this.id + ") at x:" + xCoord + ", y:" + yCoord + " on floor " + this.floor;
   }
 }
