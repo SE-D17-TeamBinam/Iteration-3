@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="750.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UIControllers.AdminMenuController">
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="750.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UIControllers.AdminMenuController">
    <children>
       <Pane fx:id="AdminMenu" prefHeight="750.0" prefWidth="1300.0">
          <children>
@@ -59,7 +59,6 @@
                   <Font name="Times New Roman" size="30.0" />
                </font>
             </Label>
-            <Button fx:id="Settings" layoutX="1140.0" layoutY="633.0" mnemonicParsing="false" text="Settings" onMouseClicked="#settings"/>
          </children>
       </Pane>
    </children>
