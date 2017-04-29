@@ -2,12 +2,13 @@ package CredentialManager;
 
 /**
  * Created by Tom on 4/3/2017.
+ *
+ * this will check to see if you have admin credentials.
  */
 public class CredentialManager {
 
   private String adminName = "admin";
   private String adminToken = "admin";
-
 
   public CredentialManager(){
 

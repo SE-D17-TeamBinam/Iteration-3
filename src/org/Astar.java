@@ -137,11 +137,6 @@ public class Astar extends PathfindingStrategy {
                 }
               }
             }
-//          else if (next.neighbors.get(j).floor != start.floor && next.neighbors.get(j).floor != goal.floor){
-//            // if floor is neither on start or goal's floor
-//
-//            //dont do anything so the wrong floor points wont be added....
-//          }
             else { // right floor(s).
               open.add(next.neighbors.get(j));    //add sucessor to open
               next.neighbors.get(j).cost = next.cost + next.Distance(next.neighbors.get(j)); //update cost
