@@ -1,3 +1,5 @@
+import static java.util.Locale.ENGLISH;
+
 import Definitions.Physician;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -8,6 +10,8 @@ import Database.FakePoint;
 import org.Point;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.apache.commons.lang3.StringUtils;
+
 //
 ///**
 // * Created by Evan on 4/8/2017.
@@ -27,18 +31,38 @@ public class TestDB {
     dbc = new DatabaseController(dbd);
     dbc.load();
     ArrayList<Physician> s0 = dbc.fuzzySearchPhysicians("c");
-//    ArrayList<Physician> s1 = dbc.fuzzySearchPhysicians("ch");
-//    ArrayList<Physician> s2 = dbc.fuzzySearchPhysicians("chr");
-//    ArrayList<Physician> s3 = dbc.fuzzySearchPhysicians("chri");
-//    ArrayList<Physician> s4 = dbc.fuzzySearchPhysicians("chris");
+    ArrayList<Physician> s1 = dbc.fuzzySearchPhysicians("ch");
+    ArrayList<Physician> s2 = dbc.fuzzySearchPhysicians("chr");
+    ArrayList<Physician> s3 = dbc.fuzzySearchPhysicians("chri");
+    ArrayList<Physician> s4 = dbc.fuzzySearchPhysicians("chris");
     ArrayList<Physician> s5 = dbc.fuzzySearchPhysicians("christ");
 
-    ArrayList<Physician> s01 = dbc.fuzzySearchPhysicians("C");
+//    ArrayList<Physician> s01 = dbc.fuzzySearchPhysicians("C");
 //    ArrayList<Physician> s11= dbc.fuzzySearchPhysicians("CH");
 //    ArrayList<Physician> s21 = dbc.fuzzySearchPhysicians("CHR");
 //    ArrayList<Physician> s31 = dbc.fuzzySearchPhysicians("CHRI");
 //    ArrayList<Physician> s41 = dbc.fuzzySearchPhysicians("CHRIS");
-    ArrayList<Physician> s51 = dbc.fuzzySearchPhysicians("CHRIST");
+   // ArrayList<Physician> s51 = dbc.fuzzySearchPhysicians("CHRIST");
+
+//    System.out.println("1: " + StringUtils.getLevenshteinDistance("cahandavid","cahand"));
+//    System.out.println("2: " +StringUtils.getLevenshteinDistance("cahandavid","david"));
+//    System.out.println("3: " +StringUtils.getLevenshteinDistance("davidcahan","chris"));
+//    System.out.println("4: " +StringUtils.getLevenshteinDistance("davidcahan","d"));
+//    System.out.println("5: " +StringUtils.getLevenshteinDistance("davidcahan","avid"));
+//    System.out.println("6: " +StringUtils.getLevenshteinDistance("davidcahan","cacanavid"));
+//    System.out.println("7: " +StringUtils.getLevenshteinDistance("davidcahan","afvidgcacan"));
+//    System.out.println("8: " +StringUtils.getLevenshteinDistance("davidcahan","cahandavidjj"));
+//    System.out.println("8.5: " +StringUtils.getLevenshteinDistance("cahandavid","cahandavidjj"));
+//    System.out.println("8: " +StringUtils.getLevenshteinDistance("davidcahan","davidjjjjj"));
+//    System.out.println("9: " +StringUtils.getLevenshteinDistance("arnlomberdo","lom"));
+//    System.out.println("10: " +StringUtils.getLevenshteinDistance("yichu","yuchu"));
+//    System.out.println("11: " + StringUtils.getLevenshteinDistance("cahanolisdavid","da"));
+    //System.out.println(StringUtils.getFuzzyDistance("davidcahan","christopher",ENGLISH));
+
+
+
+
+
 
     //ArrayList<Point> s6 = dbc.fuzzySearchPoints("a");
     //ArrayList<Point> s7 = dbc.fuzzySearchPoints("ab");
