@@ -1,5 +1,6 @@
 package org;
 
+import Database.DatabaseController;
 import Database.FakePoint;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -128,8 +129,12 @@ public class Point {
   }
 
   public String getName() {
-    if (names != null && names.size() > 0) {
-      return names.get(0);
+    if (names != null) {
+      if (names.size() > 0 && names.get(0) != null) {
+        if (names.get(0).equals("ELEVATOR"))
+          return "Elevator";
+        return names.get(0);
+      }
     }
     return null;
   }
@@ -267,7 +272,7 @@ public class Point {
     //test the neighbors of each point
     FakePoint fthis = new FakePoint(this);
     FakePoint fpobj = new FakePoint(pobj); // change to fake so that we can compare the list of ids not the list of Points
-    if (!fpobj.neighbors.equals(fthis.neighbors))
+    if (!DatabaseController.compareNeighbors(fthis.neighbors, fpobj.getNeighbors()))
       return false;
 
     return true; // Everything checks out
