@@ -3,6 +3,7 @@ package UIControllers;
 import CredentialManager.CredentialManager;
 import Database.DatabaseInterface;
 import Definitions.Physician;
+import FileController.DefaultKioskNotInMemoryException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,7 +16,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import FileController.SettingsIO;
 import org.Dictionary;
+import org.ListPoints;
 import org.Point;
 import org.Session;
 
@@ -43,8 +46,9 @@ public class CentralUIController {
   protected static ImageView logoView = new ImageView();
   /* database object */
   protected static DatabaseInterface database;
-  /* */
+  /* global points */
   protected static Point searchingPoint;
+  protected static Point kioskLocation;
 
 
   public void setSession (Session session, DatabaseInterface dbInterface) {
@@ -83,6 +87,22 @@ public class CentralUIController {
    * @parameter primaryStage: The main stage of the application
    */
   public void restartUI(Stage primaryStage) throws Exception {
+    SettingsIO settings = new SettingsIO();
+    if (settings.getScreenPreference() == 1) {
+      x_res = 1300;
+      y_res = 750;
+    } else if (settings.getScreenPreference() == 2) {
+      primaryStage.setFullScreen(true);
+    } else if (settings.getScreenPreference() == 3) {
+      primaryStage.setMaximized(true);
+    }
+    try {
+      kioskLocation = settings.getDefaultKiosk(new ListPoints(database.getNamedPoints()));
+    } catch (DefaultKioskNotInMemoryException e) {
+      kioskLocation = null;
+    }
+    currSession.setAlgorithm(settings.getAlgorithm());
+
     Parent root = FXMLLoader.load(getClass().getResource("/SettingsMenu.fxml"));
     primaryStage.setScene(new Scene(root, x_res, y_res));
     primaryStage.setTitle("Faulkner Hospital Kiosk");
