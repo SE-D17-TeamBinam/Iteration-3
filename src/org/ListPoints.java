@@ -42,7 +42,7 @@ public class ListPoints {
   public ListPoints deepClone(){
     HashMap<Point, Point> newPoints = new HashMap<Point, Point>();
     for(Point p : points){
-      newPoints.put(p, new Point(p.getXCoord(), p.getYCoord(), p.getName(), generateUniqueID(), new ArrayList<Point>(), p.getFloor()));
+      newPoints.put(p, new Point(p.getXCoord(), p.getYCoord(), p.getName(), 0, new ArrayList<Point>(), p.getFloor()));
     }
     for(Point p : points){
       Point p2 = newPoints.get(p);
@@ -61,12 +61,24 @@ public class ListPoints {
   }
 
   /**
-   * Attempts to generate a unique ID
-   * This method should probably be rewritten more reliably, as this could theoretically repeat
-   * @return a unique ID as an integer
+   * Creates a HashMap that maps the names of buildings, as Strings, to the list of Points that
+   * are contained by each building. This method assumes that every point's last alias is the name
+   * of the building in which it resides.
+   * @return A HashMap mapping the names of the buildings to an ArrayList of Points in each building
    */
-  public int generateUniqueID(){
-    return (int) Math.random()*Integer.MAX_VALUE;
+  public HashMap<String, ArrayList<Point>> separateIntoBuildings(){
+    HashMap<String, ArrayList<Point>> out = new HashMap<>();
+    for(Point p : points){
+      String buildingName = p.getNames().get(p.getNames().size() - 1);
+      if(out.keySet().contains(buildingName)){
+        out.get(buildingName).add(p);
+      }else{
+        ArrayList<Point> buildingPoints = new ArrayList<>();
+        buildingPoints.add(p);
+        out.put(buildingName, buildingPoints);
+      }
+    }
+    return out;
   }
 
   /**
@@ -74,15 +86,11 @@ public class ListPoints {
    * @param floor the floor to search for
    * @return a ListPoints of the points on the requested floor
    */
-  public ListPoints getFloor(int floor){
+  public ListPoints getFloor(int floor, String building){
     ArrayList<Point> out = new ArrayList<Point>();
     for(Point p : this.getPoints()){
-      if(p.getFloor() == floor){
+      if(p.getFloor() == floor && building.equals(p.getBuilding())){
         out.add(p);
-      }else{
-        for(Point p2 : out){
-//          p2.severFrom(p);
-        }
       }
     }
     return new ListPoints(out);
