@@ -311,7 +311,6 @@ public class MapViewController extends CentralUIController implements Initializa
   // The currently selected point
   private Point pointFocus = null;
 
-  // TODO this should be a ListPoints
   private ArrayList<Point> allPoints = new ArrayList<>();
 
   private ArrayList<Point> secondaryPointFoci = new ArrayList<>();
@@ -636,7 +635,7 @@ public class MapViewController extends CentralUIController implements Initializa
   private void initializeLanguageConfigs() {
     /* apply language configs */
     sendToMeLabel.setText(dictionary.getString("Send to Me", currSession.getLanguage()));
-    searchGoButton.setText(dictionary.getString("Go", currSession.getLanguage()));
+    searchGoButton.setText(dictionary.getString("Show on Map", currSession.getLanguage()));
     floorSearchLabel.setText(dictionary.getString("Floor", currSession.getLanguage()));
     hospitalSearchLabel.setText(dictionary.getString("Hospital", currSession.getLanguage()));
     physicianSearchLabel.setText(dictionary.getString("Physicians", currSession.getLanguage()));
@@ -838,8 +837,7 @@ public class MapViewController extends CentralUIController implements Initializa
     // For every neighbor, turn it into a connection if it doesn't exist
     // Also checks to make sure that each neighbor is contained by floorPoints
     for (int j = 0; j < p.getNeighbors().size(); j++) {
-      if (showingPoints.contains(p.getNeighbors().get(j)) &&
-          p.getNeighbors().get(j).getFloor() == currentFloor &&
+      if (p.getNeighbors().get(j).getFloor() == currentFloor &&
           currentBuilding.equals(p.getNeighbors().get(j).getBuilding())) {
         Connection c = new Connection(p, p.getNeighbors().get(j));
         if (mapViewFlag == 3 || pathfinding) {
@@ -1136,11 +1134,6 @@ public class MapViewController extends CentralUIController implements Initializa
 
   private void getMap() {
     allPoints = database.getPoints();
-    for (Point p : allPoints) {
-      if (p.getBuilding() == null) {
-        p.getNames().add("BUILDING=campus");
-      }
-    }
   }
 
   private void updateSelected() {
@@ -1323,12 +1316,19 @@ public class MapViewController extends CentralUIController implements Initializa
     displayPoints(floorPoints);
     startNodeBox.setDisable(false);
     endNodeBox.setDisable(false);
+    // Add the missing floors back to the floor choice box
     for (int i : buildingFloors.get(currentBuilding)) {
       if (!floorChoiceBox.getItems().contains(i)) {
         floorChoiceBox.getItems().add(i);
       }
     }
     sortFloorChoiceBox();
+    // Add the missing buildings back into the building choice box
+    for (String i : buildingFloors.keySet()) {
+      if (!buildingChoiceBox.getItems().contains(i)) {
+        buildingChoiceBox.getItems().add(i);
+      }
+    }
   }
 
   @FXML
@@ -1474,6 +1474,7 @@ public class MapViewController extends CentralUIController implements Initializa
 
   private ArrayList<Point> pathPoints = new ArrayList<>();
   private HashSet<Integer> showingFloors = new HashSet<>();
+  private HashSet<String> showingBuildings = new HashSet<>();
 
   @FXML
   private void drawPathButtonClicked() {
@@ -1491,9 +1492,23 @@ public class MapViewController extends CentralUIController implements Initializa
       endNodeBox.setDisable(true);
       saveButton.setDisable(true);
       goButton.setDisable(true);
+
+      // Now restrict the building choice box
+      buildingChoiceBox.setValue(start.getBuilding());
+      showingBuildings = new HashSet<String>();
+      for (Point p : pathPoints) {
+        showingBuildings.add(p.getBuilding());
+      }
+      for (int i = 0; i < buildingChoiceBox.getItems().size(); i++) {
+        String o = (String) buildingChoiceBox.getItems().get(i);
+        if (!showingBuildings.contains(o)) {
+          buildingChoiceBox.getItems().remove(o);
+          i--;
+        }
+      }
       // Update the floors that appear in the floor selector
-      // Unfortunate, but this can't be done efficiently
-      showingFloors = new HashSet<Integer>();
+      floorChoiceBox.setValue(start.getFloor());
+      showingFloors = new HashSet<>();
       for (Point p : pathPoints) {
         showingFloors.add(p.getFloor());
       }
@@ -1504,7 +1519,6 @@ public class MapViewController extends CentralUIController implements Initializa
           i--;
         }
       }
-      floorChoiceBox.setValue(start.getFloor());
       // Display the path on the map
       clearMapDisplay();
       displayPoints(pathPoints);
@@ -1863,7 +1877,7 @@ public class MapViewController extends CentralUIController implements Initializa
 
   // "scrolled" means the scroll wheel. This method controls zooming with the scroll wheel.
   @FXML
-  private void mapMouseScrolled(ScrollEvent e) { // TODO
+  private void mapMouseScrolled(ScrollEvent e) {
     changeZoom(e.getDeltaY() > 0);
     // Then update the tracking for cursor location vs image location
     // Prevents odd behavior when dragging and scrolling simultaneously
@@ -2262,9 +2276,9 @@ public class MapViewController extends CentralUIController implements Initializa
           } else {
             p = new Point(c.getX(), c.getY(), currentFloor);
           }
-          addPoint(p);
           p.connectTo(c1.getStart());
           p.connectTo(c1.getEnd());
+          addPoint(p);
         }
       }
     }
@@ -2328,21 +2342,21 @@ public class MapViewController extends CentralUIController implements Initializa
    * map. It has two MenuItem options, startingLocation and destination, which allow the user
    * to set the starting location and destination for navigation if they choose to.
    */
-  MenuItem startingLocation = new MenuItem("Set as Current Location");
-  MenuItem destination = new MenuItem("Set as Destination");
-  ContextMenu userMapMenu = new ContextMenu(startingLocation, destination);
+  private MenuItem startingLocation = new MenuItem("Set as Current Location");
+  private MenuItem destination = new MenuItem("Set as Destination");
+  private ContextMenu userMapMenu = new ContextMenu(startingLocation, destination);
 
   /**
    * Admin Context Menu for the map:
    */
-  MenuItem deletePoint = new MenuItem("Delete");
-  MenuItem copyPoint = new MenuItem("Copy");
-  MenuItem deleteAllPoints = new MenuItem("Delete All");
-  ContextMenu adminPointMenu = new ContextMenu(copyPoint, deletePoint, deleteAllPoints);
+  private MenuItem deletePoint = new MenuItem("Delete");
+  private MenuItem copyPoint = new MenuItem("Copy");
+  private MenuItem deleteAllPoints = new MenuItem("Delete All");
+  private ContextMenu adminPointMenu = new ContextMenu(copyPoint, deletePoint, deleteAllPoints);
 
   //Admin Map Menu
-  MenuItem pastePoint = new MenuItem("Paste");
-  ContextMenu adminMapMenu = new ContextMenu(pastePoint);
+  private MenuItem pastePoint = new MenuItem("Paste");
+  private ContextMenu adminMapMenu = new ContextMenu(pastePoint);
 
 
   /**
@@ -2351,7 +2365,7 @@ public class MapViewController extends CentralUIController implements Initializa
    *
    * @param point: The point that has been called by the ContextMenu.
    */
-  public void handlePoint(Point point) {
+  private void handlePoint(Point point) {
     startingLocation.setOnAction(new EventHandler<ActionEvent>() {
       @Override
       public void handle(ActionEvent e) {
@@ -2402,7 +2416,7 @@ public class MapViewController extends CentralUIController implements Initializa
    * @param xLocation: The xLocation of the click mouseEvent.
    * @param yLocation: The yLocation of the click mouseEvent.
    */
-  public void displayContextMenu(ContextMenu contextMenu, Point point, double xLocation,
+  private void displayContextMenu(ContextMenu contextMenu, Point point, double xLocation,
       double yLocation) {
     contextMenu.show(circles.get(point).getScene().getWindow(), xLocation, yLocation);
     handlePoint(point);
