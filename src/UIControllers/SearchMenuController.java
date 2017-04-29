@@ -332,9 +332,11 @@ public class SearchMenuController extends CentralUIController implements Initial
       Stage primaryStage = (Stage) anchorPane.getScene().getWindow();
       try {
         searchingPoint = RoomDirectory.getSelectionModel().getSelectedItem();
+        System.out.println(mapViewFlag);
+        mapViewFlag = 1;
         loadScene(primaryStage, "/MapScene.fxml");
       } catch (Exception e) {
-        System.out.println("Cannot load main menu");
+        System.out.println("Cannot load map");
         e.printStackTrace();
       }
     }

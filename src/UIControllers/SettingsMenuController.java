@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import org.Astar;
 import org.BFS;
 import org.DFS;
+import org.Language;
 import org.ListPoints;
 import org.Point;
 
@@ -51,8 +52,23 @@ public class SettingsMenuController extends CentralUIController implements Initi
   @FXML
   private TextField timeTimeout;
 
+  public void customListenerX () {
+    SettingsLogoff.setLayoutX(x_res - SettingsLogoff.getPrefWidth() - 12);
+  }
+
+  public void customListenerY () {
+
+  }
+
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+    if (currSession.getLanguage() == Language.SPANISH) {
+      SettingsLogoff.setPrefWidth(200);
+    } else if (currSession.getLanguage() == Language.PORTUGESE) {
+      SettingsLogoff.setPrefWidth(240);
+    } else {
+      SettingsLogoff.setPrefWidth(150);
+    }
     addResolutionListener(anchorPane);
     setBackground(anchorPane);
 
@@ -143,7 +159,6 @@ public class SettingsMenuController extends CentralUIController implements Initi
       settings.updateSetting("screenSize", "3");
       System.out.println("changed resolution to fullwindow");
     });
-
     bfsAlgorithm.setOnAction(event -> {
       settings.updateSetting("algorithm", "bfs");
       System.out.println("changed algorithm to bfs");
