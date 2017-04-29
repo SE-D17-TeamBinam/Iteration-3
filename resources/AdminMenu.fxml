@@ -15,6 +15,7 @@
       <Pane fx:id="AdminMenu" prefHeight="750.0" prefWidth="1300.0">
          <children>
             <ImageView fx:id="MapButton" fitHeight="300.0" fitWidth="300.0" layoutX="501.0" layoutY="240.0" onMouseClicked="#editMap" pickOnBounds="true" preserveRatio="true">
+
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -58,6 +59,7 @@
                   <Font name="Times New Roman" size="30.0" />
                </font>
             </Label>
+            <Button fx:id="Settings" layoutX="1140.0" layoutY="633.0" mnemonicParsing="false" text="Settings" onMouseClicked="#settings"/>
          </children>
       </Pane>
    </children>
