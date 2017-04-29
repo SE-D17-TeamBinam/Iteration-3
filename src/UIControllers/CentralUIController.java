@@ -110,7 +110,7 @@ public class CentralUIController {
     }
     currSession.setAlgorithm(settings.getAlgorithm());
 
-    Parent root = FXMLLoader.load(getClass().getResource("/AdminMenu.fxml"));
+    Parent root = FXMLLoader.load(getClass().getResource("/MainMenu.fxml"));
     primaryStage.setScene(new Scene(root, x_res, y_res));
     primaryStage.setTitle("Faulkner Hospital Kiosk");
     primaryStage.getIcons().add(new Image("/icons/kioskicon.png"));
