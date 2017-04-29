@@ -17,7 +17,7 @@ import java.util.Random;
 /**
  * Created by Praneeth Appikatla on 4/25/2017.
  */
-public class CredentialManager {
+public class CredentialManager implements CredentialInterface{
 
   private static CredentialManager instance = new CredentialManager();
   private static Properties users = new Properties();
@@ -56,14 +56,19 @@ public class CredentialManager {
     return hash.toString();
   }
 
-  public boolean signup(String username, String pass, UserType permissions) {
-    if (!users.containsKey(username) && !username.equals("") && !pass.equals("")){
+  public boolean containsUser(String username, String pass) {
+    if (users.containsKey(username) && !(username.equals("") && !pass.equals(""))){
+      return true;
+    }
+    return false;
+  }
+
+  public void signup(String username, String pass, UserType permissions) {
+    if (!containsUser(username, pass)){
       String userType = permissions.toString();
       insertUser(username, pass, userType);
       writeToFile();
-      return true;
     }
-    else return false;
   }
 
   public boolean login(String username, String pass) {

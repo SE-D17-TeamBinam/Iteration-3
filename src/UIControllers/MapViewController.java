@@ -27,8 +27,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
@@ -52,7 +52,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -2177,6 +2176,10 @@ public class MapViewController extends CentralUIController implements Initializa
 
   public void logoff() {
     Stage primaryStage = (Stage) mapViewPane.getScene().getWindow();
+    adminPermissions = false;
+    currentUser.clear();
+    currUsername = null;
+    isLoggedIn = false;
     try {
       loadScene(primaryStage, "/MainMenu.fxml");
     } catch (Exception e) {
@@ -2288,8 +2291,6 @@ public class MapViewController extends CentralUIController implements Initializa
 
       Button saveAliasButton = new Button("Save");
       Button addButton = new Button("+");
-      addButton.setStyle("-fx-background-color:#3255bc");
-      addButton.setTextFill(Paint.valueOf("White"));
       Button cancelButton = new Button("Cancel");
 
       // organize into grid pane
@@ -2297,19 +2298,14 @@ public class MapViewController extends CentralUIController implements Initializa
       grid.setHgap(10);
       grid.setVgap(10);
       grid.setPadding(new Insets(40, 0, 10, 10));
-      //grid.add(entry, 1, 1);
       grid.add(addButton, 2, 1);
       addButton.setFocusTraversable(false);
       grid.add(new Label("Add or remove names of selected point."), 1, 0);
 
-      //keep button sizes constant and color uniform with UI
+      //keep button sizes constant
       TilePane tileButtons = new TilePane();
       saveAliasButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
       cancelButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-      saveAliasButton.setStyle("-fx-background-color:#3255bc");
-      cancelButton.setStyle("-fx-background-color:#3255bc");
-      saveAliasButton.setTextFill(Paint.valueOf("White"));
-      cancelButton.setTextFill(Paint.valueOf("White"));
       tileButtons.setHgap(10);
       tileButtons.setVgap(8.0);
       tileButtons.setPadding(new Insets(20, 10, 20, 20));

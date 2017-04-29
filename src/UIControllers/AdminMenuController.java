@@ -112,6 +112,9 @@ public class AdminMenuController extends CentralUIController implements Initiali
     Stage primaryStage = (Stage) AdminMenu.getScene().getWindow();
     try {
       adminPermissions = false;
+      currentUser.clear();
+      currUsername = null;
+      isLoggedIn = false;
       loadScene(primaryStage, "/MainMenu.fxml");
     } catch (Exception e) {
       System.out.println("Cannot load main menu");

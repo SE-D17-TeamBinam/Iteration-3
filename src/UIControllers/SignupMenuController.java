@@ -3,12 +3,14 @@ package UIControllers;
 import CredentialManager.UserType;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -23,7 +25,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.TilePane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
@@ -173,34 +178,38 @@ public class SignupMenuController extends CentralUIController implements Initial
    * sign up account from text in text fields and choice box selection
    */
   public void signup() throws IOException {
-    String pass = SignupPassField.getText();
-    String username = SignupNameField.getText();
-    UserType type = (UserType) SignupBox.getSelectionModel().getSelectedItem();
+      String pass = SignupPassField.getText();
+      String username = SignupNameField.getText();
+      UserType type = (UserType) SignupBox.getSelectionModel().getSelectedItem();
 
-    if (pass.equals("") || username.equals("")){
-      SignupError.setVisible(true);
-      UsernameRequired.setTextFill(Paint.valueOf("red"));
-      PassRequired.setTextFill(Paint.valueOf("red"));
-    }
-    else if (!credentialManager.signup(username, pass, type)){
-      UsernameExistsError.setVisible(true);
-    }
-    else {
-      verifyCreation();
-      Stage primaryStage = (Stage) SignupMenu.getScene().getWindow();
-      try {
-        loadScene(primaryStage, "/AdminMenu.fxml");
-      } catch (Exception e) {
-        System.out.println("Cannot load employee login");
-        e.printStackTrace();
+      if (pass.equals("") || username.equals("")) { // gives indicators if the required fields are empty
+        SignupError.setVisible(true);
+        UsernameRequired.setTextFill(Paint.valueOf("red"));
+        PassRequired.setTextFill(Paint.valueOf("red"));
       }
-    }
-  }
+      else if (credentialManager.containsUser(username, pass)) { // if the user already exists show an error
+          UsernameExistsError.setVisible(true);
+      }
 
-  /**
-   * go back to admin login
-   */
-  public void back () {
+      else if (verifyCreation()) { // validates creation based on credentials entered
+          credentialManager.signup(username, pass, type);
+          Stage primaryStage = (Stage) SignupMenu.getScene().getWindow();
+          try {
+            loadScene(primaryStage, "/AdminMenu.fxml");
+          } catch (Exception e) {
+            System.out.println("Cannot load employee login");
+            e.printStackTrace();
+          }
+        }
+
+      }
+
+
+    /**
+     * go back to admin login
+     */
+
+  public void back() {
     Stage primaryStage = (Stage) SignupMenu.getScene().getWindow();
     try {
       loadScene(primaryStage, "/AdminMenu.fxml");
@@ -210,48 +219,95 @@ public class SignupMenuController extends CentralUIController implements Initial
     }
   }
 
-  public void verifyCreation() {
-    Dialog verification = new Dialog();
-    verification.setHeaderText("Authenticate");
-    verification.setContentText("Please verify your credentials.");
+
+  public boolean verifyCreation() {
+    boolean getFlag;
+    Stage primaryStage = (Stage) SignupMenu.getScene().getWindow();
+    Stage dialog = new Stage();
+    dialog.setMinHeight(300);
+    dialog.setMaxHeight(300);
+    VBox vbox = new VBox(20);
+    dialog.setResizable(true);
+    dialog.initModality(Modality.APPLICATION_MODAL);
+    dialog.initOwner(primaryStage);
+
+    Button okButton = new Button("OK");
+    Button cancelButton = new Button("Cancel");
+
     GridPane grid = new GridPane();
-    grid.setPadding(new Insets(20, 10, 10, 10));
-    TextField username = new TextField();
-    TextField pass = new TextField();
+    grid.setHgap(10);
+    grid.setVgap(10);
+    grid.setPadding(new Insets(40, 0, 10, 10));
 
-    ArrayList<TextField> credentials = new ArrayList<>();
-    credentials.add(username);
-    credentials.add(pass);
+    TextField userName = new TextField();
+    TextField userPass = new TextField();
+    Label uLabel = new Label("Username:");
+    Label pLabel = new Label("Password:");
 
+    grid.add(uLabel, 0, 0);
+    grid.add(pLabel, 0, 1);
+    grid.add(userName, 1, 0);
+    grid.add(userPass, 1, 1);
 
-    grid.add(username, 1 , 1);
-    grid.add(pass, 1, 2);
+    TilePane tileButtons = new TilePane();
+    cancelButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+    okButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+    tileButtons.setHgap(10);
+    tileButtons.setVgap(8.0);
+    tileButtons.setPadding(new Insets(20, 10, 20, 20));
+    tileButtons.getChildren().addAll(okButton, cancelButton);
 
-    Button verify = new Button("OK");
-    Button cancel = new Button("Cancel");
+    vbox.getChildren().addAll(grid, tileButtons);
 
-    verify.setOnMouseClicked(new EventHandler<MouseEvent>() {
+    Scene dialogScene = new Scene(vbox, 300, 300);
+    dialog.setScene(dialogScene);
+
+    BooleanProperty res = new SimpleBooleanProperty();
+
+    okButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
       @Override
       public void handle(MouseEvent event) {
-        String thisUser = credentials.get(0).getText();
-        String thisPass = credentials.get(1).getText();
-        if (thisUser.equals(currUsername) && thisPass.equals(currentUser.get(currUsername))){
-          verification.close();
+        res.set(false);
+        String username = userName.getText();
+        String pass = userPass.getText();
+        Dialog error = new Alert(AlertType.ERROR);
+        error.setContentText("The username or password you have entered is incorrect.");
+        error.setHeaderText("Verification failed");
+        if (username.equals(currUsername) && pass.equals(currentUser.get(currUsername))) {
+          res.set(true);
+          dialog.close();
+        } else {
+          res.set(false);
+          error.showAndWait();
         }
-        else {
-          Dialog verifyError = new Alert(AlertType.ERROR);
-          verifyError.setContentText("The username or password you have entered is incorrect.");
+        if (username.equals("") || pass.equals("")) {
+          res.set(false);
+          error.showAndWait();
         }
+
       }
     });
 
-    cancel.setOnMouseClicked(new EventHandler<MouseEvent>() {
+    cancelButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
       @Override
       public void handle(MouseEvent event) {
-        verification.close();
+        dialog.close();
+        res.set(false);
       }
     });
 
-    verification.showAndWait();
+    System.out.println(res);
+    dialog.showAndWait();
+
+      getFlag = res.getValue();
+      return getFlag;
+    }
+
+
   }
-}
+
+
+
+
+
+
