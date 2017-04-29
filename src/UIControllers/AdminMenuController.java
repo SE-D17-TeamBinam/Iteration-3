@@ -35,17 +35,17 @@ public class AdminMenuController extends CentralUIController implements Initiali
   @Override
   public void customListenerX() {
     LogOffButton.setLayoutX(x_res - LogOffButton.getPrefWidth() - 12);
-    MapButton.setLayoutX(5 * (x_res / 7) - 175);
-    EditButton.setLayoutX(2 * (x_res / 7) - 175);
-    DirectEditLabel.setLayoutX(2 * (x_res / 7) - 105);
-    MapLabel.setLayoutX(5 * (x_res / 7) - 95);
+    MapButton.setLayoutX(x_res/5 - MapButton.getFitWidth()/2);
+    EditButton.setLayoutX(x_res/2 - EditButton.getFitWidth()/2);
+    DirectEditLabel.setLayoutX(x_res/2 - DirectEditLabel.getPrefWidth()/2);
+    MapLabel.setLayoutX(x_res/5 - MapLabel.getPrefWidth()/2);
   }
 
   @Override
   public void customListenerY() {
-    MapButton.setLayoutY(6 * (y_res / 11) - 160);
-    EditButton.setLayoutY(6 * (y_res / 11) - 160);
-    DirectEditLabel.setLayoutY(6 * (y_res / 11) + 120);
+    MapButton.setLayoutY(6 * (y_res / 11) - MapButton.getFitHeight()/2);
+    EditButton.setLayoutY(6 * (y_res / 11) - EditButton.getFitHeight()/2);
+    DirectEditLabel.setLayoutY(6 * (y_res / 11) + MapButton.getFitHeight()/2 + 20);
     MapLabel.setLayoutY(6 * (y_res / 11) + 120);
 
   }

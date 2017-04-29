@@ -51,6 +51,14 @@ public class SettingsMenuController extends CentralUIController implements Initi
   @FXML
   private TextField timeTimeout;
 
+  public void customListenerX () {
+    SettingsLogoff.setLayoutX(x_res - SettingsLogoff.getPrefWidth() - 12);
+  }
+
+  public void customListenerY () {
+
+  }
+
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     addResolutionListener(anchorPane);
@@ -143,7 +151,6 @@ public class SettingsMenuController extends CentralUIController implements Initi
       settings.updateSetting("screenSize", "3");
       System.out.println("changed resolution to fullwindow");
     });
-
     bfsAlgorithm.setOnAction(event -> {
       settings.updateSetting("algorithm", "bfs");
       System.out.println("changed algorithm to bfs");
