@@ -1791,6 +1791,7 @@ public class MapViewController extends CentralUIController implements Initializa
 
   @FXML
   private void saveMapButtonClicked() {
+    progressBar.setVisible(true);
     saveButton.setDisable(true);
     progressPane.setVisible(true);
     saving = true;
@@ -1809,6 +1810,7 @@ public class MapViewController extends CentralUIController implements Initializa
       }
     }
     database.setPoints(allPoints);
+
   }
 
   ///////////////////

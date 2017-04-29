@@ -296,7 +296,6 @@ public class SignupMenuController extends CentralUIController implements Initial
       }
     });
 
-    System.out.println(res);
     dialog.showAndWait();
 
       getFlag = res.getValue();

@@ -90,8 +90,6 @@ public class AdminLoginController extends CentralUIController implements Initial
       LoginError.setVisible(false);
       currUsername = enteredName;
       currentUser.put(enteredName, enteredPass);
-      System.out.println(currUsername);
-      System.out.println(currentUser.get(currUsername));
       if (credentialManager.userIsAdmin(enteredName)){
         mapViewFlag = 3;
         adminPermissions = true;

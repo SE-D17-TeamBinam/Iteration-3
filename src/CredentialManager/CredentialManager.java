@@ -21,22 +21,21 @@ public class CredentialManager implements CredentialInterface{
 
   private static CredentialManager instance = new CredentialManager();
   private static Properties users = new Properties();
-  private static final String salt = "salt";
+  private static final String salt = "salt"; // could change to make more secure
   private static final File out = new File("users.txt");
 
   private CredentialManager() {
   }
 
-  public static CredentialManager testCreateInstance() {
-    return new CredentialManager();
-  }
-
   public static CredentialManager getInstance() {
-    //instance.signup("admin", "admin", UserType.ADMIN);
     return instance;
   }
 
-
+  /**
+   *
+   * @param input The string being hashed
+   * @return A string hashed with a hashing algorithm
+   */
   public static String generateHash(String input) {
     StringBuilder hash = new StringBuilder();
     try {
