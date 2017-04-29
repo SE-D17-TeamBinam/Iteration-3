@@ -2,6 +2,13 @@ package UIControllers;
 
 import CredentialManager.CredentialManager;
 import Database.DatabaseInterface;
+import Definitions.Physician;
+import FileController.DefaultKioskNotInMemoryException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
@@ -10,10 +17,10 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import FileController.SettingsIO;
 import org.Dictionary;
+import org.ListPoints;
 import org.Point;
 import org.Session;
 
@@ -41,27 +48,70 @@ public class CentralUIController {
   protected static ImageView logoView = new ImageView();
   /* database object */
   protected static DatabaseInterface database;
-  /* */
+  /* global points */
   protected static Point searchingPoint;
+  protected static Point kioskLocation;
 
 
-  public void setSession (Session s, DatabaseInterface dbe) {
-    this.currSession = s;
-    this.credentialManager = s.credentialManager;
-    this.dictionary = s.dictionary;
-    this.database = dbe;
+  public void setSession (Session session, DatabaseInterface dbInterface) {
+    this.currSession = session;
+    this.credentialManager = session.credentialManager;
+    this.dictionary = session.dictionary;
+    this.database = dbInterface;
+    try {
+      database.load();
+    } catch (Exception e) {
+    }
   }
+
+
+  public void sortDocs (List<Physician> docs) {
+    Collections.sort(docs, new Comparator<Physician>() {
+      @Override
+      public int compare(Physician doc1, Physician doc2) {
+        return doc1.getLastName().compareToIgnoreCase(doc2.getLastName());
+      }
+    });
+  }
+
+  public void sortRooms (List<Point> rooms) {
+    Collections.sort(rooms, new Comparator<Point>() {
+      @Override
+      public int compare(Point room1, Point room2) {
+        return room1.getName().compareTo(room2.getName());
+      }
+    });
+  }
+
+
   /**
    * Set the stage to the initial scene (main menu)
    * @parameter primaryStage: The main stage of the application
    */
   public void restartUI(Stage primaryStage) throws Exception {
-    Parent root = FXMLLoader.load(getClass().getResource("/MainMenu.fxml"));
+    SettingsIO settings = new SettingsIO();
+    if (settings.getScreenPreference() == 1) {
+      x_res = 1300;
+      y_res = 750;
+    } else if (settings.getScreenPreference() == 2) {
+      primaryStage.setFullScreen(true);
+    } else if (settings.getScreenPreference() == 3) {
+      primaryStage.setMaximized(true);
+    }
+    try {
+      kioskLocation = settings.getDefaultKiosk(new ListPoints(database.getNamedPoints()));
+    } catch (DefaultKioskNotInMemoryException e) {
+      kioskLocation = null;
+    }
+    currSession.setAlgorithm(settings.getAlgorithm());
+
+    Parent root = FXMLLoader.load(getClass().getResource("/SettingsMenu.fxml"));
     primaryStage.setScene(new Scene(root, x_res, y_res));
     primaryStage.setTitle("Faulkner Hospital Kiosk");
-    primaryStage.show();
     primaryStage.getIcons().add(new Image("/icons/kioskicon.png"));
+    primaryStage.show();
   }
+
   /**
    * @parameter primaryStage: The main stage of the application
    * @parameter fxmlpath: the file path of the fxml file to be loaded
@@ -81,7 +131,8 @@ public class CentralUIController {
         x_res = (double) newSceneWidth;
         bannerView.setFitWidth(x_res);
         backgroundView.setFitWidth(x_res);
-        logoView.setLayoutX(x_res/2 - 240);
+        logoView.setFitWidth(350*x_res/1300);
+        logoView.setLayoutX(x_res/2 - logoView.getFitWidth()/2);
         customListenerX();
       }
     });
@@ -89,7 +140,10 @@ public class CentralUIController {
       @Override
       public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
         y_res = (double) newSceneHeight;
+        bannerView.setFitHeight(120*y_res/750);
         backgroundView.setLayoutY(y_res/2.5);
+        logoView.setLayoutY(14*y_res/750);
+        logoView.setFitHeight(60*y_res/750);
         customListenerY();
       }
     });
@@ -105,16 +159,11 @@ public class CentralUIController {
 
   public void setBackground (AnchorPane anchorPane) {
     bannerView.setImage(banner);
-    bannerView.setFitWidth(x_res);
     backgroundView.setImage(background);
-    backgroundView.setFitWidth(x_res);
     backgroundView.setPreserveRatio(true);
-    backgroundView.setLayoutY(y_res/2.5);
     logoView.setImage(logo);
-    logoView.setFitWidth(480);
-    logoView.setPreserveRatio(true);
-    logoView.setLayoutX(x_res/2 - 240);
-    logoView.setLayoutY(-1);
+    logoView.setFitHeight(60);
+    logoView.setFitWidth(350);
     anchorPane.getChildren().add(bannerView);
     anchorPane.getChildren().add(backgroundView);
     anchorPane.getChildren().add(logoView);
@@ -123,9 +172,4 @@ public class CentralUIController {
     backgroundView.toBack();
   }
 
-  public void addDB(DatabaseInterface db){
-//    this.database = db;
-
-    System.out.println(db == null);
-  }
 }

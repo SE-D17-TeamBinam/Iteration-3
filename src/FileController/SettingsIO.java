@@ -93,7 +93,7 @@ public class SettingsIO {
     switch (strat) {
       case "dfs":
         return new DFS();
-      case "bsf":
+      case "bfs":
         return new BFS();
       default:
         return new Astar();
