@@ -34,9 +34,6 @@ public class Point {
     this.xCoord = (int) xCoord;
     this.yCoord = (int) yCoord;
     this.names = names;
-    if(names.size() == 0) {
-      this.setName(" ");
-    }
     this.isBlocked = false;
   }
 
@@ -46,7 +43,6 @@ public class Point {
     this.floor = floor;
     this.isBlocked = false;
     names = new ArrayList<String>();
-    this.setName(" ");
   }
 
   public Point(int xCoord, int yCoord, ArrayList<String> names, int id,
@@ -55,9 +51,6 @@ public class Point {
     this.xCoord = xCoord;
     this.yCoord = yCoord;
     this.names = names;
-    if(names.size() == 0){
-      setName(" ");
-    }
     this.id = id;
     this.parent = null;
     this.neighbors = new_neighbors;
@@ -80,19 +73,21 @@ public class Point {
   }
 
   //Methods{
-  public void setBlocked(Boolean change){
+  public void setBlocked(Boolean change) {
     this.isBlocked = change;
   }
 
-  public boolean getBlocked(){
+  public boolean getBlocked() {
     return this.isBlocked;
   }
 
   public void connectTo(Point node) {
-    if (!node.getNeighbors().contains(this))
+    if (!node.getNeighbors().contains(this)) {
       node.getNeighbors().add(this);
-    if (!this.getNeighbors().contains(node))
+    }
+    if (!this.getNeighbors().contains(node)) {
       this.neighbors.add(node);
+    }
   }
 
   public void severFrom(Point point) {
@@ -102,7 +97,7 @@ public class Point {
     }
   }
 
-  public String toString(){
+  public String toString() {
     return this.getName();
   }
 
@@ -140,18 +135,23 @@ public class Point {
     return null;
   }
 
-  public void setBuilding(String building){
-    String lastName = names.get(names.size() - 1);
-    if(lastName.contains("BUILDING=")){
-      names.set(names.size() - 1, "BUILDING=" + building);
-    }else{
+  public void setBuilding(String building) {
+    int ind = names.size() - 1;
+    if(ind > -1) {
+      String lastName = names.get(ind);
+      if (lastName.contains("BUILDING=")) {
+        names.set(names.size() - 1, "BUILDING=" + building);
+      } else {
+        names.add("BUILDING=" + building);
+      }
+    } else {
       names.add("BUILDING=" + building);
     }
   }
 
-  public String getBuilding(){
+  public String getBuilding() {
     String lastName = names.get(names.size() - 1);
-    if(lastName.contains("BUILDING=")){
+    if (lastName.contains("BUILDING=")) {
       return lastName.split("=")[1];
     }
     return null;
@@ -224,15 +224,16 @@ public class Point {
   /**
    * TimeDistance is just like Distance but it returns the double type instead of int
    * <p>
-   *   creates the distance by using the pythagorean theorem between two coordinates
+   * creates the distance by using the pythagorean theorem between two coordinates
    * </p>
-   * @param End  - Point type that always has an X,Y coordinate
-   * @return  Double
+   *
+   * @param End - Point type that always has an X,Y coordinate
+   * @return Double
    */
   public double TimeDistance(Point End) {//Straight Line Distance
     double x = End.xCoord - this.xCoord;
     double y = End.yCoord - this.yCoord;
-    return  Math.sqrt(x * x + y * y);
+    return Math.sqrt(x * x + y * y);
   }
 
   public void setID(int ID) {
@@ -272,32 +273,39 @@ public class Point {
   @Override
   public boolean equals(Object obj) {
     // test if the obj is null
-    if (obj == null)
+    if (obj == null) {
       return false;
+    }
 
     // test if the object isn't even the same type of class
-    if (obj.getClass() != this.getClass())
+    if (obj.getClass() != this.getClass()) {
       return super.equals(obj);
+    }
     Point pobj = (Point) obj; // we can now safely assume that obj is a Point and not null
     // test if the primitive attributes are different
-    if (pobj.xCoord != this.xCoord || pobj.yCoord != this.yCoord || pobj.id != this.id || pobj.floor != this.floor)
+    if (pobj.xCoord != this.xCoord || pobj.yCoord != this.yCoord || pobj.id != this.id
+        || pobj.floor != this.floor) {
       return false;
+    }
 
     // next test the list of names
-    if (!pobj.names.equals(this.names))
+    if (!pobj.names.equals(this.names)) {
       return false;
+    }
 
     //test the neighbors of each point
     FakePoint fthis = new FakePoint(this);
-    FakePoint fpobj = new FakePoint(pobj); // change to fake so that we can compare the list of ids not the list of Points
-    if (!fpobj.neighbors.equals(fthis.neighbors))
+    FakePoint fpobj = new FakePoint(
+        pobj); // change to fake so that we can compare the list of ids not the list of Points
+    if (!fpobj.neighbors.equals(fthis.neighbors)) {
       return false;
+    }
 
     return true; // Everything checks out
   }
 
   @Override
-  public Object clone()  {
-    return new Point(xCoord,yCoord,names,id,neighbors, floor);
+  public Object clone() {
+    return new Point(xCoord, yCoord, names, id, neighbors, floor);
   }
 }
