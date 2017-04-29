@@ -26,10 +26,22 @@ public class TestDB {
 
     dbc = new DatabaseController(dbd);
     dbc.load();
-    ArrayList<Physician> s = dbc.fuzzySearchPhysicians("m");
-    ArrayList<Physician> s1 = dbc.fuzzySearchPhysicians("mi");
-    ArrayList<Point> s2 = dbc.fuzzySearchPoints("a");
-    ArrayList<Point> s3 = dbc.fuzzySearchPoints("ab");
+    ArrayList<Physician> s0 = dbc.fuzzySearchPhysicians("c");
+//    ArrayList<Physician> s1 = dbc.fuzzySearchPhysicians("ch");
+//    ArrayList<Physician> s2 = dbc.fuzzySearchPhysicians("chr");
+//    ArrayList<Physician> s3 = dbc.fuzzySearchPhysicians("chri");
+//    ArrayList<Physician> s4 = dbc.fuzzySearchPhysicians("chris");
+    ArrayList<Physician> s5 = dbc.fuzzySearchPhysicians("christ");
+
+    ArrayList<Physician> s01 = dbc.fuzzySearchPhysicians("C");
+//    ArrayList<Physician> s11= dbc.fuzzySearchPhysicians("CH");
+//    ArrayList<Physician> s21 = dbc.fuzzySearchPhysicians("CHR");
+//    ArrayList<Physician> s31 = dbc.fuzzySearchPhysicians("CHRI");
+//    ArrayList<Physician> s41 = dbc.fuzzySearchPhysicians("CHRIS");
+    ArrayList<Physician> s51 = dbc.fuzzySearchPhysicians("CHRIST");
+
+    //ArrayList<Point> s6 = dbc.fuzzySearchPoints("a");
+    //ArrayList<Point> s7 = dbc.fuzzySearchPoints("ab");
 
     /*for(Physician p:s){
       System.out.println(p.getFirstName() + " " + p.getLastName() + " " + p.getTitle());

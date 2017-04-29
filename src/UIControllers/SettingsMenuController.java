@@ -55,10 +55,11 @@ public class SettingsMenuController extends CentralUIController implements Initi
   public void initialize(URL location, ResourceBundle resources) {
     addResolutionListener(anchorPane);
     setBackground(anchorPane);
+
+    /* initialize radio buttons */
     rooms = database.getNamedPoints();
     sortRooms(rooms);
 
-    /* initialize radio buttons */
     final ToggleGroup resolution = new ToggleGroup();
     defaultResolution.setToggleGroup(resolution);
     fullscreenResolution.setToggleGroup(resolution);
@@ -86,7 +87,7 @@ public class SettingsMenuController extends CentralUIController implements Initi
     /* initialize kiosk location */
     locationsKiosk.setItems(FXCollections.observableList(rooms));
     try {
-      locationsKiosk.getSelectionModel().select(settings.getDefaultKiosk(new ListPoints(rooms)));
+      locationsKiosk.getSelectionModel().select(settings.getDefaultKiosk(new ListPoints(rooms)).getId());
     } catch (DefaultKioskNotInMemoryException e) {
       System.out.println("Default kiosk location is not set");
     }

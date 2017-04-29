@@ -246,49 +246,33 @@ public class Point {
 
   @Override
   public boolean equals(Object obj) {
+    // test if the obj is null
     if (obj == null)
       return false;
+
+    // test if the object isn't even the same type of class
     if (obj.getClass() != this.getClass())
       return super.equals(obj);
-    Point pobj = (Point) obj;
-    if (this.xCoord == pobj.xCoord && this.yCoord == pobj.yCoord && this.id == pobj.id && this.floor == pobj.floor && this.neighbors.size() == pobj.neighbors.size()){
-      if (this.names != null) {
-        for (String s : this.names) {
-          if (!pobj.names.contains(s))
-            return false;
-        }
-      }
-      else if (this.names != pobj.names){
-        return false;
-      }
-      ArrayList<Integer> ourNeighbors = new ArrayList<Integer>();
-      ArrayList<Integer> theirNeighbors = new ArrayList<Integer>();
-      for (Point p : this.neighbors)
-        ourNeighbors.add(p.id);
-      for (Point p : pobj.neighbors)
-        theirNeighbors.add(p.id);
-      //System.out.println("ID: " + this.id + " -> " + pobj.id + ".  " + ourNeighbors + "  :  " + theirNeighbors);
+    Point pobj = (Point) obj; // we can now safely assume that obj is a Point and not null
+    // test if the primitive attributes are different
+    if (pobj.xCoord != this.xCoord || pobj.yCoord != this.yCoord || pobj.id != this.id || pobj.floor != this.floor)
+      return false;
 
-      for (int i : ourNeighbors){
-        if (!theirNeighbors.contains(i)){
-          return false;
-        }
-      }
-      return true;
-    }
-    return false;
+    // next test the list of names
+    if (!pobj.names.equals(this.names))
+      return false;
+
+    //test the neighbors of each point
+    FakePoint fthis = new FakePoint(this);
+    FakePoint fpobj = new FakePoint(pobj); // change to fake so that we can compare the list of ids not the list of Points
+    if (!fpobj.neighbors.equals(fthis.neighbors))
+      return false;
+
+    return true; // Everything checks out
   }
-
 
   @Override
   public Object clone()  {
     return new Point(xCoord,yCoord,names,id,neighbors, floor);
   }
 }
-
-//  int xCoord;    //X coordinate
-//  int yCoord;    //Y coordinate
-//  ArrayList<String> names;  //Name of the room
-//  int id;      //Unique Identifier
-//  int floor;
-//  public ArrayList<Point> neighbors = new ArrayList<>();

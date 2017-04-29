@@ -42,6 +42,7 @@ public class SearchMenuController extends CentralUIController implements Initial
   private int searchMode = 0;
   private boolean isST = false;
   private boolean isBS = false;
+
   // define all ui elements
   @FXML
   private TableView<Physician> PhysicianDirectory;
@@ -145,31 +146,37 @@ public class SearchMenuController extends CentralUIController implements Initial
                 break;
               case ENTER:
                 SearchField.deselect();
+                searchString = SearchField.getText();
                 updatePhysicians(docs);
+                updateRooms(rooms);
                 break;
             }
           }
         }
-
     });
 
     SearchField.textProperty().addListener((observable, oldValue, newValue) -> {
       if (!isST && !isBS) {
+        searchString = SearchField.getText();
+        if (searchMode == 0) {
+          updatePhysicians(docs);
+          autoCompleteDoc();
+        } else if (searchMode == 1) {
+          updateRooms(rooms);
+          autoCompleteRoom();
+        }
+      } else if (isBS) {
+        searchString = SearchField.getText();
         if (searchMode == 0) {
           updatePhysicians(docs);
         } else if (searchMode == 1) {
           updateRooms(rooms);
         }
-      } else if (isST && isBS) {
-        isST = false;
-        isBS = false;
-      } else if (isBS) {
         isBS = false;
       } else {
         isST = false;
       }
     });
-    updatePhysicians(docs);
     toggleDoc();
   }
 
@@ -222,25 +229,9 @@ public class SearchMenuController extends CentralUIController implements Initial
 
   public void updatePhysicians (List<Physician> HCs){
     HCOL.clear();
-    searchString = SearchField.getText();
     if (searchString.equals("")) {
       HCOL.addAll(HCs);
     } else {
-      String oldSearchString = searchString;
-      for (Physician doc : docs) {
-        String docName = doc.getFirstName() + " " + doc.getLastName();
-        if (docName.length() >= searchString.length()
-            && docName.substring(0, oldSearchString.length()).equalsIgnoreCase(searchString)){
-          final String newSearchString = doc.getFirstName() + " " + doc.getLastName();
-          isST = true;
-          SearchField.setText(newSearchString);
-          Platform.runLater(() -> {if (SearchField.isFocused()) {
-                SearchField.selectRange(searchString.length(), newSearchString.length());
-              }
-          });
-          break;
-        }
-      }
       HCOL.addAll(database.fuzzySearchPhysicians(searchString));
     }
     PhysicianDirectory.setItems(HCOL);
@@ -248,13 +239,52 @@ public class SearchMenuController extends CentralUIController implements Initial
 
   public void updateRooms (List<Point> Rooms){
     RMOL.clear();
-    searchString = SearchField.getText();
-    if (searchString == "") {
+    if (searchString.equals("")) {
       RMOL.addAll(Rooms);
     } else {
       RMOL.addAll(database.fuzzySearchPoints(searchString));
     }
     RoomDirectory.setItems(RMOL);
+  }
+
+  public void autoCompleteDoc () {
+    if (!searchString.equals("")) {
+      for (Physician doc : docs) {
+        String docName = doc.getFirstName() + " " + doc.getLastName();
+        if (docName.length() >= searchString.length()
+            && docName.substring(0, searchString.length()).equalsIgnoreCase(searchString)) {
+          final String newSearchString = doc.getFirstName() + " " + doc.getLastName();
+          isST = true;
+          SearchField.setText(newSearchString);
+          Platform.runLater(() -> {
+            if (SearchField.isFocused()) {
+              SearchField.selectRange(searchString.length(), newSearchString.length());
+            }
+          });
+          break;
+        }
+      }
+    }
+  }
+
+  public void autoCompleteRoom () {
+    if (!searchString.equals("")) {
+      for (Point room : rooms) {
+        String roomName = room.getName();
+        if (roomName.length() >= searchString.length()
+            && roomName.substring(0, searchString.length()).equalsIgnoreCase(searchString)) {
+          final String newSearchString = room.getName();
+          isST = true;
+          SearchField.setText(newSearchString);
+          Platform.runLater(() -> {
+            if (SearchField.isFocused()) {
+              SearchField.selectRange(searchString.length(), newSearchString.length());
+            }
+          });
+          break;
+        }
+      }
+    }
   }
 
   public void viewInfo () {
@@ -295,8 +325,6 @@ public class SearchMenuController extends CentralUIController implements Initial
 
   public void clear () {
     SearchField.setText("");
-    updatePhysicians(docs);
-    updateRooms(rooms);
   }
 
   public void viewMap () {
