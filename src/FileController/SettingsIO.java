@@ -84,7 +84,7 @@ public class SettingsIO {
   }
 
   public int getTimeout(){
-    return Integer.parseInt(settings.getProperty("timeoutLength"));
+    return Integer.parseInt(settings.getProperty("timeoutLength", "30"));
   }
 
 
