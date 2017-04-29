@@ -36,7 +36,7 @@ import java.util.Comparator;
  */
 public class DatabaseController implements DatabaseInterface {
 
-  private static final int fuzzySearchThreshold = 5;
+  //private static final int fuzzySearchThreshold = 5;
   private static final int fuzzySearchLimit = 20;
   SaveThread saveThread;
   LoadThread loadThread;
@@ -965,30 +965,39 @@ public class DatabaseController implements DatabaseInterface {
 
     System.out.println("STARTING FUZZY SEARCH: " + searchTerm);
     ArrayList<Physician> candidates = new ArrayList<Physician>();
-    if (searchTerm.replaceAll("\\s", "") == "" || searchTerm == null) {
+    if (searchTerm.replaceAll("\\s+", "") == "" || searchTerm == null) {
       candidates = localPhysicians;
       return candidates;
     }
-    LinkedHashMap<Physician,Double> my_map = new LinkedHashMap<Physician,Double>();
+    LinkedHashMap<Physician,Double> my_map1 = new LinkedHashMap<Physician,Double>();
+    LinkedHashMap<Physician,Double> my_map2 = new LinkedHashMap<Physician,Double>();
+    LinkedHashMap<Physician,Double> my_map3 = new LinkedHashMap<Physician,Double>();
 
-//    Soundex soundex = new Soundex();
-//    System.out.println("here");
-    String first_name, last_name;
+
+    String first_name, last_name,fl,lf;
     int fORl = 10;
-    LinkedHashMap<Integer,Double> length_map = make_length_map(20);
-    String searchTerm2 = searchTerm.toLowerCase();
+    LinkedHashMap<Integer,Double> length_map = make_length_map(100);
+    String searchTerm2 = searchTerm.toLowerCase().replaceAll("\\s+","");
     System.out.println("search term @" + searchTerm2 + "@ ");
-    double value;
-    boolean include;
+    double value1,value2;
+    boolean include,check;
     int length;
-    double FN,LN;
+    int length1,length2;
+    int fuzzySearchThreshold;
+    double FN,LN,FLN,LFN;
     for (Physician p : localPhysicians) {
         include = true;
+        check = false;
+        length1 = 1000;
+        length2 = 1000;
       length = -101;
 //      System.out.println("here");
-      first_name = p.getFirstName().toLowerCase();
-      last_name = p.getLastName().toLowerCase();
-      //System.out.println("first last : @" + first_name + "@ @" + last_name + "@ ");
+      first_name = p.getFirstName().toLowerCase().replaceAll("\\s+","");
+      last_name = p.getLastName().toLowerCase().replaceAll("\\s+","");
+      fl = first_name + last_name;
+      lf = last_name + first_name;
+      fuzzySearchThreshold = fl.length() - 1;
+      //System.out.println("first, last, fist-last,last-first : @" + first_name + "@ @" + last_name + "@ @" + fl + "@ @" + lf + "@ ");
       if(StringUtils.containsAny(first_name,searchTerm2) ||
             StringUtils.containsAny(last_name,searchTerm2)/*||
             StringUtils.containsAny(p.getTitle(),searchTerm)*/){
@@ -996,56 +1005,87 @@ public class DatabaseController implements DatabaseInterface {
           int fn = StringUtils.getLevenshteinDistance(first_name,searchTerm2,fuzzySearchThreshold);
           //System.out.println("fn weight: @" + fn);
           int ln = StringUtils.getLevenshteinDistance(last_name,searchTerm2,fuzzySearchThreshold);
+          int fln = StringUtils.getLevenshteinDistance(fl,searchTerm2,fuzzySearchThreshold);
+          int lfn = StringUtils.getLevenshteinDistance(lf,searchTerm2,fuzzySearchThreshold);
         //System.out.println("ln weight: @" + ln);
           //int t = StringUtils.getLevenshteinDistance(p.getTitle(),searchTerm);
-          if(first_name.length() > searchTerm2.length() || fn == -1){
+          /*if(first_name.length() + last_name.length() < searchTerm2.length() || fn == -1){
             fn = 100000;
           }
-          if(last_name.length() > searchTerm2.length() || ln == -1){
+          if(last_name.length() + first_name.length()< searchTerm2.length() || ln == -1){
             ln = 100000;
-          }
+          }*/
 //          if(fn == 100000 && ln == 100000){
 //            include = false;
 //          }
 
+        if(fn == -1){
+          fn = 10000;
+        }
+        if(ln == -1){
+          ln = 10000;
+        }
+        if(lfn == -1){
+          lfn = 10000;
+        }
+        if(fln == -1){
+          fln = 10000;
+        }
+        if(fn == 10000 && ln == 10000){
+          include = false;
+        }
+
+        System.out.println("firs-last fn, ln, fln, lfn: @" + fl + "  " + fn + ", " + ln + ", " + fln + ", " + lfn);
+
         FN = (double)fn;
         LN = (double)ln;
-        value = Math.min(FN,LN);//,t);
+        FLN = (double)fln;
+        LFN = (double)lfn;
+        value1 = Math.min(FN,Math.min(LN,Math.min(FLN,LFN)));
+        value2 = Math.min(FLN,LFN);
 
 
-          if(StringUtils.startsWith(first_name,searchTerm2)){
+          if(StringUtils.containsIgnoreCase(first_name,searchTerm2)){
             fORl = 0;
-            length = first_name.length();
+            length1 = first_name.length();
+            check = true;
           }
-          if(StringUtils.startsWith(last_name,searchTerm2)){
+          if(StringUtils.containsIgnoreCase(last_name,searchTerm2)){
             fORl = 1;
-            length = last_name.length();
+            length2 = last_name.length();
+            check = true;
+          }
+          if(check){
+            if(length1 > length2){
+              length = length2;
+            }else{
+              length = length1;
+            }
           }
           if(length != -101){
-            value = -2 + length_map.get(length);
+            value1 = -2 + length_map.get(length);
           }
 
-        if(value == 100000.0){
+        /*if(value == 100000.0){
             //System.out.println("in NOT include ");
             include = false;
-        }
+        }*/
 
 
         //System.out.println("first , last, value: @" + first_name + "@ @" + last_name + "@ " + value);
 
         if(include){
-            my_map.put(p,value);
+            my_map1.put(p,value1);
+            my_map2.put(p,value2);
           }
 //          System.out.println("here, value, id: " + value + " " + p.getID());
 
-
-
     }
 
     }
-      LinkedHashMap sortedMap = sortByValues(my_map);
+      LinkedHashMap sortedMap1 = sortByValues(my_map1);
       //Map<Integer,Physician> sortedMap = new TreeMap<Integer,Physician>(map);
-      ArrayList list2 = new ArrayList(sortedMap.entrySet());
+      ArrayList list2 = new ArrayList(sortedMap1.entrySet());
 
       int counter = -1;
       //Set set = sortedMap.entrySet();
@@ -1054,10 +1094,30 @@ public class DatabaseController implements DatabaseInterface {
       for (Iterator it2 = list2.iterator(); it2.hasNext() && counter < fuzzySearchLimit;) {
         counter++;
         Entry my_entry = (Map.Entry) it2.next();
+        my_map3.put((Physician)my_entry.getKey(),my_map2.get(my_entry.getKey()));
         //sortedHashMap.put(entry.getKey(),entry.getValue());
         candidates.add(counter,(Physician) my_entry.getKey());
-        System.out.println("key, value : " + ((Physician)(my_entry.getKey())).getLastName() + " " + ((Physician)(my_entry.getKey())).getFirstName()  + " " + my_entry.getValue());
+        System.out.println("key1, value1 : " + ((Physician)(my_entry.getKey())).getLastName() + " " + ((Physician)(my_entry.getKey())).getFirstName()  + " " + my_entry.getValue());
       }
+
+    LinkedHashMap sortedMap2 = sortByValues(my_map3);
+    ArrayList list3 = new ArrayList(sortedMap2.entrySet());
+
+/*    int counter2 = -1;
+    //Set set = sortedMap.entrySet();
+    //Iterator iterator = set.iterator();
+    //HashMap sortedHashMap = new HashMap();
+    for (Iterator it3 = list3.iterator(); it3.hasNext() && counter2 < fuzzySearchLimit;) {
+      counter2++;
+      Entry my_entry2 = (Map.Entry) it3.next();
+      //my_map3.put((Physician)my_entry.getKey(),my_map2.get(my_entry.getKey()));
+      //sortedHashMap.put(entry.getKey(),entry.getValue());
+      candidates.add(counter2,(Physician) my_entry2.getKey());
+      System.out.println("key2, value2 : " + ((Physician)(my_entry2.getKey())).getLastName() + " " + ((Physician)(my_entry2.getKey())).getFirstName()  + " " + my_entry2.getValue());
+    }
+*/
+
+
     return candidates;
   }
 
@@ -1111,7 +1171,8 @@ public class DatabaseController implements DatabaseInterface {
 //    System.out.println("here");
 
     searchTerm = searchTerm.toLowerCase();
-    LinkedHashMap<Integer,Double> length_map = make_length_map(20);
+    LinkedHashMap<Integer,Double> length_map = make_length_map(50);
+    int fuzzySearchThreshold2 = 20;
     for (Point p : named_points) {
       boolean worthit = false;
 //      System.out.println("here");
@@ -1124,9 +1185,14 @@ public class DatabaseController implements DatabaseInterface {
         lc_names.add(names.get(i).toLowerCase());
         if (StringUtils.containsAny(lc_names.get(i), searchTerm)) {
           worthit = true;
-          double value2 = (double)StringUtils.getLevenshteinDistance(lc_names.get(i),searchTerm,fuzzySearchThreshold);
+          double value2 = (double)StringUtils.getLevenshteinDistance(lc_names.get(i),searchTerm,fuzzySearchThreshold2);
           if(StringUtils.startsWith(lc_names.get(i),searchTerm)){
-            value2 = -2 + length_map.get(lc_names.get(i).length());
+            if(lc_names.get(i) != null) {
+              System.out.println("this name,length: " + lc_names.get(i) + " " + lc_names.get(i).length());
+              value2 = -2 + length_map.get(lc_names.get(i).length());
+            }
+            //System.out.println("");
+            //System.out.println("in fz points,value in map : " + length_map.get(lc_names.get(i).length()));
           }
           if(value2 != -1){
             distances.add(value2);
@@ -1138,7 +1204,7 @@ public class DatabaseController implements DatabaseInterface {
       //System.out.println("duration point first nested loop, counter: " +  duration2 + " " + i);
 
 
-      if (worthit) {
+      if (worthit && distances != null && distances.size() != 0) {
         double value = distances.get(0);
         long startTime3 = System.nanoTime();
         int k;
@@ -1155,6 +1221,8 @@ public class DatabaseController implements DatabaseInterface {
         my_map.put(p, value);
         System.out.println("here, value, id: " + value + " " + p.getId());
 
+      }else{
+        my_map.put(p, 10000.0);
       }
 
     }
