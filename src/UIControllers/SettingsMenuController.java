@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import org.Astar;
 import org.BFS;
 import org.DFS;
+import org.Language;
 import org.ListPoints;
 import org.Point;
 
@@ -61,6 +62,13 @@ public class SettingsMenuController extends CentralUIController implements Initi
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+    if (currSession.getLanguage() == Language.SPANISH) {
+      SettingsLogoff.setPrefWidth(200);
+    } else if (currSession.getLanguage() == Language.PORTUGESE) {
+      SettingsLogoff.setPrefWidth(240);
+    } else {
+      SettingsLogoff.setPrefWidth(150);
+    }
     addResolutionListener(anchorPane);
     setBackground(anchorPane);
 

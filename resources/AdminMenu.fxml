@@ -53,6 +53,11 @@
                   <Image url="@icons/settings-icon.png" />
                </image>
             </ImageView>
+            <Label fx:id="SettingsLabel" alignment="CENTER" layoutX="917.0" layoutY="553.0" mouseTransparent="true" prefHeight="47.0" prefWidth="221.0" text="Edit Settings">
+               <font>
+                  <Font name="Times New Roman" size="30.0" />
+               </font>
+            </Label>
          </children>
       </Pane>
    </children>
