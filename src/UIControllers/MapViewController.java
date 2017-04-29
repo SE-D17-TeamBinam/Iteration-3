@@ -837,7 +837,7 @@ public class MapViewController extends CentralUIController implements Initializa
     // For every neighbor, turn it into a connection if it doesn't exist
     // Also checks to make sure that each neighbor is contained by floorPoints
     for (int j = 0; j < p.getNeighbors().size(); j++) {
-      if (p.getNeighbors().get(j).getFloor() == currentFloor &&
+      if ((pathfinding ? showingPoints.contains(p.getNeighbors().get(j)) : true) && p.getNeighbors().get(j).getFloor() == currentFloor &&
           currentBuilding.equals(p.getNeighbors().get(j).getBuilding())) {
         Connection c = new Connection(p, p.getNeighbors().get(j));
         if (mapViewFlag == 3 || pathfinding) {
