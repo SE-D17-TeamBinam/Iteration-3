@@ -45,8 +45,8 @@ public class AdminMenuController extends CentralUIController implements Initiali
   public void customListenerY() {
     MapButton.setLayoutY(6 * (y_res / 11) - MapButton.getFitHeight()/2);
     EditButton.setLayoutY(6 * (y_res / 11) - EditButton.getFitHeight()/2);
-    DirectEditLabel.setLayoutY(6 * (y_res / 11) + MapButton.getFitHeight()/2 + 20);
-    MapLabel.setLayoutY(6 * (y_res / 11) + 120);
+    DirectEditLabel.setLayoutY(6 * (y_res / 11) + EditButton.getFitHeight()/2 + 20);
+    MapLabel.setLayoutY(6 * (y_res / 11) + MapButton.getFitHeight()/2 + 20);
 
   }
 
