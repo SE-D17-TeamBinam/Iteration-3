@@ -35,7 +35,7 @@ public class Point {
     this.yCoord = (int) yCoord;
     this.names = names;
     if(names.size() == 0) {
-      this.setName("");
+      this.setName(" ");
     }
     this.isBlocked = false;
   }
@@ -46,7 +46,7 @@ public class Point {
     this.floor = floor;
     this.isBlocked = false;
     names = new ArrayList<String>();
-    this.setName("");
+    this.setName(" ");
   }
 
   public Point(int xCoord, int yCoord, ArrayList<String> names, int id,
@@ -56,7 +56,7 @@ public class Point {
     this.yCoord = yCoord;
     this.names = names;
     if(names.size() == 0){
-      setName("");
+      setName(" ");
     }
     this.id = id;
     this.parent = null;

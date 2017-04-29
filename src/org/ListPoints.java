@@ -86,15 +86,11 @@ public class ListPoints {
    * @param floor the floor to search for
    * @return a ListPoints of the points on the requested floor
    */
-  public ListPoints getFloor(int floor){
+  public ListPoints getFloor(int floor, String building){
     ArrayList<Point> out = new ArrayList<Point>();
     for(Point p : this.getPoints()){
-      if(p.getFloor() == floor){
+      if(p.getFloor() == floor && building.equals(p.getBuilding())){
         out.add(p);
-      }else{
-        for(Point p2 : out){
-//          p2.severFrom(p);
-        }
       }
     }
     return new ListPoints(out);
