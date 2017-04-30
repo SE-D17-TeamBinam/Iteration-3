@@ -65,6 +65,22 @@ public class Point {
     buildingName = "";
   }
 
+
+  public Point(int xCoord, int yCoord, ArrayList<String> names, int id,
+      ArrayList<Point> new_neighbors,
+      int floor, String building) {
+    this.xCoord = xCoord;
+    this.yCoord = yCoord;
+    this.names = names;
+    this.id = id;
+    this.parent = null;
+    this.neighbors = new_neighbors;
+    this.cost = 0;
+    this.floor = floor;
+    this.isBlocked = false;
+    buildingName = building;
+  }
+
   public Point(int xCoord, int yCoord, String name, int id, ArrayList<Point> new_neighbors,
       int floor) {
     this.xCoord = xCoord;
@@ -77,6 +93,20 @@ public class Point {
     this.floor = floor;
     this.isBlocked = false;
     buildingName = "";
+  }
+
+  public Point(int xCoord, int yCoord, String name, int id, ArrayList<Point> new_neighbors,
+      int floor, String building) {
+    this.xCoord = xCoord;
+    this.yCoord = yCoord;
+    this.names = new ArrayList<String>(Arrays.asList(name));
+    this.id = id;
+    this.parent = null;
+    this.neighbors = new_neighbors;
+    this.cost = 0;
+    this.floor = floor;
+    this.isBlocked = false;
+    buildingName = building;
   }
 
   //Methods{

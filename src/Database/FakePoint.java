@@ -170,7 +170,7 @@ public class FakePoint {
     for (Point p : points) {
       newPoints.put(p,
           new Point(p.getXCoord(), p.getYCoord(), p.getNames(), p.getId(), new ArrayList<Point>(),
-              p.getFloor()));
+              p.getFloor(),p.getBuilding()));
     }
     for (Point p : points) {
       Point p2 = newPoints.get(p);

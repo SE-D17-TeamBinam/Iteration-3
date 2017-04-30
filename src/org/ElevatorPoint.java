@@ -19,6 +19,16 @@ public class ElevatorPoint extends VerticalPoint {
     super(xCoord, yCoord, names, id, new_neighbors, floor);
   }
 
+  public ElevatorPoint(int xCoord, int yCoord, String name, int id, ArrayList<Point> new_neighbors,
+      int floor, String building) {
+    super(xCoord, yCoord, name, id, new_neighbors, floor, building);
+  }
+
+  public ElevatorPoint(int xCoord, int yCoord, ArrayList<String> names, int id,
+      ArrayList<Point> new_neighbors, int floor, String building) {
+    super(xCoord, yCoord, names, id, new_neighbors, floor, building);
+  }
+
   public ElevatorPoint(double xCoord, double yCoord, int floor) {
     super((int) xCoord, (int) yCoord, floor);
   }
