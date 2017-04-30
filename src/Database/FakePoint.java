@@ -63,8 +63,6 @@ public class FakePoint {
         this.name = this.name.substring(0, this.name.length() - 1);
       }
     }
-    //TODO REMOVE THIS LINE
-//    name = name + "\tBUILDING=campus";
 
     this.id = equivalent.getId();
     if (equivalent.getParent() == null) {

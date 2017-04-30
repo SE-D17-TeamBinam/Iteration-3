@@ -839,8 +839,6 @@ public class DatabaseController implements DatabaseInterface {
         }
       }
     }
-    //TODO REMOVE THIS LINE
-//    diffPoints = FakePoint.deepClone(localPoints);
     save();
     progressBarPercentage = 1;
   }
