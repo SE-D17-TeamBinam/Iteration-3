@@ -2,6 +2,7 @@ package org;
 
 import Database.FakePoint;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by Alberto on 4/9/2017.
@@ -16,6 +17,16 @@ public class ElevatorPoint extends VerticalPoint {
   public ElevatorPoint(int xCoord, int yCoord, ArrayList<String> names, int id,
       ArrayList<Point> new_neighbors, int floor) {
     super(xCoord, yCoord, names, id, new_neighbors, floor);
+  }
+
+  public ElevatorPoint(int xCoord, int yCoord, String name, int id, ArrayList<Point> new_neighbors,
+      int floor, String building) {
+    super(xCoord, yCoord, name, id, new_neighbors, floor, building);
+  }
+
+  public ElevatorPoint(int xCoord, int yCoord, ArrayList<String> names, int id,
+      ArrayList<Point> new_neighbors, int floor, String building) {
+    super(xCoord, yCoord, names, id, new_neighbors, floor, building);
   }
 
   public ElevatorPoint(double xCoord, double yCoord, int floor) {
@@ -66,5 +77,10 @@ public class ElevatorPoint extends VerticalPoint {
   public String toStringMoreInfo() {
     return "Elevator Point!: " + this.getName() + "(" + this.id + ") at x:" + xCoord + ", y:"
         + yCoord + " on floor " + this.floor;
+  }
+
+  @Override
+  public Object clone() {
+    return new ElevatorPoint(xCoord, yCoord, names, id, neighbors, floor);
   }
 }

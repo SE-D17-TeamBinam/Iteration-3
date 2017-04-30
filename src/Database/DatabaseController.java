@@ -910,7 +910,7 @@ public class DatabaseController implements DatabaseInterface {
 
   private static ElevatorPoint toElevatorPoint(Point p) {
     ElevatorPoint ep = new ElevatorPoint(p.getXCoord(), p.getYCoord(), p.getNames(), p.getId(),
-        p.getNeighbors(), p.getFloor());
+        p.getNeighbors(), p.getFloor(), p.getBuilding());
     for (int i = 0; i < ep.neighbors.size(); i++) {
       ep.neighbors.get(i).neighbors.remove(p);
       ep.connectTo(ep.neighbors.get(i));
