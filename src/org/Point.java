@@ -143,6 +143,9 @@ public class Point {
   }
 
   public void setBuilding(String building) {
+    if (names.size() == 0 || names.get(0) == null){
+      names.set(0,"");
+    }
     int ind = names.size() - 1;
     if(ind > -1) {
       String lastName = names.get(ind);
