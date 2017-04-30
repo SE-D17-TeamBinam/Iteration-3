@@ -86,11 +86,13 @@ public class Point {
   }
 
   public void connectTo(Point node) {
-    if (!node.getNeighbors().contains(this)) {
-      node.getNeighbors().add(this);
-    }
-    if (!this.getNeighbors().contains(node)) {
-      this.neighbors.add(node);
+    if(!node.equals(this)) {
+      if (!node.getNeighbors().contains(this)) {
+        node.getNeighbors().add(this);
+      }
+      if (!this.getNeighbors().contains(node)) {
+        this.neighbors.add(node);
+      }
     }
   }
 
