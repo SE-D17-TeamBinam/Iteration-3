@@ -84,7 +84,8 @@ public class MainMenuController extends CentralUIController implements Initializ
   public void gotoMap () {
     Stage primaryStage = (Stage) MainMenu.getScene().getWindow();
     try {
-      mapViewFlag = 1;
+      mapViewFlag = 3;
+      //mapViewFlag = 1;
       loadScene(primaryStage, "/MapScene.fxml");
     } catch (Exception e) {
       e.printStackTrace();

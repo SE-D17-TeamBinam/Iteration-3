@@ -315,6 +315,7 @@ public class MapViewController extends CentralUIController implements Initializa
   private ArrayList<Point> floorPoints = new ArrayList<>();
   // ArrayList of Edges to help track for drawing
   private ArrayList<Connection> connections = new ArrayList<>();
+  private Point[] changesTree;
 
   private ArrayList<Point> clipBoard = new ArrayList<>();
 
@@ -450,6 +451,8 @@ public class MapViewController extends CentralUIController implements Initializa
     repositionResultsList();
     initializePathFindingBox();
     findMaxID();
+    storeState();
+    mapEdits.clearRedo();
   }
 
   private void initializePathFindingBox() {
@@ -1793,7 +1796,6 @@ public class MapViewController extends CentralUIController implements Initializa
   private void saveMapButtonClicked() {
     progressBar.setVisible(true);
     saveButton.setDisable(true);
-    progressPane.setVisible(true);
     saving = true;
     // Only assigns IDs to points that have not been assigned IDs
     // Checks if the newly assigned IDs exceed the value of Point.ID_MAX
@@ -1973,7 +1975,9 @@ public class MapViewController extends CentralUIController implements Initializa
           p = new Point(c.getX(), c.getY(), currentFloor);
         }
         floorPoints.add(p);
+        storeState();
         allPoints.add(p);
+        storeState();
         addVisualNodesForPoint(p, floorPoints);
         setPointFocus(p);
       }
@@ -2076,6 +2080,10 @@ public class MapViewController extends CentralUIController implements Initializa
   private void circleMouseClicked(MouseEvent e, Point p, Circle c) {
     if (!mouseDragged) { // if it was dragged, then it's not a click
       circleMouseClickNoDrag(e, p, c);
+    }
+    else{
+      storeState();
+      mapEdits.clearRedo();
     }
   }
 
@@ -2475,6 +2483,42 @@ public class MapViewController extends CentralUIController implements Initializa
     contextMenu.show(circles.get(point).getScene().getWindow(),xLocation,yLocation);
     handlePoint(point);
   }
-
   //End Context Menu Testing
+
+
+  // this should be called when an action
+  public void storeState() {
+    mapEdits.pushToUndo(allPoints);
+    System.out.println(mapEdits.getUndoStack().toString());
+    editPos++;
+    System.out.println(editPos);
+  }
+
+  public void undo() {
+    if(mapEdits.isUndoEmpty()) {
+      mapEdits.undo();
+      int size = mapEdits.undoSize();
+      ArrayList<Point> previousState = mapEdits.getUndoStack().get(size-1);
+      ListPoints lp = new ListPoints(previousState);
+      clearMapDisplay();
+      floorPoints = lp.getFloor(currentFloor).getPoints();
+      displayPoints(floorPoints);
+    }
+  }
+
+  public void redo() {
+    if (!mapEdits.isRedoEmpty()) {
+      mapEdits.redo();
+      int size = mapEdits.redoSize();
+      ArrayList<Point> previousState = mapEdits.getRedoStack().get(size - 1);
+      ListPoints lp = new ListPoints(previousState);
+      clearMapDisplay();
+      floorPoints = lp.getFloor(currentFloor).getPoints();
+      displayPoints(floorPoints);
+    }
+  }
+
+
+
+
 }

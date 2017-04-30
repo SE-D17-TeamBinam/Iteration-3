@@ -17,6 +17,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.Dictionary;
+import org.EditStack;
 import org.Point;
 import org.Session;
 
@@ -29,6 +30,12 @@ public class CentralUIController {
     3 for admin map
    */
   protected static int mapViewFlag = 0;
+  protected static EditStack mapEdits = new EditStack();
+  protected static int editPos = -1;
+  //protected ArrayList<ListPoints> undoList = new ArrayList<>();
+  //protected ArrayList<ArrayList<Point>> undoList = new ArrayList<>();
+  //protected ArrayList<ArrayList<Point>> redoList = new ArrayList<>();
+  //protected static ArrayList<ListPoints> redoList = new ArrayList<>();
   protected static Session currSession;
   protected static CredentialManager credentialManager = CredentialManager.getInstance();
   protected static Boolean adminPermissions = false;
