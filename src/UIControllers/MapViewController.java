@@ -341,6 +341,8 @@ public class MapViewController extends CentralUIController implements Initializa
   private final Color SECONDARY_POINT_FOCUS_COLOR = new Color(0, 0, 1, 1);
   private final Color SELECTION_RECTANGLE_FILL = new Color(0, 0.7, 1, 0.5);
 
+  private final String INITIAL_BUILDING = "Ground Floor";
+
   private double selectionRectangleX = 0;
   private double selectionRectangleY = 0;
   private Rectangle selectionRectangle = new Rectangle();
@@ -473,6 +475,26 @@ public class MapViewController extends CentralUIController implements Initializa
   }
 
   private void initializeChoiceBoxes() {
+    initializeCampusChoiceBoxes();
+    initializePointChoiceBoxes();
+  }
+
+  private void initializePointChoiceBoxes(){
+    startNodeBox.getSelectionModel().selectedIndexProperty().addListener(
+        new ChangeListener<Number>() {
+          public void changed(ObservableValue ov, Number old_value, Number new_value) {
+            setStart((Point) startNodeBox.getItems().get((int) new_value));
+          }
+        });
+    endNodeBox.getSelectionModel().selectedIndexProperty().addListener(
+        new ChangeListener<Number>() {
+          public void changed(ObservableValue ov, Number old_value, Number new_value) {
+            setEnd((Point) endNodeBox.getItems().get((int) new_value));
+          }
+        });
+  }
+
+  private void initializeCampusChoiceBoxes(){
     File dir = null;
     try {
       dir = Paths.get(getClass().getResource("/floor_plans/").toURI()).toFile();
@@ -506,8 +528,7 @@ public class MapViewController extends CentralUIController implements Initializa
     }
 
     buildingChoiceBox.getItems().addAll(buildingFloors.keySet());
-    buildingChoiceBox
-        .setValue(buildingChoiceBox.getItems().get(buildingChoiceBox.getItems().size() - 1));
+    buildingChoiceBox.setValue(INITIAL_BUILDING);
     floorChoiceBox.getItems().addAll(buildingFloors.get(currentBuilding));
     ArrayList<Integer> flrs = buildingFloors.get(currentBuilding);
     floorChoiceBox.setValue(flrs.get(flrs.size() - 1));
@@ -602,6 +623,7 @@ public class MapViewController extends CentralUIController implements Initializa
       textDirectionsPane.setLayoutX(x - 1);
       map_x_max = x - 1 + textDirectionsPaneTabImageView.getFitWidth();
       fixZoomPanePos();
+      fixMapDisplayLocation();
     }
   }
 
@@ -610,8 +632,10 @@ public class MapViewController extends CentralUIController implements Initializa
     double amt;
     if (x < userPaneTargetX) {
       amt = x + 1;
+      fixMapDisplayLocation();
     } else if (x > userPaneTargetX) {
       amt = x - 1;
+      fixMapDisplayLocation();
     } else {
       amt = x;
     }
@@ -676,54 +700,70 @@ public class MapViewController extends CentralUIController implements Initializa
   }
 
   private void switchFloors(int floor) {
-    currentFloor = floor;
-    Image new_img = new Image(
-        "/floor_plans/" + currentBuilding + "-" + currentFloor + ".png");
+    if(floorChoiceBox.getItems().contains(floor)){
+      currentFloor = floor;
 
-    mapImage.setImage(new_img);
-    clearMapDisplay();
-    ListPoints lp = new ListPoints(allPoints);
-    floorPoints = lp.getFloor(currentFloor, currentBuilding).getPoints();
-    if (pathfinding) {
-      displayPoints(pathPoints);
-    } else {
-      displayPoints(floorPoints);
-    }
+      Image new_img = new Image(
+          "/floor_plans/" + currentBuilding + "-" + currentFloor + ".png");
 
-    // Setup the Point choice boxes on the left
-
-    Point start = (Point) startNodeBox.getValue();
-    Point end = (Point) endNodeBox.getValue();
-
-    // Clear them first
-    startNodeBox.getItems().clear();
-    endNodeBox.getItems().clear();
-
-    if (start != null && start.getFloor() != currentFloor && !currentBuilding.equals(start.getBuilding())) {
-      startNodeBox.getItems().add(start);
-      endNodeBox.getItems().add(start);
-    }
-    if (end != null && end.getFloor() != currentFloor && !currentBuilding.equals(end.getBuilding())) {
-      startNodeBox.getItems().add(end);
-      endNodeBox.getItems().add(end);
-    }
-
-    ArrayList<Point> selectablePoints = new ArrayList<Point>();
-    // Now add the points on the current floor
-    for (Point p : floorPoints) {
-      if (p.getName() == null || p.getName().equals(" ") || p.getName()
-          .equals("ELEVATOR")) {
+      mapImage.setImage(new_img);
+      clearMapDisplay();
+      ListPoints lp = new ListPoints(allPoints);
+      floorPoints = lp.getFloor(currentFloor, currentBuilding).getPoints();
+      if (pathfinding) {
+        displayPoints(pathPoints);
       } else {
-        selectablePoints.add(p);
+        displayPoints(floorPoints);
       }
+
+      // Setup the Point choice boxes on the left
+
+      Point start = (Point) startNodeBox.getValue();
+      Point end = (Point) endNodeBox.getValue();
+
+      // Clear them first
+      startNodeBox.getItems().clear();
+      endNodeBox.getItems().clear();
+
+      if (start != null && start.getFloor() != currentFloor && !currentBuilding.equals(start.getBuilding())) {
+        startNodeBox.getItems().add(start);
+        endNodeBox.getItems().add(start);
+      }
+      if (end != null && end.getFloor() != currentFloor && !currentBuilding.equals(end.getBuilding())) {
+        startNodeBox.getItems().add(end);
+        endNodeBox.getItems().add(end);
+      }
+
+      ArrayList<Point> selectablePoints = new ArrayList<Point>();
+      // Now add the points on the current floor
+      for (Point p : floorPoints) {
+        if (p.getName() == null || p.getName().equals(" ") || p.getName()
+            .equals("ELEVATOR")) {
+        } else {
+          selectablePoints.add(p);
+        }
+      }
+      startNodeBox.getItems().addAll(selectablePoints);
+      endNodeBox.getItems().addAll(selectablePoints);
+
+      startNodeBox.setValue(start);
+      endNodeBox.setValue(end);
+
+      refreshListView();
+    }else{
+      int dif = Integer.MAX_VALUE;
+      int newFloor = 1;
+      for(int i = 0; i < floorChoiceBox.getItems().size(); i++){
+        int item = (int) floorChoiceBox.getItems().get(i);
+        int d = Math.max(floor, item) - Math.min(floor, item);
+        if(d < dif){
+          dif = d;
+          newFloor = item;
+        }
+      }
+      currentFloor = newFloor;
+      floorChoiceBox.setValue(newFloor);
     }
-    startNodeBox.getItems().addAll(selectablePoints);
-    endNodeBox.getItems().addAll(selectablePoints);
-
-    startNodeBox.setValue(start);
-    endNodeBox.setValue(end);
-
-    refreshListView();
   }
 
   private void typeSelection() {
@@ -800,7 +840,7 @@ public class MapViewController extends CentralUIController implements Initializa
   }
 
   private int currentFloor;
-  private String currentBuilding = "campus";
+  private String currentBuilding = "Ground Floor";
 
 
   // Add values to the floor selector, add a listener, and set its default value
@@ -811,7 +851,9 @@ public class MapViewController extends CentralUIController implements Initializa
         new ChangeListener<Number>() {
           public void changed(ObservableValue ov, Number old_value, Number new_value) {
             // Change the image that's being displayed when the input changes
-            switchFloors((int) floorChoiceBox.getItems().get((int) new_value));
+            if((int) new_value > -1) {
+              switchFloors((int) floorChoiceBox.getItems().get((int) new_value));
+            }
           }
         });
   }
@@ -1468,12 +1510,18 @@ public class MapViewController extends CentralUIController implements Initializa
 
   @FXML
   private void decreaseFloorButtonClicked() {
-    if (currentFloor <= (int) floorChoiceBox.getItems().get(
-        floorChoiceBox.getItems().size() - 1)) { // TODO shouldn't hard code this - could go higher
-      floorChoiceBox.getItems().get(floorChoiceBox.getItems().size() - 1);
-    } else {
-      floorChoiceBox.setValue(
-          floorChoiceBox.getItems().get(floorChoiceBox.getSelectionModel().getSelectedIndex() + 1));
+    if(currentFloor == 2){
+      buildingChoiceBox.setValue(INITIAL_BUILDING);
+    }else {
+      if (currentFloor <= (int) floorChoiceBox.getItems().get(
+          floorChoiceBox.getItems().size()
+              - 1)) { // TODO shouldn't hard code this - could go higher
+        floorChoiceBox.getItems().get(floorChoiceBox.getItems().size() - 1);
+      } else {
+        floorChoiceBox.setValue(
+            floorChoiceBox.getItems()
+                .get(floorChoiceBox.getSelectionModel().getSelectedIndex() + 1));
+      }
     }
   }
 
