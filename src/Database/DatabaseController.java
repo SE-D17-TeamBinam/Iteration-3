@@ -510,6 +510,7 @@ public class DatabaseController implements DatabaseInterface {
       }
       progressBarPercentage = .45 + .05 * i / ret.size();
     }
+
     return ret;
   }
 
@@ -838,7 +839,8 @@ public class DatabaseController implements DatabaseInterface {
         }
       }
     }
-
+    //TODO REMOVE THIS LINE
+//    diffPoints = FakePoint.deepClone(localPoints);
     save();
     progressBarPercentage = 1;
   }
