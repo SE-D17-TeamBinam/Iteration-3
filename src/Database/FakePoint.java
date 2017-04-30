@@ -1,5 +1,6 @@
 package Database;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -46,7 +47,7 @@ public class FakePoint {
     this.neighbors = new_neighbors;
     this.cost = 0;
     this.floor = floor;
-    this.name.replace(';','_');
+    this.name.replace(';', '_');
   }
 
   public FakePoint(Point equivalent) {
@@ -70,12 +71,15 @@ public class FakePoint {
     } else {
       this.parent = equivalent.getParent().getId();
     }
+    if (equivalent.getBuilding() != null) {
+      this.name = this.name + "\tBUILDING=" + equivalent.getBuilding();
+    }
     this.cost = equivalent.getCost();
     this.floor = equivalent.getFloor();
     for (int i = 0; i < equivalent.neighbors.size(); i++) {
       this.neighbors.add(equivalent.neighbors.get(i).getId());
     }
-    this.name.replace(';','_');
+    this.name.replace(';', '_');
   }
 
   //Methods
@@ -94,6 +98,16 @@ public class FakePoint {
     ArrayList<String> names = new ArrayList<String>(Arrays.asList(this.name.split("\t")));
     Point ret = new Point(this.xCoord, this.yCoord, names, this.id, new ArrayList<Point>(),
         this.floor);
+    if (ret.getNames().size() > 1) {
+      String lname = ret.getNames().get(ret.getNames().size()-1);
+      if (lname.contains("BUILDING=")) {
+        ret.setBuilding(lname.split("=")[1]);
+        ArrayList<String> retnames = ret.getNames();
+        retnames.remove(lname);
+        ret.setNames(retnames);
+      }
+    }
+
     return ret;
   }
 
@@ -151,23 +165,24 @@ public class FakePoint {
   }
 
 
-
-  public static ArrayList<Point> deepClone(ArrayList<Point> points){
+  public static ArrayList<Point> deepClone(ArrayList<Point> points) {
     HashMap<Point, Point> newPoints = new HashMap<Point, Point>();
-    for(Point p : points){
-      newPoints.put(p, new Point(p.getXCoord(), p.getYCoord(), p.getNames(), p.getId(), new ArrayList<Point>(), p.getFloor()));
+    for (Point p : points) {
+      newPoints.put(p,
+          new Point(p.getXCoord(), p.getYCoord(), p.getNames(), p.getId(), new ArrayList<Point>(),
+              p.getFloor()));
     }
-    for(Point p : points){
+    for (Point p : points) {
       Point p2 = newPoints.get(p);
-      for(Point pN : p.getNeighbors()){
+      for (Point pN : p.getNeighbors()) {
         Point newNeighbor = newPoints.get(pN);
-        if(newNeighbor != null) {
+        if (newNeighbor != null) {
           p2.connectTo(newPoints.get(pN));
         }
       }
     }
     ArrayList<Point> out = new ArrayList<Point>();
-    for(Point p : newPoints.values()){
+    for (Point p : newPoints.values()) {
       out.add(p);
     }
     return out;

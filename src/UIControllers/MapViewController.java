@@ -711,7 +711,7 @@ public class MapViewController extends CentralUIController implements Initializa
     ArrayList<Point> selectablePoints = new ArrayList<Point>();
     // Now add the points on the current floor
     for (Point p : floorPoints) {
-      if (p.getName() == null || p.getName().equals(" ") || p.getName()
+      if (p.getName() == null || p.getName().equals("") || p.getName()
           .equals("ELEVATOR")) {
       } else {
         selectablePoints.add(p);
@@ -1799,7 +1799,7 @@ public class MapViewController extends CentralUIController implements Initializa
   private ArrayList<Point> searchPointList(String search, ArrayList<Point> points) {
     ArrayList<Point> out = new ArrayList<Point>();
     for (Point p : points) {
-      if (p.getName() != null && !p.getName().equals(" ") && !p
+      if (p.getName() != null && !p.getName().equals("") && !p
           .getName().equals("ELEVATOR") && p.getName().contains(search)) {
         out.add(p);
       }
@@ -1810,7 +1810,7 @@ public class MapViewController extends CentralUIController implements Initializa
   private ArrayList<Point> filterPointList(ArrayList<Point> points) {
     ArrayList<Point> out = new ArrayList<Point>();
     for (Point p : points) {
-      if (p.getName() != null && !p.getName().equals(" ") && !p
+      if (p.getName() != null && !p.getName().equals("") && !p
           .getName().equals("ELEVATOR")) {
         out.add(p);
       }
