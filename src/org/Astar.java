@@ -71,8 +71,9 @@ public class Astar extends PathfindingStrategy {
             //Dont Update!!!!
           }else{// new to search
             if(next.neighbors.get(j) instanceof ElevatorPoint ){ //meets an elevator and changes node
-              if(changeFloor) {
-                next.neighbors.get(j).cost = next.cost + next.Distance(next.neighbors.get(j)); //update cost
+              if(changeFloor  && !changeBuilding) {
+                next.neighbors.get(j).cost =
+                    next.cost + next.Distance(next.neighbors.get(j)); //update cost
                 next.neighbors.get(j).parent = next;  //update parent
 
                 ElevatorPoint elevator = (ElevatorPoint) next.neighbors.get(j); //cast to elevator
@@ -104,6 +105,28 @@ public class Astar extends PathfindingStrategy {
                   changeFloor = false;
 
                 }
+              }
+              else if(changeBuilding){ // different building but different floors
+                next.neighbors.get(j).cost = next.cost + next.Distance(next.neighbors.get(j)); //update cost
+                next.neighbors.get(j).parent = next;  //update parent
+                ElevatorPoint elevator = (ElevatorPoint) next.neighbors.get(j); //cast to elevator
+                close.add(elevator);
+                for (Point nextPosition : elevator.neighbors) {
+                  if (open.contains(nextPosition)) {
+                    //do nothing
+                  } else if (close.contains(nextPosition)) {
+                    //dont do anything
+                  } else {
+                    nextPosition.cost = elevator.Distance(nextPosition); //update cost
+                    nextPosition.parent = elevator;  //update parent
+                    open.add(nextPosition);
+                  }
+                }
+              }
+              else { // right floor(s).
+                open.add(next.neighbors.get(j));    //add sucessor to open
+                next.neighbors.get(j).cost = next.cost + next.Distance(next.neighbors.get(j)); //update cost
+                next.neighbors.get(j).parent = next;  //update parent
               }
             }
             else if(next.neighbors.get(j) instanceof StairPoint){ //meets an elevator and changes node
