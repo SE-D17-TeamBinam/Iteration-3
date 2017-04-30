@@ -6,6 +6,8 @@ import org.Point;
 
 /**
  * Created by Leon Zhang on 2017/4/3.
+ *
+ * This class stores the object physician with it's details/fields for the database
  */
 public class Physician {
 

@@ -23,6 +23,10 @@ public class Astar extends PathfindingStrategy {
     public ArrayList<Point> execute(Point start, Point goal) throws NoPathException {
       System.out.println("Using A*");
       boolean changeFloor = start.floor != goal.floor;
+      boolean changeBuilding = start.getBuilding() != goal.getBuilding();
+      if(changeBuilding){ // one fix
+        changeFloor = true;
+      }
 
       Point next = new Point(500,500,"start",0, new ArrayList<Point>(),4);
       start.parent = start;
@@ -51,7 +55,7 @@ public class Astar extends PathfindingStrategy {
         if(next.neighbors.size() == 0){
           throw new NoPathException();
         }
-
+        close.add(next);      //add current to close
         for (int j = 0; j < next.neighbors.size(); j++ ){ //searching through neighbors
           if(next.neighbors.get(j).isBlocked){
             //doesnt update!!!
@@ -103,7 +107,7 @@ public class Astar extends PathfindingStrategy {
               }
             }
             else if(next.neighbors.get(j) instanceof StairPoint){ //meets an elevator and changes node
-              if(changeFloor) {
+              if(changeFloor && !changeBuilding) { // same building but different floors
                 next.neighbors.get(j).cost = next.cost + next.Distance(next.neighbors.get(j)); //update cost
                 next.neighbors.get(j).parent = next;  //update parent
 
@@ -136,6 +140,23 @@ public class Astar extends PathfindingStrategy {
                   changeFloor = false;
                 }
               }
+              else if(changeBuilding){ // different building but different floors
+                next.neighbors.get(j).cost = next.cost + next.Distance(next.neighbors.get(j)); //update cost
+                next.neighbors.get(j).parent = next;  //update parent
+                StairPoint stair = (StairPoint) next.neighbors.get(j); //cast to elevator
+                close.add(stair);
+                for (Point nextPosition : stair.neighbors) {
+                  if (open.contains(nextPosition)) {
+                    //do nothing
+                  } else if (close.contains(nextPosition)) {
+                    //dont do anything
+                  } else {
+                    nextPosition.cost = stair.Distance(nextPosition); //update cost
+                    nextPosition.parent = stair;  //update parent
+                    open.add(nextPosition);
+                  }
+                }
+              }
             }
             else { // right floor(s).
               open.add(next.neighbors.get(j));    //add sucessor to open
@@ -144,7 +165,7 @@ public class Astar extends PathfindingStrategy {
             }
           }
         }
-        close.add(next);      //add current to close
+
       }
 
       throw new NoPathException();  //throw error
