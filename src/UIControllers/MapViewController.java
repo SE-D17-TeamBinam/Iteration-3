@@ -28,6 +28,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioButton;
@@ -2334,10 +2335,8 @@ public class MapViewController extends CentralUIController implements Initializa
     }
   }
 
-  //Testing Context Menus
-
   /**
-   * User Context Menu for the map:
+   * User Map Menu:
    * This menu is displayed when the user right clicks on a point while viewing the navigation
    * map. It has two MenuItem options, startingLocation and destination, which allow the user
    * to set the starting location and destination for navigation if they choose to.
@@ -2347,14 +2346,21 @@ public class MapViewController extends CentralUIController implements Initializa
   private ContextMenu userMapMenu = new ContextMenu(startingLocation, destination);
 
   /**
-   * Admin Context Menu for the map:
+   * Admin Point Menu:
+   * This menu is displayed when an admin right clicks on a point. It allows the admin to delete,
+   * copy, connect, or delete all points.
    */
   private MenuItem deletePoint = new MenuItem("Delete");
   private MenuItem copyPoint = new MenuItem("Copy");
   private MenuItem deleteAllPoints = new MenuItem("Delete All");
-  private ContextMenu adminPointMenu = new ContextMenu(copyPoint, deletePoint, deleteAllPoints);
+  private MenuItem connectPoints = new MenuItem("Connect Points");
+  private ContextMenu adminPointMenu = new ContextMenu(copyPoint, deletePoint, deleteAllPoints, connectPoints);
 
-  //Admin Map Menu
+  /**
+   * Admin Map Menu:
+   * This menu appears when the admin clicks a location on the map that is not a point. It allows
+   * the admin to paste a point in this location.
+   */
   private MenuItem pastePoint = new MenuItem("Paste");
   private ContextMenu adminMapMenu = new ContextMenu(pastePoint);
 
@@ -2405,6 +2411,13 @@ public class MapViewController extends CentralUIController implements Initializa
         paste(); //Pastes all points in the queue.
       }
     });
+    connectPoints.setOnAction(new EventHandler<ActionEvent>() {
+      @Override
+      public void handle(ActionEvent e) {
+        point.connectTo(pointFocus);
+        addVisualConnection(new Connection(point, pointFocus));
+      }
+    });
   }
 
   /**
@@ -2422,5 +2435,4 @@ public class MapViewController extends CentralUIController implements Initializa
     handlePoint(point);
   }
 
-  //End Context Menu Testing
 }
