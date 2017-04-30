@@ -452,7 +452,6 @@ public class MapViewController extends CentralUIController implements Initializa
     initializePathFindingBox();
     findMaxID();
     storeState();
-    mapEdits.clearRedo();
   }
 
   private void initializePathFindingBox() {
@@ -2495,7 +2494,7 @@ public class MapViewController extends CentralUIController implements Initializa
   }
 
   public void undo() {
-    if(mapEdits.isUndoEmpty()) {
+    if(!mapEdits.isUndoEmpty()) {
       mapEdits.undo();
       int size = mapEdits.undoSize();
       ArrayList<Point> previousState = mapEdits.getUndoStack().get(size-1);
