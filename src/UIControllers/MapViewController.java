@@ -479,12 +479,13 @@ public class MapViewController extends CentralUIController implements Initializa
     initializePointChoiceBoxes();
   }
 
-  private void initializePointChoiceBoxes(){
+  private void initializePointChoiceBoxes() {
     startNodeBox.getSelectionModel().selectedIndexProperty().addListener(
         new ChangeListener<Number>() {
           public void changed(ObservableValue ov, Number old_value, Number new_value) {
-            if((int) new_value > -1) {
-              System.out.println("Start Name: \"" + startNodeBox.getItems().get((int) new_value) + "\"");
+            if ((int) new_value > -1) {
+              System.out
+                  .println("Start Name: \"" + startNodeBox.getItems().get((int) new_value) + "\"");
             }
 
           }
@@ -492,18 +493,19 @@ public class MapViewController extends CentralUIController implements Initializa
     endNodeBox.getSelectionModel().selectedIndexProperty().addListener(
         new ChangeListener<Number>() {
           public void changed(ObservableValue ov, Number old_value, Number new_value) {
-            if((int) new_value > -1) {
-              System.out.println("End Name: \"" + endNodeBox.getItems().get((int) new_value) + "\"");
+            if ((int) new_value > -1) {
+              System.out
+                  .println("End Name: \"" + endNodeBox.getItems().get((int) new_value) + "\"");
             }
           }
         });
   }
 
-  private void initializeCampusChoiceBoxes(){
+  private void initializeCampusChoiceBoxes() {
     File dir = null;
     try {
       dir = Paths.get(getClass().getResource("/floor_plans/").toURI()).toFile();
-    }catch(Exception e){
+    } catch (Exception e) {
       e.printStackTrace();
     }
     String[] floorImageNames = dir.list();
@@ -700,7 +702,7 @@ public class MapViewController extends CentralUIController implements Initializa
   }
 
   private void switchFloors(int floor) {
-    if(floorChoiceBox.getItems().contains(floor)){
+    if (floorChoiceBox.getItems().contains(floor)) {
       currentFloor = floor;
 
       Image new_img = new Image(
@@ -725,11 +727,13 @@ public class MapViewController extends CentralUIController implements Initializa
       startNodeBox.getItems().clear();
       endNodeBox.getItems().clear();
 
-      if (start != null && start.getFloor() != currentFloor && !currentBuilding.equals(start.getBuilding())) {
+      if (start != null && start.getFloor() != currentFloor && !currentBuilding
+          .equals(start.getBuilding())) {
         startNodeBox.getItems().add(start);
         endNodeBox.getItems().add(start);
       }
-      if (end != null && end.getFloor() != currentFloor && !currentBuilding.equals(end.getBuilding())) {
+      if (end != null && end.getFloor() != currentFloor && !currentBuilding
+          .equals(end.getBuilding())) {
         startNodeBox.getItems().add(end);
         endNodeBox.getItems().add(end);
       }
@@ -750,13 +754,13 @@ public class MapViewController extends CentralUIController implements Initializa
       endNodeBox.setValue(end);
 
       refreshListView();
-    }else{
+    } else {
       int dif = Integer.MAX_VALUE;
       int newFloor = 1;
-      for(int i = 0; i < floorChoiceBox.getItems().size(); i++){
+      for (int i = 0; i < floorChoiceBox.getItems().size(); i++) {
         int item = (int) floorChoiceBox.getItems().get(i);
         int d = Math.max(floor, item) - Math.min(floor, item);
-        if(d < dif){
+        if (d < dif) {
           dif = d;
           newFloor = item;
         }
@@ -851,7 +855,7 @@ public class MapViewController extends CentralUIController implements Initializa
         new ChangeListener<Number>() {
           public void changed(ObservableValue ov, Number old_value, Number new_value) {
             // Change the image that's being displayed when the input changes
-            if((int) new_value > -1) {
+            if ((int) new_value > -1) {
               switchFloors((int) floorChoiceBox.getItems().get((int) new_value));
             }
           }
@@ -884,7 +888,8 @@ public class MapViewController extends CentralUIController implements Initializa
     // For every neighbor, turn it into a connection if it doesn't exist
     // Also checks to make sure that each neighbor is contained by floorPoints
     for (int j = 0; j < p.getNeighbors().size(); j++) {
-      if ((pathfinding ? showingPoints.contains(p.getNeighbors().get(j)) : true) && p.getNeighbors().get(j).getFloor() == currentFloor &&
+      if ((pathfinding ? showingPoints.contains(p.getNeighbors().get(j)) : true)
+          && p.getNeighbors().get(j).getFloor() == currentFloor &&
           currentBuilding.equals(p.getNeighbors().get(j).getBuilding())) {
         Connection c = new Connection(p, p.getNeighbors().get(j));
         if (mapViewFlag == 3 || pathfinding) {
@@ -1395,7 +1400,7 @@ public class MapViewController extends CentralUIController implements Initializa
 
   private void setEnd(Point newEnd) {
     if (newEnd != null) {
-      if(!newEnd.equals(endNodeBox.getValue())) {
+      if (!newEnd.equals(endNodeBox.getValue())) {
         endNodeBox.getSelectionModel().clearSelection();
         if (newEnd.getFloor() == currentFloor && currentBuilding.equals(newEnd.getBuilding())) {
           endNodeBox.setValue(newEnd);
@@ -1411,7 +1416,7 @@ public class MapViewController extends CentralUIController implements Initializa
 
   private void setStart(Point newStart) {
     if (newStart != null) {
-      if(!newStart.equals(startNodeBox.getValue())) {
+      if (!newStart.equals(startNodeBox.getValue())) {
         startNodeBox.getSelectionModel().clearSelection();
         if (newStart.getFloor() == currentFloor && currentBuilding.equals(newStart.getBuilding())) {
           startNodeBox.setValue(newStart);
@@ -1526,9 +1531,9 @@ public class MapViewController extends CentralUIController implements Initializa
 
   @FXML
   private void decreaseFloorButtonClicked() {
-    if(currentFloor == 2){
+    if (currentFloor == 2) {
       buildingChoiceBox.setValue(INITIAL_BUILDING);
-    }else {
+    } else {
       if (currentFloor <= (int) floorChoiceBox.getItems().get(
           floorChoiceBox.getItems().size()
               - 1)) { // TODO shouldn't hard code this - could go higher
@@ -1650,17 +1655,17 @@ public class MapViewController extends CentralUIController implements Initializa
   private Image directionToImage(String directions) {
     Image out = new Image("/icons/straight.png");
     if (directions.contains("left")) {
-      if(directions.contains("slight")){
+      if (directions.contains("slight")) {
         // TODO add icon
         out = new Image("/icons/slight-left.png");
-      }else {
+      } else {
         out = new Image("/icons/left.png");
       }
     } else if (directions.contains("right")) {
-      if(directions.contains("slight")){
+      if (directions.contains("slight")) {
         // TODO add icon
         out = new Image("/icons/slight-right.png");
-      }else {
+      } else {
         out = new Image("/icons/right.png");
       }
     } else if (directions.contains("straight")) {
@@ -1669,7 +1674,7 @@ public class MapViewController extends CentralUIController implements Initializa
       out = new Image("/icons/destination.png");
     } else if (directions.contains("around")) {
       out = new Image("/icons/turn-around.png");
-    }else if(directions.contains("floor")){
+    } else if (directions.contains("floor")) {
       out = new Image("/icons/elevator.png");
     }
     return out;
@@ -1838,7 +1843,8 @@ public class MapViewController extends CentralUIController implements Initializa
   private void searchGoButtonClicked() {
     Point p = getSelectedPointInSearch();
     if (p != null) {
-      if(buildingChoiceBox.getItems().contains(p.getBuilding()) && buildingFloors.get(p.getBuilding()).contains(p.getFloor())) {
+      if (buildingChoiceBox.getItems().contains(p.getBuilding()) && buildingFloors
+          .get(p.getBuilding()).contains(p.getFloor())) {
         buildingChoiceBox.setValue(p.getBuilding());
         floorChoiceBox.setValue(p.getFloor());
         setPointFocus(p);
@@ -2078,18 +2084,21 @@ public class MapViewController extends CentralUIController implements Initializa
   private void mapMouseRightClick(MouseEvent e) {
     if (mapViewFlag == 3) {
       if (e.isShiftDown()) {
-        if (!pointFocus.getNeighbors().containsAll(secondaryPointFoci)) {
-          for (Point p : secondaryPointFoci) {
-            p.connectTo(pointFocus);
-            addVisualConnection(new Connection(p, pointFocus));
-          }
-        } else {
-          for (Point p : secondaryPointFoci) {
-            p.severFrom(pointFocus);
-            removeVisualConnection(new Connection(p, pointFocus));
+        if (pointFocus != null) {
+          if (!pointFocus.getNeighbors().containsAll(secondaryPointFoci)) {
+            for (Point p : secondaryPointFoci) {
+              p.connectTo(pointFocus);
+              addVisualConnection(new Connection(p, pointFocus));
+            }
+          } else {
+            for (Point p : secondaryPointFoci) {
+              p.severFrom(pointFocus);
+              removeVisualConnection(new Connection(p, pointFocus));
+            }
           }
         }
       } else {
+        // TODO if there are no points on the floor, then this will give an indexOutOfBoundsException
         displayContextMenu(adminMapMenu, (Point) circles.keySet().toArray()[0], e.getScreenX(),
             e.getScreenY());
       }
@@ -2148,7 +2157,7 @@ public class MapViewController extends CentralUIController implements Initializa
     // Cloned once here because the points could be changed after being copied, which is bad
     ListPoints lp = new ListPoints(secondaryPointFoci);
     clipBoard = lp.deepClone().getPoints();
-    for(Point p : clipBoard){
+    for (Point p : clipBoard) {
       // Makes sure that IDs do not repeat when saving
       p.setID(0);
     }
