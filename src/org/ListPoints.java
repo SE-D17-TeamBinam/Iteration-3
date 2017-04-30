@@ -42,7 +42,13 @@ public class ListPoints {
   public ListPoints deepClone(){
     HashMap<Point, Point> newPoints = new HashMap<Point, Point>();
     for(Point p : points){
-      newPoints.put(p, new Point(p.getXCoord(), p.getYCoord(), p.getName(), 0, new ArrayList<Point>(), p.getFloor()));
+      if(p.isElevator()){
+        newPoints.put(p, new ElevatorPoint(p.getXCoord(), p.getYCoord(), p.getName(), 0, new ArrayList<Point>(), p.getFloor()));
+      }else if(p.isStair()){
+        newPoints.put(p, new StairPoint(p.getXCoord(), p.getYCoord(), p.getName(), 0, new ArrayList<Point>(), p.getFloor()));
+      }else{
+        newPoints.put(p, new Point(p.getXCoord(), p.getYCoord(), p.getName(), 0, new ArrayList<Point>(), p.getFloor()));
+      }
     }
     for(Point p : points){
       Point p2 = newPoints.get(p);

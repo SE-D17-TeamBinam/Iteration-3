@@ -1,11 +1,21 @@
 package org;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by Alberto on 4/9/2017.
  */
 public class ElevatorPoint extends VerticalPoint {
+
+  public ElevatorPoint(int xCoord, int yCoord, ArrayList<String> names, int id,
+      ArrayList<Point> new_neighbors, int floor) {
+    super(xCoord, yCoord, names, id, new_neighbors, floor);
+    this.parent = null;
+    this.neighbors = new_neighbors;
+    this.cost = 0;
+    this.isBlocked = false;
+  }
 
   public ElevatorPoint(int xCoord, int yCoord, String name, int id, ArrayList<Point> new_neighbors, int floor){
     super(xCoord, yCoord, name, id, new_neighbors, floor);
@@ -48,5 +58,10 @@ public class ElevatorPoint extends VerticalPoint {
       //reaches here if for loop doesnt work, so no more vertical points with desried floor
       return false;
     }
+  }
+
+  @Override
+  public Object clone() {
+    return new ElevatorPoint(xCoord, yCoord, names, id, neighbors, floor);
   }
 }

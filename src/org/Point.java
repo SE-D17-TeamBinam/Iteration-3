@@ -17,7 +17,7 @@ public class Point {
 
   int xCoord;    //X coordinate
   int yCoord;    //Y coordinate
-  private ArrayList<String> names;  //Name of the room
+  protected ArrayList<String> names;  //Name of the room
   int id;      //Unique Identifier
   int floor;
   public ArrayList<Point> neighbors = new ArrayList<>();
@@ -25,6 +25,7 @@ public class Point {
   Point parent;
   int cost;
   boolean isBlocked;
+  String building;
 
   // Arbitrarily Large, number of Points should never exceed this amount
   public static final int ID_MAX = 3000001;
@@ -136,25 +137,11 @@ public class Point {
   }
 
   public void setBuilding(String building) {
-    int ind = names.size() - 1;
-    if(ind > -1) {
-      String lastName = names.get(ind);
-      if (lastName.contains("BUILDING=")) {
-        names.set(names.size() - 1, "BUILDING=" + building);
-      } else {
-        names.add("BUILDING=" + building);
-      }
-    } else {
-      names.add("BUILDING=" + building);
-    }
+    this.building = building;
   }
 
   public String getBuilding() {
-    String lastName = names.get(names.size() - 1);
-    if (lastName.contains("BUILDING=")) {
-      return lastName.split("=")[1];
-    }
-    return null;
+    return building;
   }
 
   public void setFloor(int floor) {

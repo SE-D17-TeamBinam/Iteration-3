@@ -7,6 +7,7 @@ import Networking.Carrier;
 import Networking.Emailer;
 import java.io.File;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -472,7 +473,12 @@ public class MapViewController extends CentralUIController implements Initializa
   }
 
   private void initializeChoiceBoxes() {
-    File dir = new File(getClass().getResource("/floor_plans/").getFile());
+    File dir = null;
+    try {
+      dir = Paths.get(getClass().getResource("/floor_plans/").toURI()).toFile();
+    }catch(Exception e){
+      e.printStackTrace();
+    }
     String[] floorImageNames = dir.list();
     for (String s : floorImageNames) {
       if (s.contains(".png")) {
@@ -504,7 +510,6 @@ public class MapViewController extends CentralUIController implements Initializa
         .setValue(buildingChoiceBox.getItems().get(buildingChoiceBox.getItems().size() - 1));
     floorChoiceBox.getItems().addAll(buildingFloors.get(currentBuilding));
     ArrayList<Integer> flrs = buildingFloors.get(currentBuilding);
-    System.out.println(flrs.size());
     floorChoiceBox.setValue(flrs.get(flrs.size() - 1));
     switchFloors((int) floorChoiceBox.getValue());
 
@@ -2000,7 +2005,6 @@ public class MapViewController extends CentralUIController implements Initializa
           for (Point p : secondaryPointFoci) {
             p.connectTo(pointFocus);
             addVisualConnection(new Connection(p, pointFocus));
-
           }
         } else {
           for (Point p : secondaryPointFoci) {
@@ -2067,7 +2071,6 @@ public class MapViewController extends CentralUIController implements Initializa
     // Cloned once here because the points could be changed after being copied, which is bad
     ListPoints lp = new ListPoints(secondaryPointFoci);
     clipBoard = lp.deepClone().getPoints();
-
     mapViewPane.setCursor(Cursor.DEFAULT);
   }
 
