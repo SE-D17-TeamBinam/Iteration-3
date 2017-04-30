@@ -868,13 +868,13 @@ public class MapViewController extends CentralUIController implements Initializa
     } else if (p.isElevator()) {
       c.setFill(ELEVATOR_POINT_COLOR);
     } else {
-      if ((p.getName() == null || p.getName().equals(" ")) && mapViewFlag == 3) {
+      if ((p.getName() == null || p.getName().equals("")) && mapViewFlag == 3) {
         c.setFill(Color.GRAY);
       } else {
         c.setFill(POINT_COLOR);
       }
     }
-    if (mapViewFlag == 3 || !(p.getName() == null || p.getName().equals(" "))) {
+    if (mapViewFlag == 3 || !(p.getName() == null || p.getName().equals(""))) {
       if (circles.get(p) == null) {
         circles.put(p, c);
         mapViewPane.getChildren().add(c);

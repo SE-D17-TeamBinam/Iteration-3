@@ -23,18 +23,18 @@ public class FakePoint {
   int cost;
 
   //Constructor
-  public FakePoint(double xCoord, double yCoord, String name) {
-    this.xCoord = (int) xCoord;
-    this.yCoord = (int) yCoord;
-    this.name = name;
-    this.name.replace(';','_');
-  }
-
-  public FakePoint(double xCoord, double yCoord, int floor) {
-    this.xCoord = (int) xCoord;
-    this.yCoord = (int) yCoord;
-    this.floor = floor;
-  }
+//  public FakePoint(double xCoord, double yCoord, String name) {
+//    this.xCoord = (int) xCoord;
+//    this.yCoord = (int) yCoord;
+//    this.name = name;
+//    this.name.replace(';','_');
+//  }
+//
+//  public FakePoint(double xCoord, double yCoord, int floor) {
+//    this.xCoord = (int) xCoord;
+//    this.yCoord = (int) yCoord;
+//    this.floor = floor;
+//  }
 
   public FakePoint(int xCoord, int yCoord, String name, int id, ArrayList<Integer> new_neighbors,
       int floor) {
@@ -55,7 +55,7 @@ public class FakePoint {
     this.name = "";
     if (equivalent.getNames() != null) {
       for (String n : equivalent.getNames()) {
-        if (n != null && n.length() > 1) {
+        if (n != null) {
           this.name += n + "\t";
         }
       }
@@ -155,7 +155,7 @@ public class FakePoint {
   public static ArrayList<Point> deepClone(ArrayList<Point> points){
     HashMap<Point, Point> newPoints = new HashMap<Point, Point>();
     for(Point p : points){
-      newPoints.put(p, new Point(p.getXCoord(), p.getYCoord(), p.getName(), p.getId(), new ArrayList<Point>(), p.getFloor()));
+      newPoints.put(p, new Point(p.getXCoord(), p.getYCoord(), p.getNames(), p.getId(), new ArrayList<Point>(), p.getFloor()));
     }
     for(Point p : points){
       Point p2 = newPoints.get(p);
