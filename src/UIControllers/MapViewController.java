@@ -7,6 +7,7 @@ import Networking.Carrier;
 import Networking.Emailer;
 import java.io.File;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -472,8 +473,12 @@ public class MapViewController extends CentralUIController implements Initializa
   }
 
   private void initializeChoiceBoxes() {
-    File dir = new File(getClass().getResource("/floor_plans/").getFile());
-    String[] floorImageNames = dir.list();
+    File dir = null;
+    try {
+      dir = Paths.get(getClass().getResource("/floor_plans/").toURI()).toFile();
+    }catch(Exception e){
+      e.printStackTrace();
+    }    String[] floorImageNames = dir.list();
     for (String s : floorImageNames) {
       if (s.contains(".png")) {
         String[] building_floors = s.split("-");
