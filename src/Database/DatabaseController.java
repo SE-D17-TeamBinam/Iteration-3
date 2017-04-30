@@ -967,7 +967,8 @@ public class DatabaseController implements DatabaseInterface {
       last_name = p.getLastName().toLowerCase().replaceAll("\\s+", "");
       fl = first_name + last_name;
       lf = last_name + first_name;
-      fuzzySearchThreshold = fl.length() - 1;
+      fuzzySearchThreshold = 3;//fl.length() - 1;
+      int fuzzySearchThreshold3 = Math.max(first_name.length(),last_name.length());
       //System.out.println("first, last, fist-last,last-first : @" + first_name + "@ @" + last_name + "@ @" + fl + "@ @" + lf + "@ ");
       if (StringUtils.containsAny(first_name, searchTerm2) ||
           StringUtils.containsAny(last_name, searchTerm2)/*||
@@ -976,8 +977,8 @@ public class DatabaseController implements DatabaseInterface {
         int fn = StringUtils.getLevenshteinDistance(first_name, searchTerm2, fuzzySearchThreshold);
         //System.out.println("fn weight: @" + fn);
         int ln = StringUtils.getLevenshteinDistance(last_name, searchTerm2, fuzzySearchThreshold);
-        int fln = StringUtils.getLevenshteinDistance(fl, searchTerm2, fuzzySearchThreshold);
-        int lfn = StringUtils.getLevenshteinDistance(lf, searchTerm2, fuzzySearchThreshold);
+        int fln = StringUtils.getLevenshteinDistance(fl, searchTerm2, fuzzySearchThreshold3);
+        int lfn = StringUtils.getLevenshteinDistance(lf, searchTerm2, fuzzySearchThreshold3);
         //System.out.println("ln weight: @" + ln);
         //int t = StringUtils.getLevenshteinDistance(p.getTitle(),searchTerm);
           /*if(first_name.length() + last_name.length() < searchTerm2.length() || fn == -1){
@@ -1002,7 +1003,7 @@ public class DatabaseController implements DatabaseInterface {
         if (fln == -1) {
           fln = 10000;
         }
-        if (fn == 10000 && ln == 10000) {
+        if ((fn == 10000 && ln == 10000) && (lfn == 10000 && fln == 10000)) {
           include = false;
         }
 
@@ -1137,7 +1138,7 @@ public class DatabaseController implements DatabaseInterface {
 //    Soundex soundex = new Soundex();
 //    System.out.println("here");
 
-    searchTerm = searchTerm.toLowerCase();
+    searchTerm = searchTerm.toLowerCase().replaceAll("\\s+", "");
     LinkedHashMap<Integer, Double> length_map = make_length_map(50);
     int fuzzySearchThreshold2 = 20;
     for (Point p : named_points) {
@@ -1149,12 +1150,17 @@ public class DatabaseController implements DatabaseInterface {
       long startTime2 = System.nanoTime();
       int i;
       for (i = 0; i < names.size(); i++) {
-        lc_names.add(names.get(i).toLowerCase());
+        String name = names.get(i).toLowerCase().replaceAll("\\s+", "");
+        lc_names.add(name);
+        fuzzySearchThreshold2 = name.length()/2;
         if (StringUtils.containsAny(lc_names.get(i), searchTerm)) {
           worthit = true;
-          double value2 = (double) StringUtils
-              .getLevenshteinDistance(lc_names.get(i), searchTerm, fuzzySearchThreshold2);
-          if (StringUtils.startsWith(lc_names.get(i), searchTerm)) {
+          double value2 = (double) StringUtils.getLevenshteinDistance(name, searchTerm, fuzzySearchThreshold2);
+          if(value2 == ((double)-1)){
+            worthit = false;
+          }
+          if (StringUtils.containsIgnoreCase(name, searchTerm)) {
+            worthit = true;
             if (lc_names.get(i) != null) {
               System.out
                   .println("this name,length: " + lc_names.get(i) + " " + lc_names.get(i).length());
@@ -1188,9 +1194,9 @@ public class DatabaseController implements DatabaseInterface {
         my_map.put(p, value);
         System.out.println("here, value, id: " + value + " " + p.getId());
 
-      } else {
+      } /*else {
         my_map.put(p, 10000.0);
-      }
+      }*/
 
     }
     LinkedHashMap sortedMap = sortByValues(my_map);
