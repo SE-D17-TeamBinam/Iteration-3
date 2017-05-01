@@ -417,6 +417,7 @@ public class MapViewController extends CentralUIController implements Initializa
 
   @FXML
   public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
+    currentBuilding = mapViewFlag == 2 ? "Ground Floor STAFF" : "Ground Floor";
     startPointIcon = new ImageView(new Image("/icons/start_icon.png"));
     endPointIcon = new ImageView(new Image("/icons/end_icon.png"));
     startPointIcon.setFitWidth(START_ICON_FIT*current_zoom_scale);
@@ -1766,7 +1767,7 @@ public class MapViewController extends CentralUIController implements Initializa
     } else if (directions.contains("straight")) {
       out = new Image("/icons/straight.png");
     } else if (directions.contains("destination")) {
-      out = new Image("/icons/destination.png");
+      out = new Image("/icons/end_icon.png");
     } else if (directions.contains("around")) {
       out = new Image("/icons/turn-around.png");
     } else if (directions.contains("floor")) {
