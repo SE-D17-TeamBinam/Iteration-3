@@ -214,7 +214,7 @@ public class CentralUIController {
     }
   }
 
-  private void setTimeOut (int time, Stage primaryStage) {
+  public void setTimeOut (int time, Stage primaryStage) {
     timeOut = makeKeyFrame(time, primaryStage);
     timeOut.play();
   }
@@ -224,7 +224,7 @@ public class CentralUIController {
     setTimeOut(time, primaryStage);
   }
 
-  private void stopTimeOut () {
+  public void stopTimeOut () {
     timeOut.stop();
   }
 

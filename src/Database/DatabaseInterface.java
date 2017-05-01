@@ -33,6 +33,12 @@ public interface DatabaseInterface {
   public ArrayList<Point> getNamedPoints();
 
   /**
+   * Gets a list of the local copy of points that have a name including staff points
+   * @return ArrayList of Points that are all the local points that have names
+   */
+  public ArrayList<Point> getStaffPoints();
+
+  /**
    * Tries to pull data from the database into the local copies then returns the local copy of
    * points
    *
