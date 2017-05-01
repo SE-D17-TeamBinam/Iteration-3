@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Properties;
-import java.util.Random;
 
 /**
  * Created by Praneeth Appikatla on 4/25/2017.
@@ -125,18 +124,18 @@ public class CredentialManager implements CredentialInterface{
     return false;
   }
 
-  public static String getSaltString(int length) {
-    // helper to generate a random string from certain characters
-    String saltChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-    StringBuilder salt = new StringBuilder();
-    Random rand = new Random();
-    while (salt.length() < length) { // length of random string
-      int index = (int) (rand.nextFloat() * saltChars.length());
-      salt.append(saltChars.charAt(index));
-    }
-    String randStr = salt.toString();
-    return randStr;
-  }
+//  public static String getSaltString(int length) {
+//    // helper to generate a random string from certain characters
+//    String saltChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+//    StringBuilder salt = new StringBuilder();
+//    Random rand = new Random();
+//    while (salt.length() < length) { // length of random string
+//      int index = (int) (rand.nextFloat() * saltChars.length());
+//      salt.append(saltChars.charAt(index));
+//    }
+//    String randStr = salt.toString();
+//    return randStr;
+//  }
 
 
 }
