@@ -76,8 +76,9 @@ public class AdminMenuController extends CentralUIController implements Initiali
     setBackground(anchorPane);
   }
 
-
-
+  /**
+   * set the scene to admin map
+   */
   @FXML
   public void editMap() {
     mapViewFlag = 3;
@@ -89,6 +90,9 @@ public class AdminMenuController extends CentralUIController implements Initiali
     }
   }
 
+  /**
+   * set the scene to directory editor
+   */
   @FXML
   public void editDirectory() {
     Stage primaryStage = (Stage) AdminMenu.getScene().getWindow();
@@ -99,6 +103,9 @@ public class AdminMenuController extends CentralUIController implements Initiali
     }
   }
 
+  /**
+   * set the scene to settings menu
+   */
   @FXML
   public void editSettings () {
     Stage primaryStage = (Stage) AdminMenu.getScene().getWindow();
@@ -110,6 +117,9 @@ public class AdminMenuController extends CentralUIController implements Initiali
     }
   }
 
+  /**
+   * set the scene back to admin login page
+   */
   @FXML
   public void back() {
     Stage primaryStage = (Stage) AdminMenu.getScene().getWindow();
@@ -120,6 +130,9 @@ public class AdminMenuController extends CentralUIController implements Initiali
     }
   }
 
+  /**
+   * set the scene to main menu
+   */
   public void logoff() {
     Stage primaryStage = (Stage) AdminMenu.getScene().getWindow();
     try {

@@ -62,6 +62,7 @@ public class AdminLoginController extends CentralUIController implements Initial
     AdminPassField.setLayoutX(x_res/2 - 20);
     LoginError.setLayoutX(x_res/2 - LoginError.getPrefWidth()/2);
   }
+
   @Override
   public void customListenerY () {
     AdminNameLabel.setLayoutY(4*y_res/11);
@@ -72,11 +73,13 @@ public class AdminLoginController extends CentralUIController implements Initial
     LoginError.setLayoutY(7*y_res/11 + 10);
   }
 
-  // Detects if a key is pressed when the username, password, or login button are highlighted
-  // If the key pressed is the ENTER key, then it attempts to login with the current input
+  /**
+   * try to login when enter is pressed
+   * @param event the Key event containing pressed key code
+   */
   @FXML
-  private void tryLogin(KeyEvent e){
-    if(e.getCode().toString().equals("ENTER")){
+  private void tryLogin(KeyEvent event){
+    if(event.getCode().toString().equals("ENTER")){
       login();
     }
   }
@@ -104,7 +107,7 @@ public class AdminLoginController extends CentralUIController implements Initial
   }
 
   /**
-   * go back to the main menu
+   * set the scene back to main menu
    */
   public void back () {
     Stage primaryStage = (Stage) AdminLogin.getScene().getWindow();
