@@ -240,7 +240,7 @@ public class SignupMenuController extends CentralUIController implements Initial
     grid.setPadding(new Insets(40, 0, 10, 10));
 
     TextField userName = new TextField();
-    TextField userPass = new TextField();
+    PasswordField userPass = new PasswordField();
     Label uLabel = new Label("Username:");
     Label pLabel = new Label("Password:");
 
@@ -287,6 +287,57 @@ public class SignupMenuController extends CentralUIController implements Initial
 
       }
     });
+
+    userName.setOnKeyPressed(new EventHandler<KeyEvent>() {
+      @Override
+      public void handle(KeyEvent event) {
+        if (event.getCode().toString().equals("ENTER")){
+          res.set(false);
+          String username = userName.getText();
+          String pass = userPass.getText();
+          Dialog error = new Alert(AlertType.ERROR);
+          error.setContentText("The username or password you have entered is incorrect.");
+          error.setHeaderText("Verification failed");
+          if (username.equals(currUsername) && pass.equals(currentUser.get(currUsername))) {
+            res.set(true);
+            dialog.close();
+          } else {
+            res.set(false);
+            error.showAndWait();
+          }
+          if (username.equals("") || pass.equals("")) {
+            res.set(false);
+            error.showAndWait();
+          }
+        }
+      }
+    });
+
+    userPass.setOnKeyPressed(new EventHandler<KeyEvent>() {
+      @Override
+      public void handle(KeyEvent event) {
+        if (event.getCode().toString().equals("ENTER")){
+          res.set(false);
+          String username = userName.getText();
+          String pass = userPass.getText();
+          Dialog error = new Alert(AlertType.ERROR);
+          error.setContentText("The username or password you have entered is incorrect.");
+          error.setHeaderText("Verification failed");
+          if (username.equals(currUsername) && pass.equals(currentUser.get(currUsername))) {
+            res.set(true);
+            dialog.close();
+          } else {
+            res.set(false);
+            error.showAndWait();
+          }
+          if (username.equals("") || pass.equals("")) {
+            res.set(false);
+            error.showAndWait();
+          }
+        }
+      }
+    });
+
 
     cancelButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
       @Override

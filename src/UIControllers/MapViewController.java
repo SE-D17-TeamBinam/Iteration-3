@@ -2377,6 +2377,7 @@ public class MapViewController extends CentralUIController implements Initializa
           }
       });
 
+
       cancelButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
         @Override
         public void handle(MouseEvent event) {
