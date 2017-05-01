@@ -5,13 +5,28 @@ import Definitions.Coordinate;
 import Definitions.Physician;
 import Networking.Carrier;
 import Networking.Emailer;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.nio.file.Paths;
+import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
@@ -536,14 +551,53 @@ public class MapViewController extends CentralUIController implements Initializa
         });
   }
 
+  private String[] getResourceListing(Class clazz, String path) throws URISyntaxException, IOException {
+    URL dirURL = clazz.getClassLoader().getResource(path);
+    if (dirURL != null && dirURL.getProtocol().equals("file")) {
+        /* A file path: easy enough */
+      return new File(dirURL.toURI()).list();
+    }
+
+    if (dirURL == null) {
+        /*
+         * In case of a jar file, we can't actually find a directory.
+         * Have to assume the same jar as clazz.
+         */
+      String me = clazz.getName().replace(".", "/")+".class";
+      dirURL = clazz.getClassLoader().getResource(me);
+    }
+
+    if (dirURL.getProtocol().equals("jar")) {
+        /* A JAR path */
+      String jarPath = dirURL.getPath().substring(5, dirURL.getPath().indexOf("!")); //strip out only the JAR file
+      JarFile jar = new JarFile(URLDecoder.decode(jarPath, "UTF-8"));
+      Enumeration<JarEntry> entries = jar.entries(); //gives ALL entries in jar
+      Set<String> result = new HashSet<String>(); //avoid duplicates in case it is a subdirectory
+      while(entries.hasMoreElements()) {
+        String name = entries.nextElement().getName();
+        if (name.startsWith(path)) { //filter according to the path
+          String entry = name.substring(path.length());
+          int checkSubdir = entry.indexOf("/");
+          if (checkSubdir >= 0) {
+            // if it is a subdirectory, we just return the directory name
+            entry = entry.substring(0, checkSubdir);
+          }
+          result.add(entry);
+        }
+      }
+      return result.toArray(new String[result.size()]);
+    }
+
+    throw new UnsupportedOperationException("Cannot list files for URL "+dirURL);
+  }
+
   private void initializeCampusChoiceBoxes() {
-    File dir = null;
+    String[] floorImageNames = {};
     try {
-      dir = Paths.get(getClass().getResource("/floor_plans/").toURI()).toFile();
-    } catch (Exception e) {
+      floorImageNames = getResourceListing(getClass(), "floor_plans/");
+    } catch (Exception e){
       e.printStackTrace();
     }
-    String[] floorImageNames = dir.list();
     for (String s : floorImageNames) {
       if (s.contains(".png")) {
         String[] building_floors = s.split("-");
@@ -645,8 +699,12 @@ public class MapViewController extends CentralUIController implements Initializa
   private void globalTimerActions() {
     updateProgressBar();
     repositionResultsList();
-    animateUserPane();
-    animateTextDirectionsPane();
+    if(userPane.isVisible()) {
+      animateUserPane();
+      animateTextDirectionsPane();
+    }else{
+      map_x_max = adminPane.getLayoutX();
+    }
     emailPane.setLayoutY(textDirectionsPaneRectangle.getHeight() - emailPane.getHeight() - 5);
     textDirectionsListView
         .setPrefHeight(emailPane.getLayoutY() - textDirectionsListView.getLayoutY() - 5);
@@ -690,8 +748,6 @@ public class MapViewController extends CentralUIController implements Initializa
       amt = x;
     }
     userPane.setLayoutX(amt);
-    map_x_max = Math.min(amt + userPaneTabImageView.getFitWidth(),
-        textDirectionsPane.getLayoutX() + textDirectionsPaneTabImageView.getFitWidth());
     fixZoomPanePos();
   }
 
@@ -1816,7 +1872,7 @@ public class MapViewController extends CentralUIController implements Initializa
       out = new Image("/icons/turn-around.png");
     } else if (directions.contains("floor")) {
       out = new Image("/icons/elevator.png");
-    } else if (directions.contains("start")){
+    } else if (directions.contains("Start")){
       out = new Image("/icons/start_icon.png");
     }
     return out;
