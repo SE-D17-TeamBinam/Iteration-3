@@ -276,9 +276,8 @@ public class SignupMenuController extends CentralUIController implements Initial
         error.setHeaderText("Verification failed");
         if (username.equals(currUsername) && pass.equals(currentUser.get(currUsername))) {
           res.set(true);
-          SettingsIO settings = new SettingsIO();
-          setTimeOut(settings.getTimeout(), primaryStage);
           dialog.close();
+          resetTimeOut(primaryStage);
         } else {
           res.set(false);
           error.showAndWait();
@@ -303,9 +302,8 @@ public class SignupMenuController extends CentralUIController implements Initial
           error.setHeaderText("Verification failed");
           if (username.equals(currUsername) && pass.equals(currentUser.get(currUsername))) {
             res.set(true);
-            SettingsIO settings = new SettingsIO();
-            setTimeOut(settings.getTimeout(), primaryStage);
             dialog.close();
+            resetTimeOut(primaryStage);
           } else {
             res.set(false);
             error.showAndWait();
@@ -330,9 +328,8 @@ public class SignupMenuController extends CentralUIController implements Initial
           error.setHeaderText("Verification failed");
           if (username.equals(currUsername) && pass.equals(currentUser.get(currUsername))) {
             res.set(true);
-            SettingsIO settings = new SettingsIO();
-            setTimeOut(settings.getTimeout(), primaryStage);
             dialog.close();
+            resetTimeOut(primaryStage);
           } else {
             res.set(false);
             error.showAndWait();
@@ -349,14 +346,11 @@ public class SignupMenuController extends CentralUIController implements Initial
     cancelButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
       @Override
       public void handle(MouseEvent event) {
-        SettingsIO settings = new SettingsIO();
-        setTimeOut(settings.getTimeout(), primaryStage);
         dialog.close();
+        resetTimeOut(primaryStage);
         res.set(false);
       }
     });
-
-
     stopTimeOut();
     dialog.showAndWait();
 
@@ -364,8 +358,7 @@ public class SignupMenuController extends CentralUIController implements Initial
     return getFlag;
     }
 
-
-  }
+}
 
 
 
