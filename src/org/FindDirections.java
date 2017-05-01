@@ -19,9 +19,10 @@ public class FindDirections {
   String reverse = "Turn around";
   String finished = "You are at your destination";
   String changeFloor = "Go to floor";
-  public float CurrentAngle;
-  public float TurnChange;
-
+  public float currentAngle;
+  public float reorient;
+  int step=0;
+  int count=0;
 
   /**
    * This creates an empty lists that stores the strings of directions.
@@ -32,7 +33,7 @@ public class FindDirections {
    * This calculates the angles between points.
    */
   private float getAngle(Point destination, Point start){
-    return (float) (Math.toDegrees(Math.atan2((destination.getXCoord()- start.getXCoord()),( destination.getYCoord() - start.getYCoord()))));
+    return (float) (Math.toDegrees(Math.atan2((start.getXCoord()-destination.getXCoord()),(start.getYCoord()-destination.getYCoord()))));
   }
   /**
    * This takes in the points from A* and produces text directions between points.
@@ -44,24 +45,22 @@ public class FindDirections {
     for(int i=reversePath.size()-1;  i>=0; i--){
       path.add(reversePath.get(i));
     }
-    int count = 0;
     Point destination = path.get(path.size()-1);
 
     while(destination !=path.get(count)){
       Point current = path.get(count);
-      Angle = getAngle(path.get(count+1), current);
-      CurrentAngle=(TurnChange+Angle)%180;
+      Angle = getAngle(current, path.get(count+1));
+      currentAngle=(reorient+Angle)%180;
       if(current.getFloor()==path.get(count+1).getFloor()){
         FloorDirections(path.get(count+1), current);
-        count++;
+        step++;
       } else {
 
         //indicates floor change in text direction
         directions.add(changeFloor + " "+ path.get(count+1).getFloor());
-        count++;
 
       }
-
+      count++;
     }
     count=0;
     directions.add(finished);
@@ -89,36 +88,49 @@ public class FindDirections {
     float newY= next.getYCoord();
     float startY= start.getYCoord();
   //  if(CurrentAngle==0 && newY>startY){
-      if (CurrentAngle <= 45 && CurrentAngle >= -45) {
+    boolean previous;
+      if (currentAngle <= 45 && currentAngle >= -45) {
         directions.add(straight + " " + next.getName());
-      } else if (CurrentAngle < 135 && CurrentAngle > 45) {
+        if(directions.get(step-1).equals((straight + " " + next.getName()))){
+          directions.remove(step-1);
+        }
+      } else if (currentAngle < 135 && currentAngle > 45) {
         directions.add(right);
         directions.add(straight + " " + next.getName());
-        ChangeDirectionRight(Angle);
-      } else if (CurrentAngle >= 135 || CurrentAngle <= -135) {
+        step++;
+        ChangeOrientationRight(Angle);
+
+      } else if (currentAngle >= 135 || currentAngle <= -135) {
         directions.add(reverse);
         directions.add(straight + " " + next.getName());
-        ChangeDirectionReverse(Angle);
-      } else if (CurrentAngle > -135 && CurrentAngle < -45) {
+        step++;
+       // ChangeDirectionReverse(Angle);
+      } else if (currentAngle > -135 && currentAngle < -45) {
         directions.add(left);
         directions.add(straight + " " + next.getName());
-        ChangeDirectionLeft(Angle);
+        step++;
+        ChangeOrientationLeft(Angle);
       }
+   // ResetDirection(Angle);
 
     }//else{
       //directions.add(reverse);
     //}
     //}
 
-    public void ChangeDirectionRight(float Angle){
-      this.TurnChange = -90;
+    public void ResetDirection(float Angle){
+      this.reorient = 0;
 
     }
-    public void ChangeDirectionLeft(float Angle){
-      this.TurnChange =90;
+    public void ChangeOrientationRight(float Angle){
+      this.reorient += 90;
+
     }
-    public void ChangeDirectionReverse(float Angle){
-      this.TurnChange =180;
+    public void ChangeOrientationLeft(float Angle){
+      this.reorient =90;
+    }
+    public void ChangeOrientationReverse(float Angle){
+      this.reorient =180;
     }
   /**
    * Takes in the directions and produces epeech.
