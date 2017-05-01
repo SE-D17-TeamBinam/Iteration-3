@@ -13,9 +13,21 @@ public abstract class VerticalPoint extends Point{
     super(xCoord, yCoord, name, id, new_neighbors, floor);
   }
 
+  VerticalPoint(int xCoord, int yCoord, ArrayList<String> names, int id, ArrayList<Point> new_neighbors, int floor){
+    super(xCoord, yCoord, names, id, new_neighbors, floor);
+  }
+
   VerticalPoint(int xCoord, int yCoord, int floor){
     super(xCoord, yCoord, floor);
   }
 
+
+  VerticalPoint(int xCoord, int yCoord, String name, int id, ArrayList<Point> new_neighbors, int floor, String building){
+    super(xCoord, yCoord, name, id, new_neighbors, floor, building);
+  }
+
+  VerticalPoint(int xCoord, int yCoord, ArrayList<String> names, int id, ArrayList<Point> new_neighbors, int floor, String building){
+    super(xCoord, yCoord, names, id, new_neighbors, floor, building);
+  }
 
 }

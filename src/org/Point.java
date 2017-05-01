@@ -1,5 +1,6 @@
 package org;
 
+import Database.DatabaseController;
 import Database.FakePoint;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,10 +18,11 @@ public class Point {
 
   int xCoord;    //X coordinate
   int yCoord;    //Y coordinate
-  private ArrayList<String> names;  //Name of the room
+  protected ArrayList<String> names;  //Name of the room
   int id;      //Unique Identifier
   int floor;
   public ArrayList<Point> neighbors = new ArrayList<>();
+  private String buildingName;
   //Attributes For A* only below.
   Point parent;
   int cost;
@@ -35,6 +37,8 @@ public class Point {
     this.yCoord = (int) yCoord;
     this.names = names;
     this.isBlocked = false;
+    this.names = new ArrayList<String>();
+    buildingName = "";
   }
 
   public Point(double xCoord, double yCoord, int floor) {
@@ -43,6 +47,7 @@ public class Point {
     this.floor = floor;
     this.isBlocked = false;
     names = new ArrayList<String>();
+    buildingName = "";
   }
 
   public Point(int xCoord, int yCoord, ArrayList<String> names, int id,
@@ -57,6 +62,23 @@ public class Point {
     this.cost = 0;
     this.floor = floor;
     this.isBlocked = false;
+    buildingName = "";
+  }
+
+
+  public Point(int xCoord, int yCoord, ArrayList<String> names, int id,
+      ArrayList<Point> new_neighbors,
+      int floor, String building) {
+    this.xCoord = xCoord;
+    this.yCoord = yCoord;
+    this.names = names;
+    this.id = id;
+    this.parent = null;
+    this.neighbors = new_neighbors;
+    this.cost = 0;
+    this.floor = floor;
+    this.isBlocked = false;
+    buildingName = building;
   }
 
   public Point(int xCoord, int yCoord, String name, int id, ArrayList<Point> new_neighbors,
@@ -70,6 +92,21 @@ public class Point {
     this.cost = 0;
     this.floor = floor;
     this.isBlocked = false;
+    buildingName = "";
+  }
+
+  public Point(int xCoord, int yCoord, String name, int id, ArrayList<Point> new_neighbors,
+      int floor, String building) {
+    this.xCoord = xCoord;
+    this.yCoord = yCoord;
+    this.names = new ArrayList<String>(Arrays.asList(name));
+    this.id = id;
+    this.parent = null;
+    this.neighbors = new_neighbors;
+    this.cost = 0;
+    this.floor = floor;
+    this.isBlocked = false;
+    buildingName = building;
   }
 
   //Methods{
@@ -82,11 +119,13 @@ public class Point {
   }
 
   public void connectTo(Point node) {
-    if (!node.getNeighbors().contains(this)) {
-      node.getNeighbors().add(this);
-    }
-    if (!this.getNeighbors().contains(node)) {
-      this.neighbors.add(node);
+    if(!node.equals(this)) {
+      if (!node.getNeighbors().contains(this)) {
+        node.getNeighbors().add(this);
+      }
+      if (!this.getNeighbors().contains(node)) {
+        this.neighbors.add(node);
+      }
     }
   }
 
@@ -129,32 +168,41 @@ public class Point {
   }
 
   public String getName() {
-    if (names != null && names.size() > 0) {
-      return names.get(0);
+    if (names != null) {
+      if (names.size() > 0 && names.get(0) != null) {
+        if (names.get(0).equals("ELEVATOR"))
+          return "Elevator";
+        return names.get(0);
+      }
     }
     return null;
   }
 
   public void setBuilding(String building) {
-    int ind = names.size() - 1;
-    if(ind > -1) {
-      String lastName = names.get(ind);
-      if (lastName.contains("BUILDING=")) {
-        names.set(names.size() - 1, "BUILDING=" + building);
-      } else {
-        names.add("BUILDING=" + building);
-      }
-    } else {
-      names.add("BUILDING=" + building);
-    }
+//    if (names.size() == 0 || names.get(0) == null){
+//      names.set(0,"");
+//    }
+//    int ind = names.size() - 1;
+//    if(ind > -1) {
+//      String lastName = names.get(ind);
+//      if (lastName.contains("BUILDING=")) {
+//        names.set(names.size() - 1, "BUILDING=" + building);
+//      } else {
+//        names.add("BUILDING=" + building);
+//      }
+//    } else {
+//      names.add("BUILDING=" + building);
+//    }
+    this.buildingName = building;
   }
 
   public String getBuilding() {
-    String lastName = names.get(names.size() - 1);
-    if (lastName.contains("BUILDING=")) {
-      return lastName.split("=")[1];
-    }
-    return null;
+//    String lastName = names.get(names.size() - 1);
+//    if (lastName.contains("BUILDING=")) {
+//      return lastName.split("=")[1];
+//    }
+//    return null;
+    return buildingName;
   }
 
   public void setFloor(int floor) {
@@ -270,6 +318,11 @@ public class Point {
   }
 
 
+  /**
+   * Checks all attributes, primitive and non
+   * @param obj The object to compare to
+   * @return true if they're equivalent, false otherwise
+   */
   @Override
   public boolean equals(Object obj) {
     // test if the obj is null
@@ -290,16 +343,15 @@ public class Point {
 
     // next test the list of names
     if (!pobj.names.equals(this.names)) {
+    if (pobj.names != null && this.names!= null && !pobj.names.equals(this.names))
       return false;
     }
 
     //test the neighbors of each point
     FakePoint fthis = new FakePoint(this);
-    FakePoint fpobj = new FakePoint(
-        pobj); // change to fake so that we can compare the list of ids not the list of Points
-    if (!fpobj.neighbors.equals(fthis.neighbors)) {
+    FakePoint fpobj = new FakePoint(pobj); // change to fake so that we can compare the list of ids not the list of Points
+    if (!DatabaseController.compareNeighbors(fthis.neighbors, fpobj.getNeighbors()))
       return false;
-    }
 
     return true; // Everything checks out
   }
@@ -308,4 +360,11 @@ public class Point {
   public Object clone() {
     return new Point(xCoord, yCoord, names, id, neighbors, floor);
   }
+
+
+  public String toStringMoreInfo(){
+    return this.getName() + "(" + this.id + ") at x:" + xCoord + ", y:" + yCoord + " on floor " + this.floor;
+  }
+
 }
+

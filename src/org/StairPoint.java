@@ -7,8 +7,21 @@ import java.util.ArrayList;
  */
 public class StairPoint extends VerticalPoint {
 
+  public StairPoint(int xCoord, int yCoord, ArrayList<String> names, int id,
+      ArrayList<Point> new_neighbors, int floor) {
+    super(xCoord, yCoord, names, id, new_neighbors, floor);
+    this.parent = null;
+    this.neighbors = new_neighbors;
+    this.cost = 0;
+    this.isBlocked = false;
+  }
+
   public StairPoint(int xCoord, int yCoord, String name, int id, ArrayList<Point> new_neighbors, int floor){
     super(xCoord, yCoord, name, id, new_neighbors, floor);
+  }
+
+  public StairPoint(int xCoord, int yCoord, String name, int id, ArrayList<Point> new_neighbors, int floor, String building){
+    super(xCoord, yCoord, name, id, new_neighbors, floor, building);
   }
 
   public StairPoint(int xCoord, int yCoord, int floor){
