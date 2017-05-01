@@ -348,6 +348,9 @@ public class MapViewController extends CentralUIController implements Initializa
   private double selectionRectangleY = 0;
   private Rectangle selectionRectangle = new Rectangle();
 
+  private final double END_ICON_FIT = 75;
+  private final double START_ICON_FIT = 75;
+
   // Tracks whether or not the mouse has been dragged since being pressed down
   private boolean mouseDragged = false;
 
@@ -414,6 +417,12 @@ public class MapViewController extends CentralUIController implements Initializa
 
   @FXML
   public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
+    startPointIcon = new ImageView(new Image("/icons/start_icon.png"));
+    endPointIcon = new ImageView(new Image("/icons/end_icon.png"));
+    startPointIcon.setFitWidth(START_ICON_FIT*current_zoom_scale);
+    startPointIcon.setFitHeight(START_ICON_FIT*current_zoom_scale);
+    endPointIcon.setFitWidth(END_ICON_FIT*current_zoom_scale);
+    endPointIcon.setFitHeight(END_ICON_FIT*current_zoom_scale);
     initializeSearch();
     if (mapViewFlag == 1) {
       AdminLogOff.setVisible(false);
@@ -439,6 +448,7 @@ public class MapViewController extends CentralUIController implements Initializa
     repositionResultsList();
     initializePathFindingBox();
     findMaxID();
+
   }
 
   @FXML
@@ -471,6 +481,7 @@ public class MapViewController extends CentralUIController implements Initializa
               }
             }
             items.removeAll(toRemove);
+            sortFloorChoiceBox();
             switchFloors(currentFloor);
           }
         });
@@ -582,6 +593,7 @@ public class MapViewController extends CentralUIController implements Initializa
                 if (ind > -1) {
                   Point myPoint = allPoints.get(ind);
                   searchingPoint = null;
+                  buildingChoiceBox.setValue(myPoint.getBuilding());
                   floorChoiceBox.setValue(myPoint.getFloor());
                   setPointFocus(myPoint);
                   setEnd(myPoint);
@@ -599,7 +611,6 @@ public class MapViewController extends CentralUIController implements Initializa
               */
             }
             globalTimerActions();
-
           }
         }));
     globalTimer.setCycleCount(Timeline.INDEFINITE);
@@ -614,6 +625,8 @@ public class MapViewController extends CentralUIController implements Initializa
     emailPane.setLayoutY(textDirectionsPaneRectangle.getHeight() - emailPane.getHeight() - 5);
     textDirectionsListView
         .setPrefHeight(emailPane.getLayoutY() - textDirectionsListView.getLayoutY() - 5);
+    moveEndIcon((Point) endNodeBox.getValue());
+    moveStartIcon((Point) startNodeBox.getValue());
   }
 
   private void repositionResultsList() {
@@ -702,6 +715,8 @@ public class MapViewController extends CentralUIController implements Initializa
     mapViewPane.getChildren().clear();
     mapViewPane.getChildren().add(mapImage);
     mapViewPane.getChildren().add(selectionRectangle);
+    mapViewPane.getChildren().add(startPointIcon);
+    mapViewPane.getChildren().add(endPointIcon);
     circles.clear();
     lines.clear();
     connections.clear();
@@ -756,6 +771,9 @@ public class MapViewController extends CentralUIController implements Initializa
 
       startNodeBox.setValue(start);
       endNodeBox.setValue(end);
+
+      moveEndIcon((Point) endNodeBox.getValue());
+      moveStartIcon((Point) startNodeBox.getValue());
 
       refreshListView();
     } else {
@@ -1270,6 +1288,8 @@ public class MapViewController extends CentralUIController implements Initializa
     updateMapScale(delta);
     fixMapDisplayLocation();
     updateVisualNodes();
+    moveStartIcon((Point) startNodeBox.getValue());
+    moveEndIcon((Point) endNodeBox.getValue());
   }
 
   private void updateMapScale(boolean delta) {
@@ -1420,6 +1440,40 @@ public class MapViewController extends CentralUIController implements Initializa
   }
 
   @FXML
+  private ImageView endPointIcon;
+
+  @FXML
+  private ImageView startPointIcon;
+
+  private void moveEndIcon(Point endPoint){
+    if(endPoint != null && endPoint.getFloor() == currentFloor && endPoint.getBuilding().equals(currentBuilding)) {
+      Coordinate c = new Coordinate(endPoint.getXCoord(), endPoint.getYCoord());
+      Coordinate dest = pixelToCoordinate(c);
+      endPointIcon.setVisible(true);
+      endPointIcon.setFitWidth(END_ICON_FIT*current_zoom_scale);
+      endPointIcon.setFitHeight(END_ICON_FIT*current_zoom_scale);
+      endPointIcon.setX(dest.getX() - endPointIcon.getFitWidth()/2);
+      endPointIcon.setY(dest.getY() - endPointIcon.getFitHeight()/2);
+    }else{
+      endPointIcon.setVisible(false);
+    }
+  }
+
+  private void moveStartIcon(Point startPoint){
+    if(startPoint != null && startPoint.getFloor() == currentFloor && startPoint.getBuilding().equals(currentBuilding)) {
+      Coordinate c = new Coordinate(startPoint.getXCoord(), startPoint.getYCoord());
+      Coordinate dest = pixelToCoordinate(c);
+      startPointIcon.setVisible(true);
+      startPointIcon.setFitWidth(START_ICON_FIT*current_zoom_scale);
+      startPointIcon.setFitHeight(START_ICON_FIT*current_zoom_scale);
+      startPointIcon.setX(dest.getX() - startPointIcon.getFitWidth()/2);
+      startPointIcon.setY(dest.getY() - startPointIcon.getFitHeight()/2);
+    }else{
+      startPointIcon.setVisible(false);
+    }
+  }
+
+  @FXML
   private void setEndButtonClicked() {
     setEnd(getSelectedPointInSearch());
   }
@@ -1430,6 +1484,7 @@ public class MapViewController extends CentralUIController implements Initializa
         endNodeBox.getSelectionModel().clearSelection();
         if (newEnd.getFloor() == currentFloor && currentBuilding.equals(newEnd.getBuilding())) {
           endNodeBox.setValue(newEnd);
+          moveEndIcon(newEnd);
         } else {
           endNodeBox.getItems().add(newEnd);
           startNodeBox.getItems().add(newEnd);
@@ -1446,6 +1501,7 @@ public class MapViewController extends CentralUIController implements Initializa
         startNodeBox.getSelectionModel().clearSelection();
         if (newStart.getFloor() == currentFloor && currentBuilding.equals(newStart.getBuilding())) {
           startNodeBox.setValue(newStart);
+          moveStartIcon(newStart);
         } else {
           startNodeBox.getItems().add(newStart);
           endNodeBox.getItems().add(newStart);
@@ -1572,8 +1628,6 @@ public class MapViewController extends CentralUIController implements Initializa
   }
 
   private ArrayList<Point> pathPoints = new ArrayList<>();
-  //  private HashSet<Integer> showingFloors = new HashSet<>();
-//  private HashSet<String> showingBuildings = new HashSet<>();
   private HashMap<String, ArrayList<Integer>> showingBuildingFloors = new HashMap<>();
 
   @FXML
