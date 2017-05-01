@@ -727,5 +727,7 @@
             </Pane>
          </children>
       </Pane>
+      <Button fx:id="UndoButton" layoutX="43.0" layoutY="80.0" mnemonicParsing="false" onMouseClicked="#undo" text="Undo" />
+      <Button layoutX="42.0" layoutY="124.0" mnemonicParsing="false" onMouseClicked="#redo" prefHeight="31.0" prefWidth="57.0" text="Redo" />
    </children>
 </AnchorPane>
