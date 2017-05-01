@@ -774,7 +774,8 @@ public class MapViewController extends CentralUIController implements Initializa
       // Now add the points on the current floor
       for (Point p : floorPoints) {
         if (p.getName() == null || p.getName().equals("") || p.getName()
-            .equals("ELEVATOR") || p.getName().equals("Elevator")) {
+            .equals("ELEVATOR") || p.getName().equals("Elevator") || p.getName().equals("OUTSIDE")
+            || p.getName().equals("INTERSECTION")) {
         } else {
           selectablePoints.add(p);
         }
@@ -950,13 +951,15 @@ public class MapViewController extends CentralUIController implements Initializa
     } else if (p.isElevator()) {
       c.setFill(ELEVATOR_POINT_COLOR);
     } else {
-      if ((p.getName() == null || p.getName().equals("")) && mapViewFlag == 3) {
+      if ((p.getName() == null || p.getName().equals("") ||
+          p.getName().equals("INTERSECTION") || p.getName().equals("OUTSIDE")) && mapViewFlag == 3) {
         c.setFill(Color.GRAY);
       } else {
         c.setFill(POINT_COLOR);
       }
     }
-    if (mapViewFlag == 3 || !(p.getName() == null || p.getName().equals(""))) {
+    if (mapViewFlag == 3 || !(p.getName() == null || p.getName().equals("")
+        || p.getName().equals("INTERSECTION") || p.getName().equals("OUTSIDE"))) {
       if (circles.get(p) == null) {
         circles.put(p, c);
         mapViewPane.getChildren().add(c);
@@ -1520,7 +1523,6 @@ public class MapViewController extends CentralUIController implements Initializa
         }
       }
     }
-
   }
 
   private void setStart(Point newStart) {
@@ -2022,7 +2024,8 @@ public class MapViewController extends CentralUIController implements Initializa
     for (Point p : points) {
       if (p.getName() != null && !p.getName().equals("") && !p
           .getName().equals("ELEVATOR") && !p.getName().equals("Elevator") &&
-          ((mapViewFlag == 2 && p.getBuilding().contains("STAFF")) || (mapViewFlag == 1 && !p.getBuilding().contains("STAFF")))) {
+          ((mapViewFlag == 2 && p.getBuilding().contains("STAFF")) || (mapViewFlag == 1 && !p.getBuilding().contains("STAFF")))
+          && !p.getName().equals("INTERSECTION") && !p.getName().equals("OUTSIDE")) {
         out.add(p);
       }
     }
