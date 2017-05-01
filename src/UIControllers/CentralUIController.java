@@ -57,7 +57,6 @@ public class CentralUIController {
   /* global points */
   protected static Point searchingPoint;
   protected static Point kioskLocation;
-  protected static Parent MainID;
   /**@author Haofan Zhang
    * set the session and database controller of central ui controller
    * @param session the session to be set
@@ -65,7 +64,6 @@ public class CentralUIController {
    */
   public void setSession (Session session, DatabaseInterface dbInterface) {
     this.currSession = session;
-    this.credentialManager = credentialManager;
     this.dictionary = session.dictionary;
     this.database = dbInterface;
     try {
@@ -229,24 +227,22 @@ public class CentralUIController {
    */
   public void addTimeOut (Scene scene) {
     SettingsIO settings = new SettingsIO();
-    if (settings.getTimeout() != 0) {
-      setTimeOut((Stage) scene.getWindow());
-      scene.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-        if (!scene.getRoot().getId().equals("MainAP")) {
-          resetTimeOut((Stage) scene.getWindow());
-        }
-      });
-      scene.addEventFilter(MouseEvent.MOUSE_MOVED, event -> {
-        if (!scene.getRoot().getId().equals("MainAP")) {
-          resetTimeOut((Stage) scene.getWindow());
-        }
-      });
-      scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-        if (!scene.getRoot().getId().equals("MainAP")) {
-          resetTimeOut((Stage) scene.getWindow());
-        }
-      });
-    }
+    setTimeOut((Stage) scene.getWindow());
+    scene.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+      if (!scene.getRoot().getId().equals("MainAP")) {
+        resetTimeOut((Stage) scene.getWindow());
+      }
+    });
+    scene.addEventFilter(MouseEvent.MOUSE_MOVED, event -> {
+      if (!scene.getRoot().getId().equals("MainAP")) {
+        resetTimeOut((Stage) scene.getWindow());
+      }
+    });
+    scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+      if (!scene.getRoot().getId().equals("MainAP")) {
+        resetTimeOut((Stage) scene.getWindow());
+      }
+    });
   }
 
 
@@ -260,6 +256,7 @@ public class CentralUIController {
   }
 
   public void resetTimeOut (Stage primaryStage) {
+    System.out.println("reseted");
     stopTimeOut();
     setTimeOut(primaryStage);
     playTimeOut();
