@@ -243,10 +243,8 @@ public class DirectEditController extends CentralUIController implements Initial
     docDisplay.clear();
     if (!searchString.equals("")) {
       for (Physician doc : docs) {
-        if (Pattern.compile(Pattern.quote(searchString),
-            Pattern.CASE_INSENSITIVE).matcher(
-                doc.getFirstName() + " " + doc.getLastName()
-            ).find()) {
+        if (Pattern.compile(Pattern.quote(searchString), Pattern.CASE_INSENSITIVE).matcher(
+                doc.getFirstName() + " " + doc.getLastName()).find()) {
           docDisplay.add(doc);
         }
       }
@@ -413,15 +411,4 @@ public class DirectEditController extends CentralUIController implements Initial
       e.printStackTrace();
     }
   }
-
-  public void editMap(){
-    mapViewFlag = 3;
-    Stage primaryStage = (Stage) anchorPane.getScene().getWindow();
-    try {
-      loadScene(primaryStage, "/MapScene.fxml");
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-
 }

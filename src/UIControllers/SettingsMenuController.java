@@ -217,6 +217,7 @@ public class SettingsMenuController extends CentralUIController implements Initi
 
   public void back () {
     Stage primaryStage = (Stage) anchorPane.getScene().getWindow();
+    applySettings(primaryStage);
     try {
       loadScene(primaryStage, "/AdminMenu.fxml");
     } catch (Exception e) {
@@ -227,6 +228,7 @@ public class SettingsMenuController extends CentralUIController implements Initi
 
   public void logoff () {
     Stage primaryStage = (Stage) anchorPane.getScene().getWindow();
+    applySettings(primaryStage);
     try {
       loadScene(primaryStage, "/MainMenu.fxml");
     } catch (Exception e) {

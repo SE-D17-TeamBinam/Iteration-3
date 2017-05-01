@@ -100,6 +100,17 @@ public class AdminMenuController extends CentralUIController implements Initiali
   }
 
   @FXML
+  public void editSettings () {
+    Stage primaryStage = (Stage) AdminMenu.getScene().getWindow();
+    try {
+      loadScene(primaryStage, "/SettingsMenu.fxml");
+    } catch (Exception e) {
+      System.out.println("Cannot load main menu");
+      e.printStackTrace();
+    }
+  }
+
+  @FXML
   public void back() {
     Stage primaryStage = (Stage) AdminMenu.getScene().getWindow();
     try {
@@ -119,15 +130,6 @@ public class AdminMenuController extends CentralUIController implements Initiali
     }
   }
 
-  public void settings () {
-    Stage primaryStage = (Stage) AdminMenu.getScene().getWindow();
-    try {
-      loadScene(primaryStage, "/SettingsMenu.fxml");
-    } catch (Exception e) {
-      System.out.println("Cannot load main menu");
-      e.printStackTrace();
-    }
-  }
 }
 
 

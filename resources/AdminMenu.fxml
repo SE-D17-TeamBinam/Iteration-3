@@ -46,7 +46,7 @@
                   <Font name="Times New Roman" size="24.0" />
                </font>
             </Button>
-            <ImageView fx:id="SettingsButton" fitHeight="300.0" fitWidth="300.0" layoutX="877.0" layoutY="240.0" onMouseClicked="#settings" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="SettingsButton" fitHeight="300.0" fitWidth="300.0" layoutX="877.0" layoutY="240.0" onMouseClicked="#editSettings" pickOnBounds="true" preserveRatio="true">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>

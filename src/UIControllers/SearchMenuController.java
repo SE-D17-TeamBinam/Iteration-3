@@ -301,9 +301,8 @@ public class SearchMenuController extends CentralUIController implements Initial
       FXMLLoader loader = new FXMLLoader(getClass().getResource("/DetailMenu.fxml"));
       DetailMenuController DC = new DetailMenuController(room, doc);
       loader.setController(DC);
-      Pane mainPane = (Pane) loader.load();
+      Pane mainPane = loader.load();
       primaryStage.setScene(new Scene(mainPane, x_res, y_res));
-      primaryStage.show();
     } catch (Exception e) {
       System.out.println("Cannot load main menu");
       e.printStackTrace();

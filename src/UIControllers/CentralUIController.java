@@ -4,24 +4,18 @@ import CredentialManager.CredentialManager;
 import Database.DatabaseInterface;
 import Definitions.Physician;
 import FileController.DefaultKioskNotInMemoryException;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import FileController.SettingsIO;
@@ -71,7 +65,6 @@ public class CentralUIController {
     }
   }
 
-
   /**
    * Set the stage to the initial scene (main menu)
    * @parameter primaryStage: The main stage of the application
@@ -103,7 +96,7 @@ public class CentralUIController {
   //// apply settings ////
   ////////////////////////
 
-  private void applySettings (Stage primaryStage) {
+  public void applySettings (Stage primaryStage) {
     SettingsIO settings = new SettingsIO();
     if (settings.getScreenPreference() == 1) {
       x_res = 1300;
@@ -204,13 +197,13 @@ public class CentralUIController {
     SettingsIO settings = new SettingsIO();
     if (settings.getTimeout() != 0) {
       setTimeOut(settings.getTimeout(), (Stage) scene.getWindow());
-      scene.setOnMouseMoved(e -> {
+      scene.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
         resetTimeOut(settings.getTimeout(), (Stage) scene.getWindow());
       });
-      scene.setOnMouseClicked(e -> {
+      scene.addEventFilter(MouseEvent.MOUSE_MOVED, event -> {
         resetTimeOut(settings.getTimeout(), (Stage) scene.getWindow());
       });
-      scene.setOnKeyTyped(e -> {
+      scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
         resetTimeOut(settings.getTimeout(), (Stage) scene.getWindow());
       });
     }
