@@ -525,24 +525,27 @@ public class MapViewController extends CentralUIController implements Initializa
       if (s.contains(".png")) {
         String[] building_floors = s.split("-");
         String buildingName = building_floors[0];
-        if (!buildingFloors.keySet().contains(buildingName)) {
-          buildingFloors.put(buildingName, new ArrayList<Integer>());
-        }
-        int floor = Integer
-            .parseInt(building_floors[1].substring(0, building_floors[1].length() - 4));
-        buildingFloors.get(buildingName).add(floor);
-        buildingFloors.get(buildingName).sort(new Comparator<Integer>() {
-          @Override
-          public int compare(Integer o1, Integer o2) {
-            if (o1 < o2) {
-              return 1;
-            } else if (o1 == o2) {
-              return 0;
-            } else {
-              return -1;
-            }
+        if((mapViewFlag == 2 && buildingName.contains("STAFF")) ||
+            (mapViewFlag == 1 && !buildingName.contains("STAFF")) || mapViewFlag == 3) {
+          if (!buildingFloors.keySet().contains(buildingName)) {
+            buildingFloors.put(buildingName, new ArrayList<Integer>());
           }
-        });
+          int floor = Integer
+              .parseInt(building_floors[1].substring(0, building_floors[1].length() - 4));
+          buildingFloors.get(buildingName).add(floor);
+          buildingFloors.get(buildingName).sort(new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+              if (o1 < o2) {
+                return 1;
+              } else if (o1 == o2) {
+                return 0;
+              } else {
+                return -1;
+              }
+            }
+          });
+        }
       }
     }
 
