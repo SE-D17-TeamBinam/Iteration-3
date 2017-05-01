@@ -247,18 +247,30 @@ public class SearchMenuController extends CentralUIController implements Initial
   public void autoCompleteDoc () {
     if (!searchString.equals("")) {
       for (Physician doc : docs) {
-        String docName = doc.getFirstName() + " " + doc.getLastName();
-        if (docName.length() >= searchString.length()
-            && docName.substring(0, searchString.length()).equalsIgnoreCase(searchString)) {
-          final String newSearchString = doc.getFirstName() + " " + doc.getLastName();
-          isST = true;
-          SearchField.setText(newSearchString);
-          Platform.runLater(() -> {
-            if (SearchField.isFocused()) {
-              SearchField.selectRange(searchString.length(), newSearchString.length());
-            }
-          });
-          break;
+        String DocRegularName = doc.getFirstName() + " " + doc.getLastName();
+        String DocStrangeName = doc.getLastName() + ", " + doc.getFirstName();
+        if (DocRegularName.length() >= searchString.length()) {
+          if (DocRegularName.substring(0, searchString.length()).equalsIgnoreCase(searchString)) {
+            final String newSearchString = DocRegularName;
+            isST = true;
+            SearchField.setText(newSearchString);
+            Platform.runLater(() -> {
+              if (SearchField.isFocused()) {
+                SearchField.selectRange(searchString.length(), newSearchString.length());
+              }
+            });
+            break;
+          } else if (DocStrangeName.substring(0, searchString.length()).equalsIgnoreCase(searchString)) {
+            final String newSearchString = DocStrangeName;
+            isST = true;
+            SearchField.setText(newSearchString);
+            Platform.runLater(() -> {
+              if (SearchField.isFocused()) {
+                SearchField.selectRange(searchString.length(), newSearchString.length());
+              }
+            });
+            break;
+          }
         }
       }
     }
