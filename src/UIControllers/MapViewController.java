@@ -1427,6 +1427,10 @@ public class MapViewController extends CentralUIController implements Initializa
     displayPoints(floorPoints);
     startNodeBox.setDisable(false);
     endNodeBox.setDisable(false);
+    setStartButton.setDisable(false);
+    setEndButton.setDisable(false);
+    searchGoButton.setDisable(false);
+    swapButton.setDisable(false);
     // Add the missing floors back to the floor choice box
     for (int i : buildingFloors.get(currentBuilding)) {
       if (!floorChoiceBox.getItems().contains(i)) {
@@ -1645,6 +1649,13 @@ public class MapViewController extends CentralUIController implements Initializa
   private HashMap<String, ArrayList<Integer>> showingBuildingFloors = new HashMap<>();
 
   @FXML
+  private Button setStartButton;
+  @FXML
+  private Button setEndButton;
+  @FXML
+  private Button swapButton;
+
+  @FXML
   private void drawPathButtonClicked() {
     Point start = (Point) startNodeBox.getSelectionModel().getSelectedItem();
     Point end = (Point) endNodeBox.getSelectionModel().getSelectedItem();
@@ -1660,6 +1671,11 @@ public class MapViewController extends CentralUIController implements Initializa
       endNodeBox.setDisable(true);
       saveButton.setDisable(true);
       goButton.setDisable(true);
+      setStartButton.setDisable(true);
+      setEndButton.setDisable(true);
+      searchGoButton.setDisable(true);
+      swapButton.setDisable(true);
+
 
       //
       showingBuildingFloors = new HashMap<>();
@@ -1676,10 +1692,6 @@ public class MapViewController extends CentralUIController implements Initializa
 
       // Now restrict the building choice box
       buildingChoiceBox.setValue(start.getBuilding());
-//      showingBuildingFloors = new HashSet<String>();
-//      for (Point p : pathPoints) {
-//        showingBuildings.add(p.getBuilding());
-//      }
       for (int i = 0; i < buildingChoiceBox.getItems().size(); i++) {
         String o = (String) buildingChoiceBox.getItems().get(i);
         if (!showingBuildingFloors.keySet().contains(o)) {
@@ -1689,10 +1701,6 @@ public class MapViewController extends CentralUIController implements Initializa
       }
       // Update the floors that appear in the floor selector
       floorChoiceBox.setValue(start.getFloor());
-//      showingFloors = new HashSet<>();
-//      for (Point p : pathPoints) {
-//        showingFloors.add(p.getFloor());
-//      }
       for (int i = 0; i < floorChoiceBox.getItems().size(); i++) {
         Object o = floorChoiceBox.getItems().get(i);
         if (!showingBuildingFloors.get(currentBuilding).contains(o)) {
@@ -1783,6 +1791,8 @@ public class MapViewController extends CentralUIController implements Initializa
       out = new Image("/icons/turn-around.png");
     } else if (directions.contains("floor")) {
       out = new Image("/icons/elevator.png");
+    } else if (directions.contains("start")){
+      out = new Image("/icons/start_icon.png");
     }
     return out;
   }
