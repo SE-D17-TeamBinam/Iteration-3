@@ -29,7 +29,7 @@ import org.Language;
 import org.Point;
 
 /**
- * Created by Leon Zhang on 4/4/2017.
+ * Created by Haofan Zhang on 4/4/2017.
  */
 public class DirectEditController extends CentralUIController implements Initializable {
   private int selectedHPIndex;

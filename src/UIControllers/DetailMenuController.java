@@ -18,7 +18,7 @@ import javafx.stage.Stage;
 import org.Point;
 
 /**
- * Created by Leon Zhang on 2017/4/1.
+ * Created by Haofan Zhang on 2017/4/1.
  */
 
 public class DetailMenuController extends CentralUIController implements Initializable {
@@ -232,6 +232,7 @@ public class DetailMenuController extends CentralUIController implements Initial
    * @param room the room to be displayed
    */
   public void gotoMap (Point room) {
+    mapViewFlag = 1;
     Stage primaryStage = (Stage) anchorPane.getScene().getWindow();
     try {
       searchingPoint = room;

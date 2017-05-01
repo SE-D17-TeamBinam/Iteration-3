@@ -17,9 +17,6 @@ import org.CentralController;
 import org.Language;
 import org.Session;
 
-/**
- * Created by Leon Zhang on 2017/4/1.
- */
 
 public class MainMenuController extends CentralUIController implements Initializable {
   // define all ui elements
@@ -45,7 +42,6 @@ public class MainMenuController extends CentralUIController implements Initializ
 
   @Override
   public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
-    Session session = new Session();
     chooseLang();
     addResolutionListener(anchorPane);
     setBackground(anchorPane);
@@ -84,7 +80,7 @@ public class MainMenuController extends CentralUIController implements Initializ
     InfoButton.setLayoutY(150*y_res/750);
   }
 
-  /**
+  /**@author Haofan Zhang
    * set the scene to user map
    */
   public void gotoMap () {
@@ -97,7 +93,7 @@ public class MainMenuController extends CentralUIController implements Initializ
     }
   }
 
-  /**
+  /**@author Haofan Zhang
    * set the scene to search menu
    */
   public void gotoSearch () {
@@ -108,7 +104,7 @@ public class MainMenuController extends CentralUIController implements Initializ
     }
   }
 
-  /**
+  /**@author Haofan Zhang
    * set the scene to admin login menu
    */
   public void gotoAdmin () throws IOException {
@@ -122,7 +118,7 @@ public class MainMenuController extends CentralUIController implements Initializ
     }
   }
 
-  /**
+  /**@author Haofan Zhang
    * set the scene to about page
    */
   public void gotoAbout() {
@@ -161,7 +157,7 @@ public class MainMenuController extends CentralUIController implements Initializ
         });
   }
 
-  }
+}
 
 
 

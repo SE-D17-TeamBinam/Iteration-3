@@ -5,8 +5,6 @@ import FileController.SettingsIO;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -27,7 +25,7 @@ import org.ListPoints;
 import org.Point;
 
 /**
- * Created by Leon Zhang on 4/27/2017.
+ * Created by Haofan Zhang on 4/27/2017.
  */
 public class SettingsMenuController extends CentralUIController implements Initializable {
   private ArrayList<Point> rooms;
