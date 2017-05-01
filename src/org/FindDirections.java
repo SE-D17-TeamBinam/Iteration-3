@@ -111,7 +111,8 @@ public class FindDirections {
       if (count == 1 &&
           (reversePath.get(0).getName().equals("Atrium Main Entrance") ||
               reversePath.get(0).getName().equals("Belkin House Entrance") ||
-              reversePath.get(0).getName().equals("Garage Entrance"))) {
+              reversePath.get(0).getName().equals("Garage Entrance")) &&
+          current.getName().equals("OUTSIDE")) {
         outside = true;
       }
 
