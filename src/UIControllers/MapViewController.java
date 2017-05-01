@@ -272,7 +272,7 @@ public class MapViewController extends CentralUIController implements Initializa
   private HashMap<String, Point> searchPoints = new HashMap<>();
 
 
-  private int userPaneVisible = 1;
+  private int userPaneVisible = 0;
 
   private void initializeSearchChoices() {
     choose1();
@@ -425,6 +425,7 @@ public class MapViewController extends CentralUIController implements Initializa
 
   @FXML
   public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
+    currentBuilding = mapViewFlag == 2 ? "Ground Floor STAFF" : "Ground Floor";
     startPointIcon = new ImageView(new Image("/icons/start_icon.png"));
     endPointIcon = new ImageView(new Image("/icons/end_icon.png"));
     startPointIcon.setFitWidth(START_ICON_FIT*current_zoom_scale);
@@ -435,7 +436,9 @@ public class MapViewController extends CentralUIController implements Initializa
     if (mapViewFlag == 1 || mapViewFlag == 2) {
       AdminLogOff.setVisible(false);
       helpButton.setVisible(false);
-      initializeLanguageConfigs();
+      if(mapViewFlag == 1) {
+        initializeLanguageConfigs();
+      }
     } else {
       userPane.setVisible(false);
       textDirectionsPane.setVisible(false);
@@ -456,7 +459,6 @@ public class MapViewController extends CentralUIController implements Initializa
     repositionResultsList();
     initializePathFindingBox();
     findMaxID();
-
   }
 
   @FXML
@@ -534,24 +536,27 @@ public class MapViewController extends CentralUIController implements Initializa
       if (s.contains(".png")) {
         String[] building_floors = s.split("-");
         String buildingName = building_floors[0];
-        if (!buildingFloors.keySet().contains(buildingName)) {
-          buildingFloors.put(buildingName, new ArrayList<Integer>());
-        }
-        int floor = Integer
-            .parseInt(building_floors[1].substring(0, building_floors[1].length() - 4));
-        buildingFloors.get(buildingName).add(floor);
-        buildingFloors.get(buildingName).sort(new Comparator<Integer>() {
-          @Override
-          public int compare(Integer o1, Integer o2) {
-            if (o1 < o2) {
-              return 1;
-            } else if (o1 == o2) {
-              return 0;
-            } else {
-              return -1;
-            }
+        if((mapViewFlag == 2 && buildingName.contains("STAFF")) ||
+            (mapViewFlag == 1 && !buildingName.contains("STAFF")) || mapViewFlag == 3) {
+          if (!buildingFloors.keySet().contains(buildingName)) {
+            buildingFloors.put(buildingName, new ArrayList<Integer>());
           }
-        });
+          int floor = Integer
+              .parseInt(building_floors[1].substring(0, building_floors[1].length() - 4));
+          buildingFloors.get(buildingName).add(floor);
+          buildingFloors.get(buildingName).sort(new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+              if (o1 < o2) {
+                return 1;
+              } else if (o1 == o2) {
+                return 0;
+              } else {
+                return -1;
+              }
+            }
+          });
+        }
       }
     }
 
@@ -596,6 +601,16 @@ public class MapViewController extends CentralUIController implements Initializa
             if (first) {
               first = false;
               updateUserPane();
+
+              if (kioskLocation != null) {
+                int ind = allPoints.indexOf(kioskLocation);
+                if (ind > -1) {
+                  Point myPoint = allPoints.get(ind);
+                  buildingChoiceBox.setValue(myPoint.getBuilding());
+                  floorChoiceBox.setValue(myPoint.getFloor());
+                  setStart(myPoint);
+                }
+              }
               if (searchingPoint != null) {
                 int ind = allPoints.indexOf(searchingPoint);
                 if (ind > -1) {
@@ -607,16 +622,6 @@ public class MapViewController extends CentralUIController implements Initializa
                   setEnd(myPoint);
                 }
               }
-              /*
-              if (kioskLocation != null) {
-                int ind = allPoints.indexOf(kioskLocation);
-                if (ind > -1) {
-                  Point myPoint = allPoints.get(ind);
-                  floorChoiceBox.setValue(myPoint.getFloor());
-                  setStart(myPoint);
-                }
-              }
-              */
             }
             globalTimerActions();
           }
@@ -1364,6 +1369,17 @@ public class MapViewController extends CentralUIController implements Initializa
     setFloorConnectFocus(null);
   }
 
+  /**
+   * Swaps the two point from/to field
+   * @author mscollins2
+   */
+  @FXML
+  private void swapPoints() {
+    Point temp = (Point) startNodeBox.getValue(); //Grab a point so we can swap
+    startNodeBox.setValue(endNodeBox.getValue());
+    endNodeBox.setValue(temp); //swapparino
+    //that was easy
+  }
 
   private void sortBuildingChoiceBox() {
     buildingChoiceBox.getItems().sort(new Comparator() {
@@ -1421,6 +1437,10 @@ public class MapViewController extends CentralUIController implements Initializa
     displayPoints(floorPoints);
     startNodeBox.setDisable(false);
     endNodeBox.setDisable(false);
+    setStartButton.setDisable(false);
+    setEndButton.setDisable(false);
+    searchGoButton.setDisable(false);
+    swapButton.setDisable(false);
     // Add the missing floors back to the floor choice box
     for (int i : buildingFloors.get(currentBuilding)) {
       if (!floorChoiceBox.getItems().contains(i)) {
@@ -1435,7 +1455,7 @@ public class MapViewController extends CentralUIController implements Initializa
       }
     }
     sortBuildingChoiceBox();
-    /*
+
     if (kioskLocation != null) {
       int ind = allPoints.indexOf(kioskLocation);
       if (ind > -1) {
@@ -1443,7 +1463,7 @@ public class MapViewController extends CentralUIController implements Initializa
         setStart(myPoint);
       }
     }
-    */
+
 
   }
 
@@ -1639,6 +1659,13 @@ public class MapViewController extends CentralUIController implements Initializa
   private HashMap<String, ArrayList<Integer>> showingBuildingFloors = new HashMap<>();
 
   @FXML
+  private Button setStartButton;
+  @FXML
+  private Button setEndButton;
+  @FXML
+  private Button swapButton;
+
+  @FXML
   private void drawPathButtonClicked() {
     Point start = (Point) startNodeBox.getSelectionModel().getSelectedItem();
     Point end = (Point) endNodeBox.getSelectionModel().getSelectedItem();
@@ -1654,6 +1681,11 @@ public class MapViewController extends CentralUIController implements Initializa
       endNodeBox.setDisable(true);
       saveButton.setDisable(true);
       goButton.setDisable(true);
+      setStartButton.setDisable(true);
+      setEndButton.setDisable(true);
+      searchGoButton.setDisable(true);
+      swapButton.setDisable(true);
+
 
       //
       showingBuildingFloors = new HashMap<>();
@@ -1670,10 +1702,6 @@ public class MapViewController extends CentralUIController implements Initializa
 
       // Now restrict the building choice box
       buildingChoiceBox.setValue(start.getBuilding());
-//      showingBuildingFloors = new HashSet<String>();
-//      for (Point p : pathPoints) {
-//        showingBuildings.add(p.getBuilding());
-//      }
       for (int i = 0; i < buildingChoiceBox.getItems().size(); i++) {
         String o = (String) buildingChoiceBox.getItems().get(i);
         if (!showingBuildingFloors.keySet().contains(o)) {
@@ -1683,10 +1711,6 @@ public class MapViewController extends CentralUIController implements Initializa
       }
       // Update the floors that appear in the floor selector
       floorChoiceBox.setValue(start.getFloor());
-//      showingFloors = new HashSet<>();
-//      for (Point p : pathPoints) {
-//        showingFloors.add(p.getFloor());
-//      }
       for (int i = 0; i < floorChoiceBox.getItems().size(); i++) {
         Object o = floorChoiceBox.getItems().get(i);
         if (!showingBuildingFloors.get(currentBuilding).contains(o)) {
@@ -1772,11 +1796,13 @@ public class MapViewController extends CentralUIController implements Initializa
     } else if (directions.contains("straight")) {
       out = new Image("/icons/straight.png");
     } else if (directions.contains("destination")) {
-      out = new Image("/icons/destination.png");
+      out = new Image("/icons/end_icon.png");
     } else if (directions.contains("around")) {
       out = new Image("/icons/turn-around.png");
     } else if (directions.contains("floor")) {
       out = new Image("/icons/elevator.png");
+    } else if (directions.contains("start")){
+      out = new Image("/icons/start_icon.png");
     }
     return out;
   }
@@ -1995,7 +2021,8 @@ public class MapViewController extends CentralUIController implements Initializa
     ArrayList<Point> out = new ArrayList<Point>();
     for (Point p : points) {
       if (p.getName() != null && !p.getName().equals("") && !p
-          .getName().equals("ELEVATOR") && !p.getName().equals("Elevator")) {
+          .getName().equals("ELEVATOR") && !p.getName().equals("Elevator") &&
+          ((mapViewFlag == 2 && p.getBuilding().contains("STAFF")) || (mapViewFlag == 1 && !p.getBuilding().contains("STAFF")))) {
         out.add(p);
       }
     }

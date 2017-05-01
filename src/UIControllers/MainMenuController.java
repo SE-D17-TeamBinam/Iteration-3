@@ -17,9 +17,6 @@ import org.CentralController;
 import org.Language;
 import org.Session;
 
-/**
- * Created by Leon Zhang on 2017/4/1.
- */
 
 public class MainMenuController extends CentralUIController implements Initializable {
   // define all ui elements
@@ -43,9 +40,8 @@ public class MainMenuController extends CentralUIController implements Initializ
   @FXML
   private Label MapLabel;
 
-
+  @Override
   public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
-    Session session = new Session();
     chooseLang();
     addResolutionListener(anchorPane);
     setBackground(anchorPane);
@@ -54,7 +50,9 @@ public class MainMenuController extends CentralUIController implements Initializ
     isLoggedIn = false;
   }
 
-
+  /**
+   * apply language configuration by set text from dictionary
+   */
   public void applyLanguageConfig(){
     SearchLabel.setText(dictionary.getString("Search", currSession.getLanguage()));
     MapLabel.setText(dictionary.getString("Map", currSession.getLanguage()));
@@ -79,8 +77,12 @@ public class MainMenuController extends CentralUIController implements Initializ
     SearchLabel.setLayoutY(6*(y_res/11) + 100);
     langBox.setLayoutY(y_res - 50);
     MainKey.setLayoutY(y_res - 50);
+    InfoButton.setLayoutY(150*y_res/750);
   }
 
+  /**@author Haofan Zhang
+   * set the scene to user map
+   */
   public void gotoMap () {
     Stage primaryStage = (Stage) MainMenu.getScene().getWindow();
     try {
@@ -91,6 +93,9 @@ public class MainMenuController extends CentralUIController implements Initializ
     }
   }
 
+  /**@author Haofan Zhang
+   * set the scene to search menu
+   */
   public void gotoSearch () {
     Stage primaryStage = (Stage) MainMenu.getScene().getWindow();
     try {
@@ -99,6 +104,9 @@ public class MainMenuController extends CentralUIController implements Initializ
     }
   }
 
+  /**@author Haofan Zhang
+   * set the scene to admin login menu
+   */
   public void gotoAdmin () throws IOException {
     // for now sign up admin when loaded so people can get to admin view
     //credentialManager.signup("admin", "admin", UserType.ADMIN);
@@ -110,6 +118,9 @@ public class MainMenuController extends CentralUIController implements Initializ
     }
   }
 
+  /**@author Haofan Zhang
+   * set the scene to about page
+   */
   public void gotoAbout() {
     Stage primaryStage = (Stage) MainMenu.getScene().getWindow();
     try {
@@ -118,6 +129,9 @@ public class MainMenuController extends CentralUIController implements Initializ
     }
   }
 
+  /**
+   * select and apply current language
+   */
   public void chooseLang() {
     langBox.getItems().add("ENGLISH");
     langBox.getItems().add("SPANISH");
@@ -143,7 +157,7 @@ public class MainMenuController extends CentralUIController implements Initializ
         });
   }
 
-  }
+}
 
 
 

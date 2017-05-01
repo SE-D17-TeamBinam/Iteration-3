@@ -5,8 +5,6 @@ import FileController.SettingsIO;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -27,7 +25,7 @@ import org.ListPoints;
 import org.Point;
 
 /**
- * Created by Leon Zhang on 4/27/2017.
+ * Created by Haofan Zhang on 4/27/2017.
  */
 public class SettingsMenuController extends CentralUIController implements Initializable {
   private ArrayList<Point> rooms;
@@ -68,10 +66,12 @@ public class SettingsMenuController extends CentralUIController implements Initi
   @FXML
   private TextField timeTimeout;
 
+  @Override
   public void customListenerX () {
     SettingsLogoff.setLayoutX(x_res - SettingsLogoff.getPrefWidth() - 12);
   }
 
+  @Override
   public void customListenerY () {
     double resLY = 353 * y_res/750;
     SettingsResolution.setLayoutY(resLY);
@@ -109,6 +109,7 @@ public class SettingsMenuController extends CentralUIController implements Initi
     rooms = database.getNamedPoints();
     sortRooms(rooms);
 
+    /* radio button group policies */
     final ToggleGroup resolution = new ToggleGroup();
     defaultResolution.setToggleGroup(resolution);
     fullscreenResolution.setToggleGroup(resolution);
@@ -118,6 +119,7 @@ public class SettingsMenuController extends CentralUIController implements Initi
     dfsAlgorithm.setToggleGroup(algorithm);
     astarAlgorithm.setToggleGroup(algorithm);
 
+    /* apply existing settings on radio buttons */
     if (settings.getScreenPreference() == 1){
       defaultResolution.setSelected(true);
     } else if (settings.getScreenPreference() == 2) {
@@ -159,6 +161,7 @@ public class SettingsMenuController extends CentralUIController implements Initi
         }
     });
 
+    /* timeout field listener */
     timeTimeout.textProperty().addListener((observable, oldValue, newValue) -> {
       try {
         Integer newTimeOut = Integer.parseInt(newValue);
@@ -167,10 +170,11 @@ public class SettingsMenuController extends CentralUIController implements Initi
           TimeoutError.setVisible(true);
         } else if (newTimeOut == 0) {
           System.out.println("timeout disabled");
+          settings.updateSetting("timeoutLength", Integer.toString(0));
           TimeoutError.setVisible(false);
         } else {
-          System.out.println("set timeout length to " + newValue);
-          settings.updateSetting("timeoutLength", newValue);
+          System.out.println("set timeout length to " + Integer.toString(newTimeOut));
+          settings.updateSetting("timeoutLength", Integer.toString(newTimeOut));
           TimeoutError.setVisible(false);
         }
       } catch (NumberFormatException e) {
@@ -207,14 +211,23 @@ public class SettingsMenuController extends CentralUIController implements Initi
 
   }
 
+  /**
+   * try to increase timeout length by 1
+   */
   public void increaseTimeout () {
     timeTimeout.setText(Integer.toString(Integer.parseInt(timeTimeout.getText()) + 1));
   }
 
+  /**
+   * try to decrease timeout length by 1
+   */
   public void decreaseTimeout() {
     timeTimeout.setText(Integer.toString(Integer.parseInt(timeTimeout.getText()) - 1));
   }
 
+  /**
+   * set the scene back to admin menu
+   */
   public void back () {
     Stage primaryStage = (Stage) anchorPane.getScene().getWindow();
     applySettings(primaryStage);
@@ -226,6 +239,9 @@ public class SettingsMenuController extends CentralUIController implements Initi
     }
   }
 
+  /**
+   * set the scene back to main menu
+   */
   public void logoff () {
     Stage primaryStage = (Stage) anchorPane.getScene().getWindow();
     applySettings(primaryStage);
