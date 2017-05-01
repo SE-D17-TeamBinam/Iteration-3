@@ -76,7 +76,8 @@ public class CentralUIController {
    */
   public void restartUI(Stage primaryStage) throws Exception {
     applySettings(primaryStage);
-    loadScene(primaryStage, "/MainMenu.fxml");
+    Parent root = FXMLLoader.load(getClass().getResource("/MainMenu.fxml"));
+    primaryStage.setScene(new Scene(root, x_res, y_res));
     primaryStage.show();
   }
 
@@ -90,11 +91,11 @@ public class CentralUIController {
       stopTimeOut();
     }
     Parent root = FXMLLoader.load(getClass().getResource(fxmlpath));
-    Scene newScene = new Scene(root, x_res, y_res);
+    Scene currScene = primaryStage.getScene();
+    currScene.setRoot(root);
     if (!fxmlpath.equals("/MainMenu.fxml")) {
-      addTimeOut(newScene);
+      addTimeOut(currScene);
     }
-    primaryStage.setScene(newScene);
   }
 
   ////////////////////////
@@ -108,12 +109,16 @@ public class CentralUIController {
   public void applySettings (Stage primaryStage) {
     SettingsIO settings = new SettingsIO();
     if (settings.getScreenPreference() == 1) {
-      x_res = 1300;
-      y_res = 750;
+      primaryStage.setFullScreen(false);
+      primaryStage.setMaximized(false);
+      primaryStage.setWidth(1300);
+      primaryStage.setHeight(750);
     } else if (settings.getScreenPreference() == 2) {
       primaryStage.setFullScreen(true);
+      primaryStage.setMaximized(false);
     } else if (settings.getScreenPreference() == 3) {
       primaryStage.setMaximized(true);
+      primaryStage.setFullScreen(false);
     }
     try {
       kioskLocation = settings.getDefaultKiosk(new ListPoints(database.getNamedPoints()));
