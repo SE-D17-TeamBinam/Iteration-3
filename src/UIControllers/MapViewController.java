@@ -11,7 +11,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -22,17 +21,23 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
@@ -43,14 +48,17 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.Astar;
@@ -2011,7 +2019,8 @@ public class MapViewController extends CentralUIController implements Initializa
     ArrayList<Point> out = new ArrayList<Point>();
     for (Point p : points) {
       if (p.getName() != null && !p.getName().equals("") && !p
-          .getName().equals("ELEVATOR") && !p.getName().equals("Elevator")) {
+          .getName().equals("ELEVATOR") && !p.getName().equals("Elevator") &&
+          ((mapViewFlag == 2 && p.getBuilding().contains("STAFF")) || (mapViewFlag == 1 && !p.getBuilding().contains("STAFF")))) {
         out.add(p);
       }
     }
@@ -2508,10 +2517,10 @@ public class MapViewController extends CentralUIController implements Initializa
     textButton.setSelected(true);
     emailButton.setUserData("email");
     textButton.setUserData("text");
-    carrierBox.getItems().add(Carrier.att);
-    carrierBox.getItems().add(Carrier.tmobile);
-    carrierBox.getItems().add(Carrier.sprint);
-    carrierBox.getItems().add(Carrier.verizon);
+    carrierBox.getItems().add(Carrier.ATT);
+    carrierBox.getItems().add(Carrier.TMOBILE);
+    carrierBox.getItems().add(Carrier.SPRINT);
+    carrierBox.getItems().add(Carrier.VERIZON);
 
     directionSelect.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
       @Override
@@ -2542,6 +2551,130 @@ public class MapViewController extends CentralUIController implements Initializa
             directions);
       }
     }
+  }
+
+  public void addAlias() {
+    if (pointFocus != null) {
+
+      // initializations
+      Stage primaryStage = (Stage) mapViewPane.getScene().getWindow();
+      Stage dialog = new Stage();
+      dialog.setMinHeight(300);
+      dialog.setMaxHeight(600);
+      dialog.setMinWidth(400);
+      dialog.setMaxWidth(400);
+      dialog.setTitle("Alias Entry");
+      dialog.setResizable(true);
+      dialog.initModality(Modality.APPLICATION_MODAL);
+      dialog.initOwner(primaryStage);
+      VBox dialogVbox = new VBox(20);
+
+      Button saveAliasButton = new Button("Save");
+      Button addButton = new Button("+");
+      Button cancelButton = new Button("Cancel");
+
+      // organize into grid pane
+      GridPane grid = new GridPane();
+      grid.setHgap(10);
+      grid.setVgap(10);
+      grid.setPadding(new Insets(40, 0, 10, 10));
+      grid.add(addButton, 2, 1);
+      addButton.setFocusTraversable(false);
+      grid.add(new Label("Add or remove names of selected point."), 1, 0);
+
+      //keep button sizes constant
+      TilePane tileButtons = new TilePane();
+      saveAliasButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+      cancelButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+      tileButtons.setHgap(10);
+      tileButtons.setVgap(8.0);
+      tileButtons.setPadding(new Insets(20, 10, 20, 20));
+      tileButtons.getChildren().addAll(saveAliasButton, cancelButton);
+
+      // add to Vbox
+      dialogVbox.getChildren().addAll(grid, tileButtons);
+
+      // wrap into ScrollPane
+      ScrollPane scroll = new ScrollPane(dialogVbox);
+      scroll.setHbarPolicy(ScrollBarPolicy.NEVER);
+      scroll.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
+      Scene dialogScene = new Scene(scroll, 300, 200);
+      dialog.setScene(dialogScene);
+
+      ArrayList<String> names = new ArrayList<>();
+      ArrayList<TextField> aliases = new ArrayList<TextField>();
+
+      // initializes box based on the names of the selected point
+      if (!pointFocus.getName().equals("null")) {
+        for (int i = 0; i < pointFocus.getNames().size(); i++) {
+          TextField t = new TextField();
+          t.setText(pointFocus.getNames().get(i));
+          aliases.add(t);
+          grid.add(t, 1, grid.getChildren().size() - 1);
+          if (dialog.getMinHeight() <= 600) {
+            dialog.setMinHeight(dialog.getMinHeight() + 50);
+          }
+        }
+      } else {
+        TextField t = new TextField();
+        aliases.add(t);
+        grid.add(t, 1, 1);
+      }
+
+
+      // "+" button functionality: adds a new text field
+      addButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        @Override
+        public void handle(MouseEvent event) {
+          TextField nextEntry = new TextField();
+          aliases.add(nextEntry);
+          // keep track of where to add the text field
+          grid.add(nextEntry, 1, grid.getChildren().size()-1);
+          nextEntry.requestFocus();
+          if (dialog.getHeight() <= dialog.getMaxHeight()) {
+            dialog.setMinHeight(dialog.getHeight() + 50);
+          }
+        }
+      });
+
+      // "Save" button functionality: sets the names of currently selected point to what's in the
+      // text fields and closes the text box
+      saveAliasButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        @Override
+        public void handle(MouseEvent event) {
+
+          for(TextField t: aliases) {
+            if (!t.getText().equals("") && !names.contains(t.getText()))
+              names.add(t.getText().trim());
+          }
+          pointFocus.setNames(names);
+          for (int i = 0; i < pointFocus.getNames().size(); i++) {
+            System.out.println(pointFocus.getNames().get(i));
+          }
+          dialog.close();
+        }
+      });
+
+
+      cancelButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        @Override
+        public void handle(MouseEvent event) {
+          dialog.close();
+        }
+      });
+
+
+      dialog.showAndWait();
+
+    }
+    else {
+      Dialog alert = new Alert(AlertType.ERROR);
+      alert.setHeaderText("Attention");
+      alert.setContentText("Please select a point to add or remove name(s) from.");
+      alert.showAndWait();
+
+    }
+
   }
 
   /**

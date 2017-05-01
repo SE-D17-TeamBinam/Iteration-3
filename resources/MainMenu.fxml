@@ -46,7 +46,7 @@
                   <Font name="Times New Roman" size="36.0" />
                </font>
             </Label>
-            <ImageView fx:id="InfoButton" fitHeight="31.0" fitWidth="35.0" layoutX="1261.0" layoutY="163.0" onMouseClicked="#gotoAbout" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="InfoButton" fitHeight="31.0" fitWidth="47.0" layoutX="1261.0" layoutY="130.0" onMouseClicked="#gotoAbout" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@icons/About.png" />
                </image>
