@@ -243,6 +243,7 @@ public class DatabaseController implements DatabaseInterface {
 
   /**
    * Get all the physicians from the database
+   *
    * @return ArrayList of the real, converted Physicians
    * @throws SQLException if there is a problem contacting database
    */
@@ -830,14 +831,15 @@ public class DatabaseController implements DatabaseInterface {
       }
     }
 
-    if (localPoints.size() > points.size()) {
-      remPoints = new ArrayList<>();
-      for (Point localP : localPoints) {
-        Point p = findRealPoint(localP.getId(), points);
-        if (p == null) {
-          remPoints.add(localP);
-        }
+    remPoints = new ArrayList<>();
+    for (Point localP : localPoints) {
+      Point p = findRealPoint(localP.getId(), points);
+      if (p == null) {
+        remPoints.add(localP);
       }
+    }
+    if (remPoints.size() == 0) {
+      remPoints = null;
     }
     save();
     progressBarPercentage = 1;
@@ -865,7 +867,6 @@ public class DatabaseController implements DatabaseInterface {
 //          //do stuff, if neccesary, else, delete
 //        }
 
-        //e.printStackTrace();
       }
     }
     ArrayList<Physician> copyOfPhysicians = new ArrayList<Physician>();
@@ -910,7 +911,7 @@ public class DatabaseController implements DatabaseInterface {
 
   private static ElevatorPoint toElevatorPoint(Point p) {
     ElevatorPoint ep = new ElevatorPoint(p.getXCoord(), p.getYCoord(), p.getNames(), p.getId(),
-        p.getNeighbors(), p.getFloor());
+        p.getNeighbors(), p.getFloor(), p.getBuilding());
     for (int i = 0; i < ep.neighbors.size(); i++) {
       ep.neighbors.get(i).neighbors.remove(p);
       ep.connectTo(ep.neighbors.get(i));
@@ -968,7 +969,7 @@ public class DatabaseController implements DatabaseInterface {
       fl = first_name + last_name;
       lf = last_name + first_name;
       fuzzySearchThreshold = 3;//fl.length() - 1;
-      int fuzzySearchThreshold3 = Math.max(first_name.length(),last_name.length());
+      int fuzzySearchThreshold3 = Math.max(first_name.length(), last_name.length());
       //System.out.println("first, last, fist-last,last-first : @" + first_name + "@ @" + last_name + "@ @" + fl + "@ @" + lf + "@ ");
       if (StringUtils.containsAny(first_name, searchTerm2) ||
           StringUtils.containsAny(last_name, searchTerm2)/*||
@@ -991,6 +992,11 @@ public class DatabaseController implements DatabaseInterface {
 //            include = false;
 //          }
 
+        if(fln == 0 || lfn == 0){
+          candidates.add(p);
+          return candidates;
+        }
+
         if (fn == -1) {
           fn = 10000;
         }
@@ -1003,6 +1009,7 @@ public class DatabaseController implements DatabaseInterface {
         if (fln == -1) {
           fln = 10000;
         }
+
         if ((fn == 10000 && ln == 10000) && (lfn == 10000 && fln == 10000)) {
           include = false;
         }
@@ -1034,6 +1041,9 @@ public class DatabaseController implements DatabaseInterface {
         }
         if (length != -101) {
           value1 = -2 + length_map.get(length);
+        }
+        if(fn == 0 || ln == 0){
+          value1  =  -3;
         }
 
         /*if(value == 100000.0){
@@ -1152,11 +1162,12 @@ public class DatabaseController implements DatabaseInterface {
       for (i = 0; i < names.size(); i++) {
         String name = names.get(i).toLowerCase().replaceAll("\\s+", "");
         lc_names.add(name);
-        fuzzySearchThreshold2 = name.length()/2;
+        fuzzySearchThreshold2 = name.length() / 2;
         if (StringUtils.containsAny(lc_names.get(i), searchTerm)) {
           worthit = true;
-          double value2 = (double) StringUtils.getLevenshteinDistance(name, searchTerm, fuzzySearchThreshold2);
-          if(value2 == ((double)-1)){
+          double value2 = (double) StringUtils
+              .getLevenshteinDistance(name, searchTerm, fuzzySearchThreshold2);
+          if (value2 == ((double) -1)) {
             worthit = false;
           }
           if (StringUtils.containsIgnoreCase(name, searchTerm)) {

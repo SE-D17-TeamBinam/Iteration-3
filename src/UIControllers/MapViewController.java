@@ -591,6 +591,16 @@ public class MapViewController extends CentralUIController implements Initializa
             if (first) {
               first = false;
               updateUserPane();
+
+              if (kioskLocation != null) {
+                int ind = allPoints.indexOf(kioskLocation);
+                if (ind > -1) {
+                  Point myPoint = allPoints.get(ind);
+                  buildingChoiceBox.setValue(myPoint.getBuilding());
+                  floorChoiceBox.setValue(myPoint.getFloor());
+                  setStart(myPoint);
+                }
+              }
               if (searchingPoint != null) {
                 int ind = allPoints.indexOf(searchingPoint);
                 if (ind > -1) {
@@ -602,16 +612,6 @@ public class MapViewController extends CentralUIController implements Initializa
                   setEnd(myPoint);
                 }
               }
-              /*
-              if (kioskLocation != null) {
-                int ind = allPoints.indexOf(kioskLocation);
-                if (ind > -1) {
-                  Point myPoint = allPoints.get(ind);
-                  floorChoiceBox.setValue(myPoint.getFloor());
-                  setStart(myPoint);
-                }
-              }
-              */
             }
             globalTimerActions();
           }
@@ -1359,6 +1359,17 @@ public class MapViewController extends CentralUIController implements Initializa
     setFloorConnectFocus(null);
   }
 
+  /**
+   * Swaps the two point from/to field
+   * @author mscollins2
+   */
+  @FXML
+  private void swapPoints() {
+    Point temp = (Point) startNodeBox.getValue(); //Grab a point so we can swap
+    startNodeBox.setValue(endNodeBox.getValue());
+    endNodeBox.setValue(temp); //swapparino
+    //that was easy
+  }
 
   private void sortBuildingChoiceBox() {
     buildingChoiceBox.getItems().sort(new Comparator() {
@@ -1430,7 +1441,7 @@ public class MapViewController extends CentralUIController implements Initializa
       }
     }
     sortBuildingChoiceBox();
-    /*
+
     if (kioskLocation != null) {
       int ind = allPoints.indexOf(kioskLocation);
       if (ind > -1) {
@@ -1438,7 +1449,7 @@ public class MapViewController extends CentralUIController implements Initializa
         setStart(myPoint);
       }
     }
-    */
+
 
   }
 

@@ -1,7 +1,13 @@
 package UIControllers;
 
+import FileController.SettingsIO;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -26,28 +32,35 @@ public class AdminMenuController extends CentralUIController implements Initiali
   @FXML
   private ImageView MapButton;
   @FXML
+  private ImageView SettingsButton;
+  @FXML
   private Label MapLabel;
   @FXML
   private Label DirectEditLabel;
+  @FXML
+  private Label SettingsLabel;
   @FXML
   private Button LogOffButton;
 
   @Override
   public void customListenerX() {
     LogOffButton.setLayoutX(x_res - LogOffButton.getPrefWidth() - 12);
-    MapButton.setLayoutX(5 * (x_res / 7) - 175);
-    EditButton.setLayoutX(2 * (x_res / 7) - 175);
-    DirectEditLabel.setLayoutX(2 * (x_res / 7) - 105);
-    MapLabel.setLayoutX(5 * (x_res / 7) - 95);
+    MapButton.setLayoutX(x_res/5 - MapButton.getFitWidth()/2);
+    EditButton.setLayoutX(x_res/2 - EditButton.getFitWidth()/2);
+    SettingsButton.setLayoutX(4*x_res/5 - SettingsButton.getFitWidth()/2);
+    MapLabel.setLayoutX(x_res/5 - MapLabel.getPrefWidth()/2);
+    DirectEditLabel.setLayoutX(x_res/2 - DirectEditLabel.getPrefWidth()/2);
+    SettingsLabel.setLayoutX(4*x_res/5 - SettingsLabel.getPrefWidth()/2);
   }
 
   @Override
   public void customListenerY() {
-    MapButton.setLayoutY(6 * (y_res / 11) - 160);
-    EditButton.setLayoutY(6 * (y_res / 11) - 160);
-    DirectEditLabel.setLayoutY(6 * (y_res / 11) + 120);
-    MapLabel.setLayoutY(6 * (y_res / 11) + 120);
-
+    MapButton.setLayoutY(6*y_res / 11 - MapButton.getFitHeight()/2);
+    EditButton.setLayoutY(6*y_res / 11 - EditButton.getFitHeight()/2);
+    SettingsButton.setLayoutY(6*y_res/11 -SettingsButton.getFitHeight()/2);
+    DirectEditLabel.setLayoutY(6*y_res / 11 + EditButton.getFitHeight()/2 + 20);
+    MapLabel.setLayoutY(6*y_res / 11 + MapButton.getFitHeight()/2 + 20);
+    SettingsLabel.setLayoutY(6*y_res/11 + SettingsButton.getFitHeight()/2 + 20);
   }
 
   @Override
@@ -62,6 +75,8 @@ public class AdminMenuController extends CentralUIController implements Initiali
     addResolutionListener(anchorPane);
     setBackground(anchorPane);
   }
+
+
 
   @FXML
   public void editMap() {
@@ -80,6 +95,17 @@ public class AdminMenuController extends CentralUIController implements Initiali
     try {
       loadScene(primaryStage, "/DirectEdit.fxml");
     } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  @FXML
+  public void editSettings () {
+    Stage primaryStage = (Stage) AdminMenu.getScene().getWindow();
+    try {
+      loadScene(primaryStage, "/SettingsMenu.fxml");
+    } catch (Exception e) {
+      System.out.println("Cannot load main menu");
       e.printStackTrace();
     }
   }
@@ -104,15 +130,6 @@ public class AdminMenuController extends CentralUIController implements Initiali
     }
   }
 
-  public void settings () {
-    Stage primaryStage = (Stage) AdminMenu.getScene().getWindow();
-    try {
-      loadScene(primaryStage, "/SettingsMenu.fxml");
-    } catch (Exception e) {
-      System.out.println("Cannot load main menu");
-      e.printStackTrace();
-    }
-  }
 }
 
 

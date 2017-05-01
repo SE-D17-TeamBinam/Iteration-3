@@ -63,7 +63,7 @@ public class MainMenuController extends CentralUIController implements Initializ
     MapButton.setLayoutX(5*(x_res/7) - MapButton.getFitWidth()/2);
     SearchButton.setLayoutX(2*(x_res/7) - SearchButton.getFitWidth()/2);
     MainKey.setLayoutX(x_res - MainKey.getFitWidth() - 10);
-    InfoButton.setLayoutX(x_res - InfoButton.getFitWidth() - 20);
+    InfoButton.setLayoutX(15*x_res/16);
     SearchLabel.setLayoutX(2*(x_res/7) - SearchLabel.getPrefWidth()/2);
   }
 
@@ -75,6 +75,7 @@ public class MainMenuController extends CentralUIController implements Initializ
     SearchButton.setLayoutY(6*(y_res/11) - SearchButton.getFitHeight()/2);
     SearchLabel.setLayoutY(6*(y_res/11) + 100);
     langBox.setLayoutY(y_res - 50);
+    InfoButton.setLayoutY(y_res/5);
   }
 
   public void gotoMap () {

@@ -34,12 +34,11 @@ import org.Point;
 public class DirectEditController extends CentralUIController implements Initializable {
   private int selectedHPIndex;
   private Physician selectedHP = null;
-  private ChoiceBox<String> selectedCB = null;
+  private ChoiceBox<Point> selectedCB = null;
   private ArrayList<Physician> docs;
   private ArrayList<Point> rooms;
-  private ArrayList<String> roomNames;
   private ObservableList<Physician> docDisplay = FXCollections.observableArrayList();
-  private ArrayList<ChoiceBox> locations;
+  private ObservableList<ChoiceBox> locations = FXCollections.observableArrayList();
   private String searchString = "";
 
   @FXML
@@ -172,8 +171,12 @@ public class DirectEditController extends CentralUIController implements Initial
 
     rooms = database.getNamedPoints();
     docs = database.getPhysicians();
-    sortDocs(docs);
     sortRooms(rooms);
+
+    refreshDir();
+    Directory.setItems(docDisplay);
+
+    Locations.setItems(locations);
 
     /* apply language configs */
     DirectBack.setText(dictionary.getString("Back", currSession.getLanguage()));
@@ -207,46 +210,28 @@ public class DirectEditController extends CentralUIController implements Initial
         return new ReadOnlyStringWrapper(locations);
       }
     });
-    roomNames = new ArrayList<>();
-
-    // load all displayDocs
-    refreshDir();
-    Directory.setItems(docDisplay);
-
-    for (Point n : rooms) {
-      roomNames.add(n.getName());
-    }
 
     /////////////////////////////
     ///////// Listeners /////////
     /////////////////////////////
     // when select any doc
-    Directory.getSelectionModel().selectedItemProperty().addListener(
-        new ChangeListener<Physician>() {
-          public void changed(ObservableValue<? extends Physician> ov,
-              Physician old_val, Physician new_val) {
-            int clicked = Directory.getSelectionModel().getSelectedIndex();
-            if (clicked >= 0) {
-              selectedHPIndex = clicked;
-              selectedHP = docDisplay.get(selectedHPIndex);
-            }
-            refreshLoc();
-            // set text field
-            refreshInfo();
-          }
-        });
-    Locations.getSelectionModel().selectedItemProperty().addListener(
-        new ChangeListener<ChoiceBox>() {
-          @Override
-          public void changed(ObservableValue<? extends ChoiceBox> observable, ChoiceBox oldValue,
-              ChoiceBox newValue) {
-            selectedCB = newValue;
-          }
-        });
+    Directory.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+      int clicked = Directory.getSelectionModel().getSelectedIndex();
+      if (clicked >= 0) {
+        selectedHPIndex = clicked;
+        selectedHP = newValue;
+      }
+      refreshLoc();
+      refreshInfo();
+    });
+    Locations.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+      selectedCB = newValue;
+    });
     DirectSearch.textProperty().addListener((observable, oldValue, newValue) -> {
       searchString = newValue.toString();
       refreshDir();
     });
+
   }
 
   /////////////////////////////
@@ -254,13 +239,12 @@ public class DirectEditController extends CentralUIController implements Initial
   /////////////////////////////
 
   public void refreshDir () {
+    sortDocs(docs);
     docDisplay.clear();
-    if (searchString != "") {
+    if (!searchString.equals("")) {
       for (Physician doc : docs) {
-        if (Pattern.compile(Pattern.quote(searchString),
-            Pattern.CASE_INSENSITIVE).matcher(
-                doc.getFirstName() + " " + doc.getLastName()
-            ).find()) {
+        if (Pattern.compile(Pattern.quote(searchString), Pattern.CASE_INSENSITIVE).matcher(
+                doc.getFirstName() + " " + doc.getLastName()).find()) {
           docDisplay.add(doc);
         }
       }
@@ -270,23 +254,27 @@ public class DirectEditController extends CentralUIController implements Initial
   }
 
   private void refreshLoc () {
-    int i = 0;
-    locations = new ArrayList<>();
-    for (Point p : selectedHP.getLocations()) {
-      ChoiceBox<String> cb = new ChoiceBox<>();
-      cb.setItems(FXCollections.observableList(roomNames));
-      Point temp = selectedHP.getLocations().get(i);
-      cb.setValue(temp.getName());
-      locations.add(cb);
-      i++;
+    locations.clear();
+    if (selectedHP != null) {
+      for (Point p : selectedHP.getLocations()) {
+        ChoiceBox<Point> cb = new ChoiceBox<>();
+        cb.setItems(FXCollections.observableList(rooms));
+        cb.setValue(p);
+        locations.add(cb);
+      }
     }
-    Locations.setItems(FXCollections.observableList(locations));
   }
 
   private void refreshInfo () {
-    LastName.setText(selectedHP.getLastName());
-    FirstName.setText(selectedHP.getFirstName());
-    Title.setText(selectedHP.getTitle());
+    if (selectedHP != null) {
+      LastName.setText(selectedHP.getLastName());
+      FirstName.setText(selectedHP.getFirstName());
+      Title.setText(selectedHP.getTitle());
+    } else {
+      LastName.setText("");
+      FirstName.setText("");
+      Title.setText("");
+    }
   }
 
 
@@ -297,32 +285,21 @@ public class DirectEditController extends CentralUIController implements Initial
     DirectSearch.setText("");
   }
 
-  private void clearLoc () {
-    Locations.setItems(FXCollections.observableList(new ArrayList<>()));
-  }
-
-  private void clearInfo () {
-    LastName.setText("");
-    FirstName.setText("");
-    Title.setText("");
-  }
 
   /////////////////////////////
   /// location manipulation ///
   /////////////////////////////
   public void addLocation () {
     if (selectedHP != null) {
-      ChoiceBox<String> cb = new ChoiceBox<>();
-      cb.setItems(FXCollections.observableList(roomNames));
+      ChoiceBox<Point> cb = new ChoiceBox<>();
+      cb.setItems(FXCollections.observableList(rooms));
       locations.add(cb);
-      Locations.setItems(FXCollections.observableList(locations));
     }
   }
 
   public void removeLocation () {
     if (selectedHP != null) {
       locations.remove(selectedCB);
-      Locations.setItems(FXCollections.observableList(locations));
     }
   }
 
@@ -330,24 +307,12 @@ public class DirectEditController extends CentralUIController implements Initial
     ArrayList<Point> ret = new ArrayList<>();
     for (ChoiceBox cb : locations) {
       if (cb.getValue() != null) {
-        addtoFinalLocs(ret, cb);
+        ret.add((Point) cb.getValue());
       }
     }
     return ret;
   }
 
-  private void addtoFinalLocs(ArrayList<Point> ret, ChoiceBox L) {
-    for (Point n : rooms) {
-      try {
-        if (n.getName().equals(L.getValue().toString())) {
-          ret.add(n);
-          break;
-        }
-      } catch (NullPointerException e) {
-        continue;
-      }
-    }
-  }
 
   /////////////////////////////
   ///// data manipulation /////
@@ -363,23 +328,22 @@ public class DirectEditController extends CentralUIController implements Initial
       for (int i = 0 ; i < docs.size() ; i++) {
         if (docs.get(i).getID() == selectedHP.getID()){
           docs.set(i, selectedHP);
-          docDisplay.set(selectedHPIndex, selectedHP);
-          isNewPhysician = false;
+          //docDisplay.set(selectedHPIndex, selectedHP);
           database.editPhysician(selectedHP);
+          isNewPhysician = false;
           break;
         }
       }
       if (isNewPhysician) {
         docs.add(selectedHP);
-        docDisplay.add(selectedHP);
+        //docDisplay.add(selectedHP);
         database.addPhysician(selectedHP);
       }
-      //database.setPhysicians(docs);
+      // save to database
       database.save();
       // refresh the page
       refreshInfo();
       refreshDir();
-      // save to database
       Directory.getSelectionModel().select(selectedHP);
     } catch (NullPointerException e) {
       System.out.println("Nothing is selected");
@@ -398,9 +362,15 @@ public class DirectEditController extends CentralUIController implements Initial
   public void create () {
     Directory.getSelectionModel().select(-1);
     long newPID;
-    try {
-      newPID = docs.get(docs.size() - 1).getID() + 1;
-    } catch (ArrayIndexOutOfBoundsException e) {
+    if (docs.size() > 0) {
+      long max = docs.get(0).getID();
+      for (int i = 0; i < docs.size(); i++) {
+        if (docs.get(i).getID() > max) {
+          max = docs.get(i).getID();
+        }
+      }
+      newPID = max + 1;
+    } else {
       newPID = 1;
     }
     selectedHP = new Physician("", "", "", newPID, new ArrayList<>());
@@ -412,9 +382,10 @@ public class DirectEditController extends CentralUIController implements Initial
   public void delete () {
     database.removePhysician(selectedHP.getID());
     docs.remove(selectedHP);
+    selectedHP = null;
     refreshDir();
-    clearLoc();
-    clearInfo();
+    refreshLoc();
+    refreshInfo();
     //database.setPhysicians(docs);
   }
 
@@ -440,15 +411,4 @@ public class DirectEditController extends CentralUIController implements Initial
       e.printStackTrace();
     }
   }
-
-  public void editMap(){
-    mapViewFlag = 3;
-    Stage primaryStage = (Stage) anchorPane.getScene().getWindow();
-    try {
-      loadScene(primaryStage, "/MapScene.fxml");
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-
 }
