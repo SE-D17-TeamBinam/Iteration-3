@@ -42,31 +42,46 @@ public class AdminMenuController extends CentralUIController implements Initiali
 
   @Override
   public void customListenerX() {
-    LogOffButton.setLayoutX(x_res - LogOffButton.getPrefWidth() - 12);
-    MapButton.setLayoutX(x_res/5 - MapButton.getFitWidth()/2);
-    EditButton.setLayoutX(x_res/2 - EditButton.getFitWidth()/2);
-    SettingsButton.setLayoutX(4*x_res/5 - SettingsButton.getFitWidth()/2);
-    MapLabel.setLayoutX(x_res/5 - MapLabel.getPrefWidth()/2);
-    DirectEditLabel.setLayoutX(x_res/2 - DirectEditLabel.getPrefWidth()/2);
-    MapLabel.setLayoutX(x_res/5 - MapLabel.getPrefWidth()/2);
-    CreateAccountButton.setLayoutX(x_res - CreateAccountButton.getPrefWidth() - 12);
-    LoginLabel.setLayoutX(x_res/2 - LoginLabel.getPrefWidth()/2 + 70);
-    SettingsButton.setLayoutX(4*x_res/5 - SettingsButton.getFitWidth()/2);
-    SettingsLabel.setLayoutX(4*x_res/5 - SettingsLabel.getPrefWidth()/2);
+    if (!adminPermissions) {
+      MapButton.setLayoutX(5*(x_res/7) - 155);
+      EditButton.setLayoutX(2*(x_res/7) - 155);
+      DirectEditLabel.setLayoutX(2*(x_res/7) - 105);
+      MapLabel.setLayoutX(5*(x_res/7) - 95);
+      LoginLabel.setLayoutX(x_res / 2 - LoginLabel.getPrefWidth() / 2 + 70);
+      LogOffButton.setLayoutX(x_res - LogOffButton.getPrefWidth() - 12);
+    }
+    else {
+      LogOffButton.setLayoutX(x_res - LogOffButton.getPrefWidth() - 12);
+      MapButton.setLayoutX(x_res / 5 - MapButton.getFitWidth() / 2);
+      EditButton.setLayoutX(x_res / 2 - EditButton.getFitWidth() / 2);
+      DirectEditLabel.setLayoutX(x_res / 2 - DirectEditLabel.getPrefWidth() / 2);
+      MapLabel.setLayoutX(x_res / 5 - MapLabel.getPrefWidth() / 2);
+      CreateAccountButton.setLayoutX(x_res - CreateAccountButton.getPrefWidth() - 12);
+      LoginLabel.setLayoutX(x_res / 2 - LoginLabel.getPrefWidth() / 2 + 70);
+      SettingsButton.setLayoutX(4 * x_res / 5 - SettingsButton.getFitWidth() / 2);
+      SettingsLabel.setLayoutX(4 * x_res / 5 - SettingsLabel.getPrefWidth() / 2);
+    }
   }
 
   @Override
   public void customListenerY() {
-    MapButton.setLayoutY(6*y_res / 11 - MapButton.getFitHeight()/2);
-    EditButton.setLayoutY(6*y_res / 11 - EditButton.getFitHeight()/2);
-    SettingsButton.setLayoutY(6*y_res/11 -SettingsButton.getFitHeight()/2);
-    DirectEditLabel.setLayoutY(6*y_res / 11 + EditButton.getFitHeight()/2 + 20);
-    MapLabel.setLayoutY(6*y_res / 11 + MapButton.getFitHeight()/2 + 20);
-    SettingsLabel.setLayoutY(6*y_res/11 + SettingsButton.getFitHeight()/2 + 20);
-    CreateAccountButton.setLayoutY(y_res - CreateAccountButton.getPrefWidth()/2);
-    LoginLabel.setLayoutY(y_res - LoginLabel.getPrefHeight());
+    if (!adminPermissions) {
+      MapButton.setLayoutY(6 * (y_res / 11) - 170);
+      EditButton.setLayoutY(6 * (y_res / 11) - 170);
+      DirectEditLabel.setLayoutY(6 * (y_res / 11) + 130);
+      MapLabel.setLayoutY(6 * (y_res / 11) + 130);
+      LoginLabel.setLayoutY(y_res - LoginLabel.getPrefHeight());
+    } else {
+      MapButton.setLayoutY(6 * y_res / 11 - MapButton.getFitHeight() / 2);
+      EditButton.setLayoutY(6 * y_res / 11 - EditButton.getFitHeight() / 2);
+      SettingsButton.setLayoutY(6 * y_res / 11 - SettingsButton.getFitHeight() / 2);
+      DirectEditLabel.setLayoutY(6 * y_res / 11 + EditButton.getFitHeight() / 2 + 20);
+      MapLabel.setLayoutY(6 * y_res / 11 + MapButton.getFitHeight() / 2 + 20);
+      SettingsLabel.setLayoutY(6 * y_res / 11 + SettingsButton.getFitHeight() / 2 + 20);
+      CreateAccountButton.setLayoutY(y_res - CreateAccountButton.getPrefWidth() / 2);
+      LoginLabel.setLayoutY(y_res - LoginLabel.getPrefHeight());
+    }
   }
-
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
@@ -81,6 +96,8 @@ public class AdminMenuController extends CentralUIController implements Initiali
     setBackground(anchorPane);
     LoginLabel.setText(LoginLabel.getText() + currUsername);
     initializeCreationButton();
+    initializeSettingsButton();
+    intializeStaffLabels();
   }
 
   public void initializeCreationButton() {
@@ -88,6 +105,21 @@ public class AdminMenuController extends CentralUIController implements Initiali
       CreateAccountButton.setVisible(false);
     }
   }
+
+  public void initializeSettingsButton() {
+    if(!adminPermissions) {
+      SettingsButton.setVisible(false);
+      SettingsLabel.setVisible(false);
+    }
+  }
+
+  public void intializeStaffLabels() {
+    if(!adminPermissions) {
+      MapLabel.setText("Map");
+      DirectEditLabel.setText("Directory");
+    }
+  }
+
 
   public void createAccount() {
     Stage primaryStage = (Stage) AdminMenu.getScene().getWindow();
@@ -103,8 +135,7 @@ public class AdminMenuController extends CentralUIController implements Initiali
    * set the scene to admin map
    */
   @FXML
-  public void editMap() {
-    mapViewFlag = 3;
+  public void editMap(){
     Stage primaryStage = (Stage) AdminMenu.getScene().getWindow();
     try {
       loadScene(primaryStage, "/MapScene.fxml");
@@ -120,7 +151,12 @@ public class AdminMenuController extends CentralUIController implements Initiali
   public void editDirectory() {
     Stage primaryStage = (Stage) AdminMenu.getScene().getWindow();
     try {
-      loadScene(primaryStage, "/DirectEdit.fxml");
+      if (!adminPermissions) {
+        loadScene(primaryStage, "/SearchMenu.fxml");
+      }
+      else {
+        loadScene(primaryStage, "/DirectEdit.fxml");
+      }
     } catch (Exception e) {
       e.printStackTrace();
     }

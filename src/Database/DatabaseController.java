@@ -759,12 +759,53 @@ public class DatabaseController implements DatabaseInterface {
     int i;
     for (i = 0; i < localPoints.size(); i++) {
       if (localPoints.get(i).getName() != null && !localPoints.get(i).getName().equals("null")
-          && !localPoints.get(i).getName().equals("") && !(Objects.equals(localPoints.get(i).getName().replaceAll("\\s", ""), ""))) {namedPoints.add((Point) localPoints.get(i).clone());
+          && !localPoints.get(i).getName().equals("") && !localPoints.get(i).getBuilding().contains("STAFF") && !(Objects.equals(localPoints.get(i).getName().replaceAll("\\s", ""), ""))) {namedPoints.add((Point) localPoints.get(i).clone());
+      }
+    }
+    return namedPoints;
+  }
+
+  @Override
+  public ArrayList<Point> getStaffPoints() {
+    ArrayList<Point> staffPoints = getNamedPoints();
+    ArrayList<Point> clonedStaffPoints = new ArrayList<>();
+
+    for (Point p : staffPoints) {
+      if (p.getBuilding().contains("STAFF")) {
+        clonedStaffPoints.add(p);
       }
     }
 
-    return namedPoints;
+    return clonedStaffPoints;
   }
+//    while (saveThread.running || loadThread.running) {
+//      ;
+//    }
+//    if (localPoints.size() < 1) {
+//      try {
+//        load();
+//      } catch (SQLException e) {
+//        Alert alert = new Alert(AlertType.ERROR,
+//            "Message. Bad Things Happened! : "
+//                + "DB ERROR: failed to load in getStaffPoints method: "
+//                + e.getMessage()); //can add buttons if you want, or change to different popup types
+//        alert.showAndWait(); //this puts it in focus
+////        if (alert.getResult() == ButtonType.YES) {
+////          //do stuff, if neccesary, else, delete
+////        }
+//        e.printStackTrace();
+//      }
+//    }
+//    System.out.println("trying to get Points with names");
+//    ArrayList<Point> staffPoints = new ArrayList<Point>();
+//    int i;
+//    for (i = 0; i < localPoints.size(); i++) {
+//      if (localPoints.get(i).getName() != null && !localPoints.get(i).getName().equals("null")
+//          && !localPoints.get(i).getName().equals("") && !(Objects.equals(localPoints.get(i).getName().replaceAll("\\s", ""), ""))) {staffPoints.add((Point) localPoints.get(i).clone());
+//      }
+//    }
+//    return staffPoints;
+
 
   @Override
   public ArrayList<Point> getPoints() {

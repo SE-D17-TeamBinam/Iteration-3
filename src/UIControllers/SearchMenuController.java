@@ -10,7 +10,6 @@ import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -23,7 +22,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -84,7 +82,12 @@ public class SearchMenuController extends CentralUIController implements Initial
     addResolutionListener(anchorPane);
     setBackground(anchorPane);
     docs = database.getPhysicians();
-    rooms = database.getNamedPoints();
+    if (isLoggedIn) {
+      rooms = database.getStaffPoints();
+    }
+    else{
+      rooms = database.getNamedPoints();
+    }
     sortDocs(docs);
     sortRooms(rooms);
 
@@ -362,7 +365,12 @@ public class SearchMenuController extends CentralUIController implements Initial
   public void back () {
     Stage primaryStage = (Stage) anchorPane.getScene().getWindow();
     try {
-      loadScene(primaryStage, "/MainMenu.fxml");
+      if (isLoggedIn) {
+        loadScene(primaryStage, "/AdminMenu.fxml");
+      }
+      else{
+        loadScene(primaryStage,"/MainMenu.fxml" );
+      }
     } catch (Exception e) {
       System.out.println("Cannot load main menu");
       e.printStackTrace();

@@ -1,6 +1,7 @@
 package UIControllers;
 
 import CredentialManager.UserType;
+import FileController.SettingsIO;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -275,6 +276,8 @@ public class SignupMenuController extends CentralUIController implements Initial
         error.setHeaderText("Verification failed");
         if (username.equals(currUsername) && pass.equals(currentUser.get(currUsername))) {
           res.set(true);
+          SettingsIO settings = new SettingsIO();
+          setTimeOut(settings.getTimeout(), primaryStage);
           dialog.close();
         } else {
           res.set(false);
@@ -300,6 +303,8 @@ public class SignupMenuController extends CentralUIController implements Initial
           error.setHeaderText("Verification failed");
           if (username.equals(currUsername) && pass.equals(currentUser.get(currUsername))) {
             res.set(true);
+            SettingsIO settings = new SettingsIO();
+            setTimeOut(settings.getTimeout(), primaryStage);
             dialog.close();
           } else {
             res.set(false);
@@ -325,6 +330,8 @@ public class SignupMenuController extends CentralUIController implements Initial
           error.setHeaderText("Verification failed");
           if (username.equals(currUsername) && pass.equals(currentUser.get(currUsername))) {
             res.set(true);
+            SettingsIO settings = new SettingsIO();
+            setTimeOut(settings.getTimeout(), primaryStage);
             dialog.close();
           } else {
             res.set(false);
@@ -342,15 +349,19 @@ public class SignupMenuController extends CentralUIController implements Initial
     cancelButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
       @Override
       public void handle(MouseEvent event) {
+        SettingsIO settings = new SettingsIO();
+        setTimeOut(settings.getTimeout(), primaryStage);
         dialog.close();
         res.set(false);
       }
     });
 
+
+    stopTimeOut();
     dialog.showAndWait();
 
-      getFlag = res.getValue();
-      return getFlag;
+    getFlag = res.getValue();
+    return getFlag;
     }
 
 
