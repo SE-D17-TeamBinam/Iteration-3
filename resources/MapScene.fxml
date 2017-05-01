@@ -721,7 +721,7 @@
             </Pane>
          </children>
       </Pane>
-      <ChoiceBox fx:id="buildingChoiceBox" disable="true" layoutX="9.0" layoutY="218.0" prefHeight="31.0" prefWidth="132.0" />
+      <ChoiceBox fx:id="buildingChoiceBox" layoutX="9.0" layoutY="218.0" prefHeight="31.0" prefWidth="132.0" />
       <Label fx:id="zoneLabel" layoutX="44.0" layoutY="187.0" text="Zone">
          <font>
             <Font name="Times New Roman" size="30.0" />
