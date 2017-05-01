@@ -58,7 +58,11 @@ public class CentralUIController {
   protected static Point searchingPoint;
   protected static Point kioskLocation;
 
-
+  /**
+   * set the session and database controller of central ui controller
+   * @param session the session to be set
+   * @param dbInterface the database controller to be set
+   */
   public void setSession (Session session, DatabaseInterface dbInterface) {
     this.currSession = session;
     this.credentialManager = credentialManager;
@@ -67,6 +71,7 @@ public class CentralUIController {
     try {
       database.load();
     } catch (Exception e) {
+      System.out.println("Failed to load from database");
     }
   }
 
@@ -76,7 +81,8 @@ public class CentralUIController {
    */
   public void restartUI(Stage primaryStage) throws Exception {
     applySettings(primaryStage);
-    loadScene(primaryStage, "/MainMenu.fxml");
+    Parent root = FXMLLoader.load(getClass().getResource("/MainMenu.fxml"));
+    primaryStage.setScene(new Scene(root, x_res, y_res));
     primaryStage.show();
   }
 
@@ -90,26 +96,34 @@ public class CentralUIController {
       stopTimeOut();
     }
     Parent root = FXMLLoader.load(getClass().getResource(fxmlpath));
-    Scene newScene = new Scene(root, x_res, y_res);
+    Scene currScene = primaryStage.getScene();
+    currScene.setRoot(root);
     if (!fxmlpath.equals("/MainMenu.fxml")) {
-      addTimeOut(newScene);
+      addTimeOut(currScene);
     }
-    primaryStage.setScene(newScene);
   }
 
   ////////////////////////
   //// apply settings ////
   ////////////////////////
 
+  /**
+   * apply settings to the ui from settings IO
+   * @param primaryStage the Stage to apply settings on
+   */
   public void applySettings (Stage primaryStage) {
     SettingsIO settings = new SettingsIO();
     if (settings.getScreenPreference() == 1) {
-      x_res = 1300;
-      y_res = 750;
+      primaryStage.setFullScreen(false);
+      primaryStage.setMaximized(false);
+      primaryStage.setWidth(1300);
+      primaryStage.setHeight(750);
     } else if (settings.getScreenPreference() == 2) {
       primaryStage.setFullScreen(true);
+      primaryStage.setMaximized(false);
     } else if (settings.getScreenPreference() == 3) {
       primaryStage.setMaximized(true);
+      primaryStage.setFullScreen(false);
     }
     try {
       kioskLocation = settings.getDefaultKiosk(new ListPoints(database.getNamedPoints()));
@@ -123,12 +137,16 @@ public class CentralUIController {
   //// sort functions ////
   ////////////////////////
 
+  /**
+   * sort a list of physicians by last name, if last name is the same, sort by first name
+   * @param docs the list of physicians to be sorted
+   */
   public void sortDocs (List<Physician> docs) {
     Collections.sort(docs, new Comparator<Physician>() {
       @Override
       public int compare(Physician doc1, Physician doc2) {
         int cmpLast = doc1.getLastName().compareToIgnoreCase(doc2.getLastName());
-        if (cmpLast == 0) {
+        if (cmpLast != 0) {
           return cmpLast;
         } else {
           return doc1.getFirstName().compareToIgnoreCase(doc2.getFirstName());
@@ -137,6 +155,10 @@ public class CentralUIController {
     });
   }
 
+  /**
+   * sort a list of points by name
+   * @param rooms the list of points to be sorted
+   */
   public void sortRooms (List<Point> rooms) {
     Collections.sort(rooms, new Comparator<Point>() {
       @Override
@@ -150,6 +172,10 @@ public class CentralUIController {
   //// banner and logo ///
   ////////////////////////
 
+  /**
+   * add a resolution listener for banner, background and logo
+   * @param anchorPane the anchor pane to listen on
+   */
   public void addResolutionListener (AnchorPane anchorPane) {
     anchorPane.widthProperty().addListener((observableValue, oldSceneWidth, newSceneWidth) -> {
       x_res = (double) newSceneWidth;
@@ -160,31 +186,34 @@ public class CentralUIController {
     });
     anchorPane.heightProperty().addListener((observableValue, oldSceneHeight, newSceneHeight) -> {
       y_res = (double) newSceneHeight;
-      bannerView.setFitHeight(120*y_res/750);
       backgroundView.setLayoutY(y_res/2.5);
-      logoView.setFitHeight(60*y_res/750);
-      logoView.setFitWidth(350*y_res/750);
-      logoView.setLayoutX(x_res/2 - logoView.getFitWidth()/2);
-      logoView.setLayoutY(14*y_res/750);
       customListenerY();
     });
   }
 
-  public void customListenerX () {
+  /**
+   * the resolution scale function for each ui controller to override
+   * set layoutX/width of individual ui element here
+   */
+  public void customListenerX () {}
 
-  }
+  /**
+   * the resolution scale function for each ui controller to override
+   * set layoutY/height of individual ui element here
+   */
+  public void customListenerY () {}
 
-  public void customListenerY () {
-
-  }
-
+  /**
+   * add banner background and logo to an anchor pane
+   * @param anchorPane the anchor pane to add on
+   */
   public void setBackground (AnchorPane anchorPane) {
     bannerView.setImage(banner);
     backgroundView.setImage(background);
     backgroundView.setPreserveRatio(true);
     logoView.setImage(logo);
-    logoView.setFitHeight(60);
-    logoView.setFitWidth(350);
+    logoView.setFitWidth(380);
+    logoView.setLayoutY(12);
     logoView.setPreserveRatio(true);
     anchorPane.getChildren().add(bannerView);
     anchorPane.getChildren().add(backgroundView);
@@ -198,6 +227,10 @@ public class CentralUIController {
   /// time out functions ///
   //////////////////////////
 
+  /**
+   * add time out implementation to a scene
+   * @param scene the scene to add on
+   */
   private void addTimeOut (Scene scene) {
     SettingsIO settings = new SettingsIO();
     if (settings.getTimeout() != 0) {
@@ -214,20 +247,39 @@ public class CentralUIController {
     }
   }
 
-  private void setTimeOut (int time, Stage primaryStage) {
+  /**
+   * initialize the time out of a stage
+   * @param time the time out length in seconds
+   * @param primaryStage the primary stage to apply the time out
+   */
+  public void setTimeOut (int time, Stage primaryStage) {
     timeOut = makeKeyFrame(time, primaryStage);
     timeOut.play();
   }
 
+  /**
+   * reset the timer of time out of a stage
+   * @param time the new time out length in seconds
+   * @param primaryStage the primary stage to reset the time out
+   */
   private void resetTimeOut (int time, Stage primaryStage) {
     timeOut.stop();
     setTimeOut(time, primaryStage);
   }
 
-  private void stopTimeOut () {
+  /**
+   * stop the time out
+   */
+  public void stopTimeOut () {
     timeOut.stop();
   }
 
+  /**
+   * make a timeline schedule for the time out
+   * @param time the time out length in seconds
+   * @param primaryStage the primary stage to show the main menu after time out
+   * @return the newly created timeline
+   */
   private Timeline makeKeyFrame (int time, Stage primaryStage) {
     KeyFrame KF = new KeyFrame(javafx.util.Duration.seconds(time), event-> {
       System.out.println("Session timed out");
