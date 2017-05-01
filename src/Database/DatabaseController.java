@@ -243,6 +243,7 @@ public class DatabaseController implements DatabaseInterface {
 
   /**
    * Get all the physicians from the database
+   *
    * @return ArrayList of the real, converted Physicians
    * @throws SQLException if there is a problem contacting database
    */
@@ -830,14 +831,15 @@ public class DatabaseController implements DatabaseInterface {
       }
     }
 
-    if (localPoints.size() > points.size()) {
-      remPoints = new ArrayList<>();
-      for (Point localP : localPoints) {
-        Point p = findRealPoint(localP.getId(), points);
-        if (p == null) {
-          remPoints.add(localP);
-        }
+    remPoints = new ArrayList<>();
+    for (Point localP : localPoints) {
+      Point p = findRealPoint(localP.getId(), points);
+      if (p == null) {
+        remPoints.add(localP);
       }
+    }
+    if (remPoints.size() == 0) {
+      remPoints = null;
     }
     save();
     progressBarPercentage = 1;
@@ -865,7 +867,6 @@ public class DatabaseController implements DatabaseInterface {
 //          //do stuff, if neccesary, else, delete
 //        }
 
-        //e.printStackTrace();
       }
     }
     ArrayList<Physician> copyOfPhysicians = new ArrayList<Physician>();
@@ -968,7 +969,7 @@ public class DatabaseController implements DatabaseInterface {
       fl = first_name + last_name;
       lf = last_name + first_name;
       fuzzySearchThreshold = 3;//fl.length() - 1;
-      int fuzzySearchThreshold3 = Math.max(first_name.length(),last_name.length());
+      int fuzzySearchThreshold3 = Math.max(first_name.length(), last_name.length());
       //System.out.println("first, last, fist-last,last-first : @" + first_name + "@ @" + last_name + "@ @" + fl + "@ @" + lf + "@ ");
       if (StringUtils.containsAny(first_name, searchTerm2) ||
           StringUtils.containsAny(last_name, searchTerm2)/*||
@@ -1152,11 +1153,12 @@ public class DatabaseController implements DatabaseInterface {
       for (i = 0; i < names.size(); i++) {
         String name = names.get(i).toLowerCase().replaceAll("\\s+", "");
         lc_names.add(name);
-        fuzzySearchThreshold2 = name.length()/2;
+        fuzzySearchThreshold2 = name.length() / 2;
         if (StringUtils.containsAny(lc_names.get(i), searchTerm)) {
           worthit = true;
-          double value2 = (double) StringUtils.getLevenshteinDistance(name, searchTerm, fuzzySearchThreshold2);
-          if(value2 == ((double)-1)){
+          double value2 = (double) StringUtils
+              .getLevenshteinDistance(name, searchTerm, fuzzySearchThreshold2);
+          if (value2 == ((double) -1)) {
             worthit = false;
           }
           if (StringUtils.containsIgnoreCase(name, searchTerm)) {
