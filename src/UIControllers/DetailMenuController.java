@@ -207,7 +207,7 @@ public class DetailMenuController extends CentralUIController implements Initial
   public void quit () {
     Stage primaryStage = (Stage) anchorPane.getScene().getWindow();
     try {
-      restartUI(primaryStage);
+      loadScene(primaryStage, "/MainMenu.fxml");
     } catch (Exception e) {
       System.out.println("Cannot load main menu");
       e.printStackTrace();

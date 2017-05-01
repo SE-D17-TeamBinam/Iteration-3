@@ -41,7 +41,7 @@ public class CentralUIController {
   protected static String currUsername;
   protected static HashMap<String, String> currentUser = new HashMap<>();
   protected static Dictionary dictionary;
-  private static Timeline timeOut = null;
+  private static Timeline timeOut;
   /* resolution */
   protected static double x_res = 1300;
   protected static double y_res = 750;
@@ -57,7 +57,7 @@ public class CentralUIController {
   /* global points */
   protected static Point searchingPoint;
   protected static Point kioskLocation;
-
+  protected static Parent MainID;
   /**@author Haofan Zhang
    * set the session and database controller of central ui controller
    * @param session the session to be set
@@ -83,6 +83,7 @@ public class CentralUIController {
     applySettings(primaryStage);
     Parent root = FXMLLoader.load(getClass().getResource("/MainMenu.fxml"));
     Scene currScene = new Scene(root, x_res, y_res);
+    addTimeOut(currScene);
     primaryStage.setScene(currScene);
     primaryStage.show();
   }
@@ -93,11 +94,9 @@ public class CentralUIController {
    * Set the stage to a scene by an fxml file
    */
   public void loadScene (Stage primaryStage, String fxmlpath) throws Exception {
-    stopTimeOut();
     Parent root = FXMLLoader.load(getClass().getResource(fxmlpath));
     Scene currScene = primaryStage.getScene();
     currScene.setRoot(root);
-    playTimeOut();
   }
 
   ////////////////////////
@@ -127,6 +126,7 @@ public class CentralUIController {
     } catch (DefaultKioskNotInMemoryException e) {
       kioskLocation = null;
     }
+    //resetTimeOut(primaryStage);
   }
 
   ////////////////////////
@@ -232,28 +232,23 @@ public class CentralUIController {
     if (settings.getTimeout() != 0) {
       setTimeOut((Stage) scene.getWindow());
       scene.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-        resetTimeOut((Stage) scene.getWindow());
+        if (!scene.getRoot().getId().equals("MainAP")) {
+          resetTimeOut((Stage) scene.getWindow());
+        }
       });
       scene.addEventFilter(MouseEvent.MOUSE_MOVED, event -> {
-        resetTimeOut((Stage) scene.getWindow());
+        if (!scene.getRoot().getId().equals("MainAP")) {
+          resetTimeOut((Stage) scene.getWindow());
+        }
       });
       scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-        resetTimeOut((Stage) scene.getWindow());
+        if (!scene.getRoot().getId().equals("MainAP")) {
+          resetTimeOut((Stage) scene.getWindow());
+        }
       });
     }
   }
 
-  private void removeTimeOut (Scene scene) {
-    scene.removeEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-      resetTimeOut((Stage) scene.getWindow());
-    });
-    scene.removeEventFilter(MouseEvent.MOUSE_MOVED, event -> {
-      resetTimeOut((Stage) scene.getWindow());
-    });
-    scene.removeEventFilter(KeyEvent.KEY_PRESSED, event -> {
-      resetTimeOut((Stage) scene.getWindow());
-    });
-  }
 
 
   /**@author Haofan Zhang
@@ -271,7 +266,7 @@ public class CentralUIController {
   }
 
   public void playTimeOut () {
-    if (timeOut != null && new SettingsIO().getTimeout() != 0) {
+    if (new SettingsIO().getTimeout() != 0) {
       timeOut.play();
     }
   }
@@ -279,9 +274,7 @@ public class CentralUIController {
    * stop the time out
    */
   public void stopTimeOut () {
-    if (timeOut != null) {
-      timeOut.stop();
-    }
+    timeOut.stop();
   }
 
   /**@author Haofan Zhang

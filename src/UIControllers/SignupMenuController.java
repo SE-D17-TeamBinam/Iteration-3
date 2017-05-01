@@ -277,7 +277,7 @@ public class SignupMenuController extends CentralUIController implements Initial
         if (username.equals(currUsername) && pass.equals(currentUser.get(currUsername))) {
           res.set(true);
           dialog.close();
-          playTimeOut();
+          resetTimeOut(primaryStage);
         } else {
           res.set(false);
           error.showAndWait();
@@ -303,7 +303,7 @@ public class SignupMenuController extends CentralUIController implements Initial
           if (username.equals(currUsername) && pass.equals(currentUser.get(currUsername))) {
             res.set(true);
             dialog.close();
-            playTimeOut();
+            resetTimeOut(primaryStage);
           } else {
             res.set(false);
             error.showAndWait();
@@ -329,7 +329,7 @@ public class SignupMenuController extends CentralUIController implements Initial
           if (username.equals(currUsername) && pass.equals(currentUser.get(currUsername))) {
             res.set(true);
             dialog.close();
-            playTimeOut();
+            resetTimeOut(primaryStage);
           } else {
             res.set(false);
             error.showAndWait();
@@ -347,7 +347,7 @@ public class SignupMenuController extends CentralUIController implements Initial
       @Override
       public void handle(MouseEvent event) {
         dialog.close();
-        playTimeOut();
+        resetTimeOut(primaryStage);
         res.set(false);
       }
     });

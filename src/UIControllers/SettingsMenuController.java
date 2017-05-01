@@ -246,7 +246,7 @@ public class SettingsMenuController extends CentralUIController implements Initi
     Stage primaryStage = (Stage) anchorPane.getScene().getWindow();
     applySettings(primaryStage);
     try {
-      restartUI(primaryStage);
+      loadScene(primaryStage, "/MainMenu.fxml");
     } catch (Exception e) {
       System.out.println("Cannot load main menu");
       e.printStackTrace();

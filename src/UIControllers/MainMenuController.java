@@ -85,7 +85,6 @@ public class MainMenuController extends CentralUIController implements Initializ
    */
   public void gotoMap () {
     Stage primaryStage = (Stage) MainMenu.getScene().getWindow();
-    addTimeOut(primaryStage.getScene());
     try {
       mapViewFlag = 1;
       loadScene(primaryStage, "/MapScene.fxml");
@@ -99,7 +98,6 @@ public class MainMenuController extends CentralUIController implements Initializ
    */
   public void gotoSearch () {
     Stage primaryStage = (Stage) MainMenu.getScene().getWindow();
-    addTimeOut(primaryStage.getScene());
     try {
       loadScene(primaryStage, "/SearchMenu.fxml");
     } catch (Exception e) {
@@ -114,7 +112,6 @@ public class MainMenuController extends CentralUIController implements Initializ
     //credentialManager.signup("admin", "admin", UserType.ADMIN);
     // sign up staff when loaded for testing purposes
     Stage primaryStage = (Stage) MainMenu.getScene().getWindow();
-    addTimeOut(primaryStage.getScene());
     try {
       loadScene(primaryStage, "/AdminLogin.fxml");
     } catch (Exception e) { e.printStackTrace();
@@ -126,7 +123,6 @@ public class MainMenuController extends CentralUIController implements Initializ
    */
   public void gotoAbout() {
     Stage primaryStage = (Stage) MainMenu.getScene().getWindow();
-    addTimeOut(primaryStage.getScene());
     try {
       loadScene(primaryStage, "/AboutPage.fxml");
     } catch (Exception e) {
