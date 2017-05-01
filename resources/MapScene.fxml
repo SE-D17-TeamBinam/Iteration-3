@@ -157,7 +157,7 @@
                <font>
                   <Font name="Times New Roman" size="15.0" />
                </font></RadioButton>
-            <RadioButton fx:id="stairButton" layoutX="114.0" layoutY="56.0" mnemonicParsing="false" text="Stair">
+            <RadioButton fx:id="stairButton" disable="true" layoutX="114.0" layoutY="56.0" mnemonicParsing="false" text="Stair">
                <font>
                   <Font name="Times New Roman" size="15.0" />
                </font></RadioButton>
