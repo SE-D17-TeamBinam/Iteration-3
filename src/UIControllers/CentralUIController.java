@@ -58,7 +58,7 @@ public class CentralUIController {
   protected static Point searchingPoint;
   protected static Point kioskLocation;
 
-  /**
+  /**@author Haofan Zhang
    * set the session and database controller of central ui controller
    * @param session the session to be set
    * @param dbInterface the database controller to be set
@@ -75,7 +75,7 @@ public class CentralUIController {
     }
   }
 
-  /**
+  /**@author Haofan Zhang
    * Set the stage to the initial scene (main menu)
    * @parameter primaryStage: The main stage of the application
    */
@@ -86,7 +86,7 @@ public class CentralUIController {
     primaryStage.show();
   }
 
-  /**
+  /**@author Haofan Zhang
    * @parameter primaryStage: The main stage of the application
    * @parameter fxmlpath: the file path of the fxml file to be loaded
    * Set the stage to a scene by an fxml file
@@ -107,7 +107,7 @@ public class CentralUIController {
   //// apply settings ////
   ////////////////////////
 
-  /**
+  /**@author Haofan Zhang
    * apply settings to the ui from settings IO
    * @param primaryStage the Stage to apply settings on
    */
@@ -119,11 +119,11 @@ public class CentralUIController {
       primaryStage.setWidth(1300);
       primaryStage.setHeight(750);
     } else if (settings.getScreenPreference() == 2) {
-      primaryStage.setFullScreen(true);
       primaryStage.setMaximized(false);
+      primaryStage.setFullScreen(true);
     } else if (settings.getScreenPreference() == 3) {
-      primaryStage.setMaximized(true);
       primaryStage.setFullScreen(false);
+      primaryStage.setMaximized(true);
     }
     try {
       kioskLocation = settings.getDefaultKiosk(new ListPoints(database.getNamedPoints()));
@@ -137,7 +137,7 @@ public class CentralUIController {
   //// sort functions ////
   ////////////////////////
 
-  /**
+  /**@author Haofan Zhang
    * sort a list of physicians by last name, if last name is the same, sort by first name
    * @param docs the list of physicians to be sorted
    */
@@ -155,7 +155,7 @@ public class CentralUIController {
     });
   }
 
-  /**
+  /**@author Haofan Zhang
    * sort a list of points by name
    * @param rooms the list of points to be sorted
    */
@@ -172,7 +172,7 @@ public class CentralUIController {
   //// banner and logo ///
   ////////////////////////
 
-  /**
+  /**@author Haofan Zhang
    * add a resolution listener for banner, background and logo
    * @param anchorPane the anchor pane to listen on
    */
@@ -191,19 +191,19 @@ public class CentralUIController {
     });
   }
 
-  /**
+  /**@author Haofan Zhang
    * the resolution scale function for each ui controller to override
    * set layoutX/width of individual ui element here
    */
   public void customListenerX () {}
 
-  /**
+  /**@author Haofan Zhang
    * the resolution scale function for each ui controller to override
    * set layoutY/height of individual ui element here
    */
   public void customListenerY () {}
 
-  /**
+  /**@author Haofan Zhang
    * add banner background and logo to an anchor pane
    * @param anchorPane the anchor pane to add on
    */
@@ -227,7 +227,7 @@ public class CentralUIController {
   /// time out functions ///
   //////////////////////////
 
-  /**
+  /**@author Haofan Zhang
    * add time out implementation to a scene
    * @param scene the scene to add on
    */
@@ -247,7 +247,7 @@ public class CentralUIController {
     }
   }
 
-  /**
+  /**@author Haofan Zhang
    * initialize the time out of a stage
    * @param time the time out length in seconds
    * @param primaryStage the primary stage to apply the time out
@@ -257,7 +257,7 @@ public class CentralUIController {
     timeOut.play();
   }
 
-  /**
+  /**@author Haofan Zhang
    * reset the timer of time out of a stage
    * @param time the new time out length in seconds
    * @param primaryStage the primary stage to reset the time out
@@ -274,7 +274,7 @@ public class CentralUIController {
     timeOut.stop();
   }
 
-  /**
+  /**@author Haofan Zhang
    * make a timeline schedule for the time out
    * @param time the time out length in seconds
    * @param primaryStage the primary stage to show the main menu after time out

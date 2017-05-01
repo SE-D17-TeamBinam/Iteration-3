@@ -67,7 +67,7 @@ public class AdminLoginController extends CentralUIController implements Initial
     LoginError.setLayoutY(7*y_res/11 + 10);
   }
 
-  /**
+  /**@author Haofan Zhang
    * try to login when enter is pressed
    * @param event the Key event containing pressed key code
    */
@@ -113,7 +113,7 @@ public class AdminLoginController extends CentralUIController implements Initial
     }
   }
 
-  /**
+  /**@author Haofan Zhang
    * go back to the main menu
    */
   public void back () {

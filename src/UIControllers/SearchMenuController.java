@@ -31,7 +31,7 @@ import javafx.util.Callback;
 import org.Point;
 
 /**
- * Created by Leon Zhang on 2017/4/1.
+ * Created by Haofan Zhang on 2017/4/1.
  */
 public class SearchMenuController extends CentralUIController implements Initializable {
   private ArrayList<Physician> docs;
