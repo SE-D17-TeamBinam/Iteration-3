@@ -992,6 +992,11 @@ public class DatabaseController implements DatabaseInterface {
 //            include = false;
 //          }
 
+        if(fln == 0 || lfn == 0){
+          candidates.add(p);
+          return candidates;
+        }
+
         if (fn == -1) {
           fn = 10000;
         }
@@ -1004,6 +1009,7 @@ public class DatabaseController implements DatabaseInterface {
         if (fln == -1) {
           fln = 10000;
         }
+
         if ((fn == 10000 && ln == 10000) && (lfn == 10000 && fln == 10000)) {
           include = false;
         }
@@ -1035,6 +1041,9 @@ public class DatabaseController implements DatabaseInterface {
         }
         if (length != -101) {
           value1 = -2 + length_map.get(length);
+        }
+        if(fn == 0 || ln == 0){
+          value1  =  -3;
         }
 
         /*if(value == 100000.0){
