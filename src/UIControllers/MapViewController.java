@@ -1674,7 +1674,7 @@ public class MapViewController extends CentralUIController implements Initializa
 
   private ArrayList<Point> pathPoints = new ArrayList<>();
   private HashMap<String, ArrayList<Integer>> showingBuildingFloors = new HashMap<>();
-  
+
   @FXML
   private Button swapButton;
 

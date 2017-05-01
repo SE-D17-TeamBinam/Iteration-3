@@ -61,17 +61,6 @@ public class AdminMenuController extends CentralUIController implements Initiali
       SettingsButton.setLayoutX(4 * x_res / 5 - SettingsButton.getFitWidth() / 2);
       SettingsLabel.setLayoutX(4 * x_res / 5 - SettingsLabel.getPrefWidth() / 2);
     }
-    LogOffButton.setLayoutX(x_res - LogOffButton.getPrefWidth() - 12);
-    MapButton.setLayoutX(x_res/5 - MapButton.getFitWidth()/2);
-    EditButton.setLayoutX(x_res/2 - EditButton.getFitWidth()/2);
-    SettingsButton.setLayoutX(4*x_res/5 - SettingsButton.getFitWidth()/2);
-    MapLabel.setLayoutX(x_res/5 - MapLabel.getPrefWidth()/2);
-    DirectEditLabel.setLayoutX(x_res/2 - DirectEditLabel.getPrefWidth()/2);
-    MapLabel.setLayoutX(x_res/5 - MapLabel.getPrefWidth()/2);
-    CreateAccountButton.setLayoutX(x_res - CreateAccountButton.getPrefWidth() - 12);
-    LoginLabel.setLayoutX(x_res/2 - LoginLabel.getPrefWidth()/2 + 70);
-    SettingsButton.setLayoutX(4*x_res/5 - SettingsButton.getFitWidth()/2);
-    SettingsLabel.setLayoutX(4*x_res/5 - SettingsLabel.getPrefWidth()/2);
   }
 
   @Override
@@ -147,7 +136,6 @@ public class AdminMenuController extends CentralUIController implements Initiali
    */
   @FXML
   public void editMap(){
-    mapViewFlag = 3;
     Stage primaryStage = (Stage) AdminMenu.getScene().getWindow();
     try {
       loadScene(primaryStage, "/MapScene.fxml");
@@ -163,7 +151,12 @@ public class AdminMenuController extends CentralUIController implements Initiali
   public void editDirectory() {
     Stage primaryStage = (Stage) AdminMenu.getScene().getWindow();
     try {
-      loadScene(primaryStage, "/DirectEdit.fxml");
+      if (!adminPermissions) {
+        loadScene(primaryStage, "/SearchMenu.fxml");
+      }
+      else {
+        loadScene(primaryStage, "/DirectEdit.fxml");
+      }
     } catch (Exception e) {
       e.printStackTrace();
     }
