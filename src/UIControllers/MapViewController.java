@@ -424,7 +424,7 @@ public class MapViewController extends CentralUIController implements Initializa
     endPointIcon.setFitWidth(END_ICON_FIT*current_zoom_scale);
     endPointIcon.setFitHeight(END_ICON_FIT*current_zoom_scale);
     initializeSearch();
-    if (mapViewFlag == 1) {
+    if (mapViewFlag == 1 || mapViewFlag == 2) {
       AdminLogOff.setVisible(false);
       helpButton.setVisible(false);
       initializeLanguageConfigs();
@@ -448,7 +448,6 @@ public class MapViewController extends CentralUIController implements Initializa
     repositionResultsList();
     initializePathFindingBox();
     findMaxID();
-
   }
 
   @FXML
@@ -856,7 +855,7 @@ public class MapViewController extends CentralUIController implements Initializa
       // TODO
       // Replace the first 'true' with point.shouldOnlyBeSeenByStaff
       // Replace second 'true' with !point.shouldOnlyBeSeenByStaff
-      if ((true && mapViewFlag >= 2) || (true && !p.getBlocked() && mapViewFlag == 1)) {
+      if ((true && mapViewFlag >= 2) || (true && !p.getBlocked() && (mapViewFlag == 1 || mapViewFlag == 2))) {
         if (currentBuilding.equals(p.getBuilding()) && p.getFloor() == currentFloor && (!pathfinding
             || (pathfinding && pathPoints.contains(p)))) {
           addVisualNodesForPoint(p, points);
