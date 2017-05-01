@@ -81,6 +81,7 @@ public class MainMenuController extends CentralUIController implements Initializ
     SearchLabel.setLayoutY(6*(y_res/11) + 100);
     langBox.setLayoutY(y_res - 50);
     MainKey.setLayoutY(y_res - 50);
+    InfoButton.setLayoutY(150*y_res/750);
   }
 
   /**

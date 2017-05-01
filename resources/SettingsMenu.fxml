@@ -94,7 +94,7 @@
                   </Label>
                </children>
             </Pane>
-            <Label fx:id="TimeoutTip" layoutX="771.0" layoutY="447.0" prefHeight="21.0" prefWidth="366.0" text="* Minimum timeout is 10 seconds, set to 0 to turn off" />
+            <Label fx:id="TimeoutTip" layoutX="771.0" layoutY="447.0" prefHeight="21.0" prefWidth="366.0" text="* Minimum timeout is 10 seconds, set to 0 to disable" />
             <Label fx:id="TimeoutError" layoutX="771.0" layoutY="468.0" prefHeight="21.0" prefWidth="262.0" text="* Please enter a valid time out length" textFill="RED" visible="false" />
          </children>
       </Pane>
