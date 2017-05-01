@@ -119,11 +119,11 @@ public class CentralUIController {
       primaryStage.setWidth(1300);
       primaryStage.setHeight(750);
     } else if (settings.getScreenPreference() == 2) {
-      primaryStage.setFullScreen(true);
       primaryStage.setMaximized(false);
+      primaryStage.setFullScreen(true);
     } else if (settings.getScreenPreference() == 3) {
-      primaryStage.setMaximized(true);
       primaryStage.setFullScreen(false);
+      primaryStage.setMaximized(true);
     }
     try {
       kioskLocation = settings.getDefaultKiosk(new ListPoints(database.getNamedPoints()));
