@@ -170,11 +170,11 @@ public class SettingsMenuController extends CentralUIController implements Initi
           TimeoutError.setVisible(true);
         } else if (newTimeOut == 0) {
           System.out.println("timeout disabled");
-          settings.updateSetting("timeoutLength", newValue);
+          settings.updateSetting("timeoutLength", Integer.toString(0));
           TimeoutError.setVisible(false);
         } else {
-          System.out.println("set timeout length to " + newValue);
-          settings.updateSetting("timeoutLength", newValue);
+          System.out.println("set timeout length to " + Integer.toString(newTimeOut));
+          settings.updateSetting("timeoutLength", Integer.toString(newTimeOut));
           TimeoutError.setVisible(false);
         }
       } catch (NumberFormatException e) {
