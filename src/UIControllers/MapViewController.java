@@ -456,6 +456,7 @@ public class MapViewController extends CentralUIController implements Initializa
     repositionResultsList();
     initializePathFindingBox();
     findMaxID();
+
   }
 
   @FXML

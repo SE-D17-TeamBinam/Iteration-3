@@ -22,11 +22,11 @@ public class Point {
   int id;      //Unique Identifier
   int floor;
   public ArrayList<Point> neighbors = new ArrayList<>();
+  private String buildingName;
   //Attributes For A* only below.
   Point parent;
   int cost;
   boolean isBlocked;
-  String building;
 
   // Arbitrarily Large, number of Points should never exceed this amount
   public static final int ID_MAX = 3000001;
@@ -38,7 +38,7 @@ public class Point {
     this.names = names;
     this.isBlocked = false;
     this.names = new ArrayList<String>();
-
+    buildingName = "";
   }
 
   public Point(double xCoord, double yCoord, int floor) {
@@ -47,6 +47,7 @@ public class Point {
     this.floor = floor;
     this.isBlocked = false;
     names = new ArrayList<String>();
+    buildingName = "";
   }
 
   public Point(int xCoord, int yCoord, ArrayList<String> names, int id,
@@ -61,6 +62,23 @@ public class Point {
     this.cost = 0;
     this.floor = floor;
     this.isBlocked = false;
+    buildingName = "";
+  }
+
+
+  public Point(int xCoord, int yCoord, ArrayList<String> names, int id,
+      ArrayList<Point> new_neighbors,
+      int floor, String building) {
+    this.xCoord = xCoord;
+    this.yCoord = yCoord;
+    this.names = names;
+    this.id = id;
+    this.parent = null;
+    this.neighbors = new_neighbors;
+    this.cost = 0;
+    this.floor = floor;
+    this.isBlocked = false;
+    buildingName = building;
   }
 
   public Point(int xCoord, int yCoord, String name, int id, ArrayList<Point> new_neighbors,
@@ -74,6 +92,21 @@ public class Point {
     this.cost = 0;
     this.floor = floor;
     this.isBlocked = false;
+    buildingName = "";
+  }
+
+  public Point(int xCoord, int yCoord, String name, int id, ArrayList<Point> new_neighbors,
+      int floor, String building) {
+    this.xCoord = xCoord;
+    this.yCoord = yCoord;
+    this.names = new ArrayList<String>(Arrays.asList(name));
+    this.id = id;
+    this.parent = null;
+    this.neighbors = new_neighbors;
+    this.cost = 0;
+    this.floor = floor;
+    this.isBlocked = false;
+    buildingName = building;
   }
 
   //Methods{
@@ -146,31 +179,30 @@ public class Point {
   }
 
   public void setBuilding(String building) {
-    if (names.size() == 0) {
-      names.add("");
-    }
-    if(names.get(0) == null) {
-      names.set(0, "");
-    }
-    int ind = names.size() - 1;
-    if(ind > -1) {
-      String lastName = names.get(ind);
-      if (lastName.contains("BUILDING=")) {
-        names.set(names.size() - 1, "BUILDING=" + building);
-      } else {
-        names.add("BUILDING=" + building);
-      }
-    } else {
-      names.add("BUILDING=" + building);
-    }
+//    if (names.size() == 0 || names.get(0) == null){
+//      names.set(0,"");
+//    }
+//    int ind = names.size() - 1;
+//    if(ind > -1) {
+//      String lastName = names.get(ind);
+//      if (lastName.contains("BUILDING=")) {
+//        names.set(names.size() - 1, "BUILDING=" + building);
+//      } else {
+//        names.add("BUILDING=" + building);
+//      }
+//    } else {
+//      names.add("BUILDING=" + building);
+//    }
+    this.buildingName = building;
   }
 
   public String getBuilding() {
-    String lastName = names.get(names.size() - 1);
-    if (lastName.contains("BUILDING=")) {
-      return lastName.split("=")[1];
-    }
-    return null;
+//    String lastName = names.get(names.size() - 1);
+//    if (lastName.contains("BUILDING=")) {
+//      return lastName.split("=")[1];
+//    }
+//    return null;
+    return buildingName;
   }
 
   public void setFloor(int floor) {

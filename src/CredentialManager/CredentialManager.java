@@ -14,7 +14,13 @@ import java.util.Enumeration;
 import java.util.Properties;
 
 /**
+<<<<<<< HEAD
  * Created by Praneeth Appikatla on 4/25/2017.
+=======
+ * Created by Tom on 4/3/2017.
+ *
+ * this will check to see if you have admin credentials.
+>>>>>>> b7cb43c5e1efd690e885fad010bd129ed4de9d37
  */
 public class CredentialManager implements CredentialInterface{
 
