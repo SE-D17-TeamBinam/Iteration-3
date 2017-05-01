@@ -77,32 +77,35 @@ public class DetailMenuController extends CentralUIController implements Initial
   public void customListenerX () {
     DetailDone.setLayoutX(x_res - DetailDone.getPrefWidth() - 12);
     DetailRoom.setPrefWidth(x_res);
-    double roomFieldX = x_res * 0.58 - RoomPane.getPrefWidth()/2;
-    RoomPane.setLayoutX(roomFieldX);
-    RoomFloorField.setLayoutX(roomFieldX);
-    RoomNameField.setLayoutX(roomFieldX);
-    double roomLabelX = x_res * 0.4 - RoomNameField.getPrefWidth()/2;
-    RoomNameLabel.setLayoutX(roomLabelX);
-    RoomFloorLabel.setLayoutX(roomLabelX);
-    RoomHPLabel.setLayoutX(roomLabelX);
     DetailDoc.setPrefWidth(x_res);
-    double docLabelX = x_res * 0.22 - DocFirstNameLabel.getPrefWidth()/2;
-    DocFirstNameLabel.setLayoutX(docLabelX);
-    DocLastNameLabel.setLayoutX(docLabelX);
-    DocTitleLabel.setLayoutX(docLabelX);
-    DocLocationsLabel.setLayoutX(docLabelX);
-    double docFieldX = x_res * 0.58 - DocPane.getPrefWidth()/2;
-    DocPane.setLayoutX(docFieldX);
-    DocFirstNameField.setLayoutX(docFieldX);
-    DocLastNameField.setLayoutX(docFieldX);
-    DocTitleField.setLayoutX(docFieldX);
-    Platform.runLater(() -> {DocInfoLabel.setLayoutX(x_res/2 - DocInfoLabel.getWidth()/2);});
-    Platform.runLater(() -> {RoomDetailLabel.setLayoutX(x_res/2 - RoomDetailLabel.getWidth()/2);});
+    double LX = x_res * 0.5 - RoomNameLabel.getPrefWidth() - 100;
+    RoomNameLabel.setLayoutX(LX);
+    RoomFloorLabel.setLayoutX(LX);
+    RoomHPLabel.setLayoutX(LX);
+    double FX = x_res * 0.5 + 50;
+    RoomPane.setLayoutX(FX);
+    RoomFloorField.setLayoutX(FX);
+    RoomNameField.setLayoutX(FX);
+
+    DocFirstNameLabel.setLayoutX(LX);
+    DocLastNameLabel.setLayoutX(LX);
+    DocTitleLabel.setLayoutX(LX);
+    DocLocationsLabel.setLayoutX(LX);
+
+    DocPane.setLayoutX(FX);
+    DocFirstNameField.setLayoutX(FX);
+    DocLastNameField.setLayoutX(FX);
+    DocTitleField.setLayoutX(FX);
+
+    DocInfoLabel.setLayoutX(x_res/2 - DocInfoLabel.getPrefWidth()/2);
+    RoomDetailLabel.setLayoutX(x_res/2 - RoomDetailLabel.getPrefWidth()/2);
   }
   @Override
   public void customListenerY () {
-    DocPane.setPrefHeight(y_res*9/10 - 457);
-    RoomPane.setPrefHeight(y_res*9/10 - 400);
+    DocPane.setPrefHeight(y_res*9/10 - DocPane.getLayoutY() - 167*(y_res/750 - 1));
+    RoomPane.setPrefHeight(y_res*9/10 - RoomPane.getLayoutY() - 167*(y_res/750 - 1));
+    DetailRoom.setLayoutY(167*(y_res/750 - 1));
+    DetailDoc.setLayoutY(167*(y_res/750 - 1));
   }
 
   @Override
@@ -125,8 +128,6 @@ public class DetailMenuController extends CentralUIController implements Initial
         ILabel.setMinWidth(50);
         ILabel.setFont(Font.font("Times New Roman", 30));
         ILabel.setText(txt);
-        //Platform.runLater(() -> {ILabel.setPrefWidth(ILabel.getWidth() + 15);});
-
 
         Button Goto = new Button();
         Goto.setPrefHeight(46);

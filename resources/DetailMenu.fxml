@@ -1,30 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<?import java.net.URL?>
-<?import javafx.scene.control.Button?>
 
 <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="750" prefWidth="1300" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
   <children>
       <Pane fx:id="DetailDoc" prefHeight="750.0" prefWidth="1300.0" style="-fx-background-color: transparent;" visible="false">
          <children>
-            <ScrollPane fx:id="DocPane" layoutX="494.0" layoutY="457.0" prefHeight="247.0" prefWidth="520.0" style="-fx-background-color: transparent;">
-               <content>
-                  <VBox fx:id="DocLocations" prefWidth="500.0" style="-fx-background-color: transparent;" />
-               </content></ScrollPane>
+            <Label fx:id="DocInfoLabel" alignment="CENTER" contentDisplay="BOTTOM" layoutX="497.0" layoutY="167.0" prefHeight="55.0" prefWidth="306.0" text="Doctor Information">
+               <font>
+                  <Font name="Times New Roman" size="38.0" />
+               </font>
+            </Label>
             <Label fx:id="DocFirstNameLabel" alignment="CENTER_RIGHT" layoutX="151.0" layoutY="250.0" prefHeight="45.0" prefWidth="270.0" text="First Name">
                <font>
                   <Font name="Times New Roman" size="30.0" />
-               </font>
-            </Label>
-            <Label fx:id="DocInfoLabel" alignment="CENTER" contentDisplay="BOTTOM" layoutX="489.0" layoutY="167.0" text="Doctor Information">
-               <font>
-                  <Font name="Times New Roman" size="38.0" />
                </font>
             </Label>
             <Label fx:id="DocLastNameLabel" alignment="CENTER_RIGHT" layoutX="151.0" layoutY="318.0" prefHeight="45.0" prefWidth="270.0" text="Last Name">
@@ -57,11 +53,15 @@
                   <Font name="Times New Roman" size="30.0" />
                </font>
             </Label>
+            <ScrollPane fx:id="DocPane" layoutX="494.0" layoutY="457.0" prefHeight="247.0" prefWidth="520.0" style="-fx-background-color: transparent;">
+               <content>
+                  <VBox fx:id="DocLocations" prefWidth="500.0" style="-fx-background-color: transparent;" />
+               </content></ScrollPane>
          </children>
       </Pane>
       <Pane fx:id="DetailRoom" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750" prefWidth="1300" style="-fx-background-color: transparent;">
          <children>
-            <Label fx:id="RoomDetailLabel" alignment="CENTER" contentDisplay="BOTTOM" layoutX="538.0" layoutY="167.0" text="Room Details">
+            <Label fx:id="RoomDetailLabel" alignment="CENTER" contentDisplay="BOTTOM" layoutX="497.0" layoutY="167.0" prefHeight="55.0" prefWidth="306.0" text="Room Details">
                <font>
                   <Font size="38.0" />
                </font>
@@ -70,11 +70,11 @@
                <font>
                   <Font name="Times New Roman" size="30.0" />
                </font></Label>
-            <Label fx:id="RoomHPLabel" alignment="CENTER_RIGHT" layoutX="151.0" layoutY="399.0" prefWidth="270.0" text="Healthcare Providers">
+            <Label fx:id="RoomFloorLabel" alignment="CENTER_RIGHT" layoutX="151.0" layoutY="334.0" prefHeight="34.0" prefWidth="270.0" text="Floor">
                <font>
                   <Font name="Times New Roman" size="30.0" />
                </font></Label>
-            <Label fx:id="RoomFloorLabel" alignment="CENTER_RIGHT" layoutX="151.0" layoutY="334.0" prefHeight="34.0" prefWidth="270.0" text="Floor">
+            <Label fx:id="RoomHPLabel" alignment="CENTER_RIGHT" layoutX="151.0" layoutY="399.0" prefWidth="270.0" text="Healthcare Providers">
                <font>
                   <Font name="Times New Roman" size="30.0" />
                </font></Label>

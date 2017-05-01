@@ -3,19 +3,24 @@ package UIControllers;
 import CredentialManager.CredentialManager;
 import Database.DatabaseInterface;
 import Definitions.Physician;
-import java.util.ArrayList;
+import FileController.DefaultKioskNotInMemoryException;
 import java.util.Collections;
 import java.util.Comparator;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import java.util.List;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import FileController.SettingsIO;
 import org.Dictionary;
+import org.ListPoints;
 import org.Point;
 import org.Session;
 
@@ -31,6 +36,7 @@ public class CentralUIController {
   protected static Session currSession;
   protected static CredentialManager credentialManager;
   protected static Dictionary dictionary;
+  private static Timeline timeOut = null;
   /* resolution */
   protected static double x_res = 1300;
   protected static double y_res = 750;
@@ -43,8 +49,9 @@ public class CentralUIController {
   protected static ImageView logoView = new ImageView();
   /* database object */
   protected static DatabaseInterface database;
-  /* */
+  /* global points */
   protected static Point searchingPoint;
+  protected static Point kioskLocation;
 
 
   public void setSession (Session session, DatabaseInterface dbInterface) {
@@ -58,36 +65,14 @@ public class CentralUIController {
     }
   }
 
-
-  public void sortDocs (ArrayList<Physician> docs) {
-    Collections.sort(docs, new Comparator<Physician>() {
-      @Override
-      public int compare(Physician doc1, Physician doc2) {
-        return Long.compare(doc1.getID(), doc2.getID());
-      }
-    });
-  }
-
-  public void sortRooms (ArrayList<Point> rooms) {
-    Collections.sort(rooms, new Comparator<Point>() {
-      @Override
-      public int compare(Point room1, Point room2) {
-        return room1.getName().compareTo(room2.getName());
-      }
-    });
-  }
-
-
   /**
    * Set the stage to the initial scene (main menu)
    * @parameter primaryStage: The main stage of the application
    */
   public void restartUI(Stage primaryStage) throws Exception {
-    Parent root = FXMLLoader.load(getClass().getResource("/MainMenu.fxml"));
-    primaryStage.setScene(new Scene(root, x_res, y_res));
-    primaryStage.setTitle("Faulkner Hospital Kiosk");
+    applySettings(primaryStage);
+    loadScene(primaryStage, "/MainMenu.fxml");
     primaryStage.show();
-    primaryStage.getIcons().add(new Image("/icons/kioskicon.png"));
   }
 
   /**
@@ -96,30 +81,87 @@ public class CentralUIController {
    * Set the stage to a scene by an fxml file
    */
   public void loadScene (Stage primaryStage, String fxmlpath) throws Exception {
+    if (timeOut != null) {
+      stopTimeOut();
+    }
     Parent root = FXMLLoader.load(getClass().getResource(fxmlpath));
-    primaryStage.setScene(new Scene(root, x_res, y_res));
-    primaryStage.show();
+    Scene newScene = new Scene(root, x_res, y_res);
+    if (!fxmlpath.equals("/MainMenu.fxml")) {
+      addTimeOut(newScene);
+    }
+    primaryStage.setScene(newScene);
   }
 
+  ////////////////////////
+  //// apply settings ////
+  ////////////////////////
 
-  public void addResolutionListener (AnchorPane anchorPane) {
-    anchorPane.widthProperty().addListener(new ChangeListener<Number>() {
+  public void applySettings (Stage primaryStage) {
+    SettingsIO settings = new SettingsIO();
+    if (settings.getScreenPreference() == 1) {
+      x_res = 1300;
+      y_res = 750;
+    } else if (settings.getScreenPreference() == 2) {
+      primaryStage.setFullScreen(true);
+    } else if (settings.getScreenPreference() == 3) {
+      primaryStage.setMaximized(true);
+    }
+    try {
+      kioskLocation = settings.getDefaultKiosk(new ListPoints(database.getNamedPoints()));
+    } catch (DefaultKioskNotInMemoryException e) {
+      kioskLocation = null;
+    }
+    currSession.setAlgorithm(settings.getAlgorithm());
+  }
+
+  ////////////////////////
+  //// sort functions ////
+  ////////////////////////
+
+  public void sortDocs (List<Physician> docs) {
+    Collections.sort(docs, new Comparator<Physician>() {
       @Override
-      public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
-        x_res = (double) newSceneWidth;
-        bannerView.setFitWidth(x_res);
-        backgroundView.setFitWidth(x_res);
-        logoView.setLayoutX(x_res/2 - 240);
-        customListenerX();
+      public int compare(Physician doc1, Physician doc2) {
+        int cmpLast = doc1.getLastName().compareToIgnoreCase(doc2.getLastName());
+        if (cmpLast == 0) {
+          return cmpLast;
+        } else {
+          return doc1.getFirstName().compareToIgnoreCase(doc2.getFirstName());
+        }
       }
     });
-    anchorPane.heightProperty().addListener(new ChangeListener<Number>() {
+  }
+
+  public void sortRooms (List<Point> rooms) {
+    Collections.sort(rooms, new Comparator<Point>() {
       @Override
-      public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
-        y_res = (double) newSceneHeight;
-        backgroundView.setLayoutY(y_res/2.5);
-        customListenerY();
+      public int compare(Point room1, Point room2) {
+        return room1.getName().compareTo(room2.getName());
       }
+    });
+  }
+
+  ////////////////////////
+  //// banner and logo ///
+  ////////////////////////
+
+  public void addResolutionListener (AnchorPane anchorPane) {
+    anchorPane.widthProperty().addListener((observableValue, oldSceneWidth, newSceneWidth) -> {
+      x_res = (double) newSceneWidth;
+      bannerView.setFitWidth(x_res);
+      backgroundView.setFitWidth(x_res);
+      logoView.setLayoutX(x_res/2 - logoView.getFitWidth()/2);
+      customListenerX();
+    });
+    anchorPane.heightProperty().addListener((observableValue, oldSceneHeight, newSceneHeight) -> {
+      y_res = (double) newSceneHeight;
+      bannerView.setFitHeight(120*y_res/750);
+      backgroundView.setLayoutY(y_res/2.5);
+      logoView.setFitHeight(60*y_res/750);
+      logoView.setFitWidth(350*y_res/750);
+      logoView.setLayoutX(x_res/2 - logoView.getFitWidth()/2);
+      logoView.setLayoutY(14*y_res/750);
+      customListenerY();
     });
   }
 
@@ -133,16 +175,12 @@ public class CentralUIController {
 
   public void setBackground (AnchorPane anchorPane) {
     bannerView.setImage(banner);
-    bannerView.setFitWidth(x_res);
     backgroundView.setImage(background);
-    backgroundView.setFitWidth(x_res);
     backgroundView.setPreserveRatio(true);
-    backgroundView.setLayoutY(y_res/2.5);
     logoView.setImage(logo);
-    logoView.setFitWidth(480);
+    logoView.setFitHeight(60);
+    logoView.setFitWidth(350);
     logoView.setPreserveRatio(true);
-    logoView.setLayoutX(x_res/2 - 240);
-    logoView.setLayoutY(-1);
     anchorPane.getChildren().add(bannerView);
     anchorPane.getChildren().add(backgroundView);
     anchorPane.getChildren().add(logoView);
@@ -151,9 +189,52 @@ public class CentralUIController {
     backgroundView.toBack();
   }
 
-  public void addDB(DatabaseInterface db){
-//    this.database = db;
+  //////////////////////////
+  /// time out functions ///
+  //////////////////////////
 
-    System.out.println(db == null);
+  private void addTimeOut (Scene scene) {
+    SettingsIO settings = new SettingsIO();
+    if (settings.getTimeout() != 0) {
+      setTimeOut(settings.getTimeout(), (Stage) scene.getWindow());
+      scene.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+        resetTimeOut(settings.getTimeout(), (Stage) scene.getWindow());
+      });
+      scene.addEventFilter(MouseEvent.MOUSE_MOVED, event -> {
+        resetTimeOut(settings.getTimeout(), (Stage) scene.getWindow());
+      });
+      scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+        resetTimeOut(settings.getTimeout(), (Stage) scene.getWindow());
+      });
+    }
+  }
+
+  private void setTimeOut (int time, Stage primaryStage) {
+    timeOut = makeKeyFrame(time, primaryStage);
+    timeOut.play();
+  }
+
+  private void resetTimeOut (int time, Stage primaryStage) {
+    timeOut.stop();
+    setTimeOut(time, primaryStage);
+  }
+
+  private void stopTimeOut () {
+    timeOut.stop();
+  }
+
+  private Timeline makeKeyFrame (int time, Stage primaryStage) {
+    KeyFrame KF = new KeyFrame(javafx.util.Duration.seconds(time), event-> {
+      System.out.println("Session timed out");
+      try {
+        loadScene(primaryStage, "/MainMenu.fxml");
+      } catch (Exception e) {
+        System.out.println("Cannot load main menu from keyframe");
+        e.printStackTrace();
+      }
+    });
+    Timeline timeout = new Timeline(KF);
+    timeout.setCycleCount(1);
+    return timeout;
   }
 }

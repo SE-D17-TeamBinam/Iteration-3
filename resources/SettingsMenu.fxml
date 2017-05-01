@@ -24,7 +24,7 @@
                   <Font name="Times New Roman" size="24.0" />
                </font>
             </Button>
-            <Label fx:id="SettingsLocation" layoutX="284.0" layoutY="253.0" text="Default Kiosk Location:">
+            <Label fx:id="SettingsLocation" layoutX="282.0" layoutY="247.0" prefHeight="40.0" text="Default Kiosk Location:">
                <font>
                   <Font size="18.0" />
                </font>
@@ -34,7 +34,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label fx:id="SettingsTimeout" layoutX="284.0" layoutY="453.0" text="Time out after (seconds):">
+            <Label fx:id="SettingsTimeout" layoutX="282.0" layoutY="447.0" prefHeight="40.0" text="Time out after (seconds):">
                <font>
                   <Font size="18.0" />
                </font>
@@ -74,26 +74,28 @@
                   <Font size="18.0" />
                </font>
             </RadioButton>
-            <ChoiceBox fx:id="locationsKiosk" layoutX="525.0" layoutY="247.0" prefHeight="40.0" prefWidth="186.0" />
-            <Pane layoutX="525.0" layoutY="447.0" prefHeight="40.0" prefWidth="186.0">
+            <ChoiceBox fx:id="locationsKiosk" layoutX="525.0" layoutY="247.0" prefHeight="40.0" prefWidth="235.0" />
+            <Pane fx:id="timeoutPane" layoutX="525.0" layoutY="447.0" prefHeight="40.0" prefWidth="186.0">
                <children>
                   <TextField fx:id="timeTimeout" alignment="CENTER_RIGHT" prefWidth="151.0">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </TextField>
-                  <Label fx:id="upTimeout" alignment="CENTER" layoutX="152.0" layoutY="21.0" minHeight="0.0" prefHeight="19.0" prefWidth="35.0" rotate="180.0" style="-fx-background-color: grey; -fx-text-fill: white;" text="^">
+                  <Label fx:id="downTimeout" alignment="CENTER" layoutX="152.0" minHeight="0.0" onMouseClicked="#increaseTimeout" prefHeight="19.0" prefWidth="35.0" style="-fx-background-color: grey; -fx-text-fill: white;" text="^">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
                   </Label>
-                  <Label fx:id="downTimeout" alignment="CENTER" layoutX="152.0" minHeight="0.0" prefHeight="19.0" prefWidth="35.0" style="-fx-background-color: grey; -fx-text-fill: white;" text="^">
+                  <Label fx:id="upTimeout" alignment="CENTER" layoutX="152.0" layoutY="21.0" minHeight="0.0" onMouseClicked="#decreaseTimeout" prefHeight="19.0" prefWidth="35.0" rotate="180.0" style="-fx-background-color: grey; -fx-text-fill: white;" text="^">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
                   </Label>
                </children>
             </Pane>
+            <Label fx:id="TimeoutTip" layoutX="771.0" layoutY="447.0" prefHeight="21.0" prefWidth="366.0" text="* Minimum timeout is 10 seconds, set to 0 to turn off" />
+            <Label fx:id="TimeoutError" layoutX="771.0" layoutY="468.0" prefHeight="21.0" prefWidth="262.0" text="* Please enter a valid time out length" textFill="RED" visible="false" />
          </children>
       </Pane>
    </children>
