@@ -41,7 +41,7 @@ public class CentralUIController {
   protected static String currUsername;
   protected static HashMap<String, String> currentUser = new HashMap<>();
   protected static Dictionary dictionary;
-  private static Timeline timeOut;
+  private static Timeline timeOut = null;
   /* resolution */
   protected static double x_res = 1300;
   protected static double y_res = 750;
@@ -57,6 +57,7 @@ public class CentralUIController {
   /* global points */
   protected static Point searchingPoint;
   protected static Point kioskLocation;
+
   /**@author Haofan Zhang
    * set the session and database controller of central ui controller
    * @param session the session to be set
@@ -64,6 +65,7 @@ public class CentralUIController {
    */
   public void setSession (Session session, DatabaseInterface dbInterface) {
     this.currSession = session;
+    this.credentialManager = credentialManager;
     this.dictionary = session.dictionary;
     this.database = dbInterface;
     try {
@@ -80,9 +82,7 @@ public class CentralUIController {
   public void restartUI(Stage primaryStage) throws Exception {
     applySettings(primaryStage);
     Parent root = FXMLLoader.load(getClass().getResource("/MainMenu.fxml"));
-    Scene currScene = new Scene(root, x_res, y_res);
-    addTimeOut(currScene);
-    primaryStage.setScene(currScene);
+    primaryStage.setScene(new Scene(root, x_res, y_res));
     primaryStage.show();
   }
 
@@ -92,9 +92,13 @@ public class CentralUIController {
    * Set the stage to a scene by an fxml file
    */
   public void loadScene (Stage primaryStage, String fxmlpath) throws Exception {
+    stopTimeOut();
     Parent root = FXMLLoader.load(getClass().getResource(fxmlpath));
     Scene currScene = primaryStage.getScene();
     currScene.setRoot(root);
+    if (!fxmlpath.equals("/MainMenu.fxml")) {
+      addTimeOut(currScene);
+    }
   }
 
   ////////////////////////
@@ -124,7 +128,7 @@ public class CentralUIController {
     } catch (DefaultKioskNotInMemoryException e) {
       kioskLocation = null;
     }
-    //resetTimeOut(primaryStage);
+    currSession.setAlgorithm(settings.getAlgorithm());
   }
 
   ////////////////////////
@@ -225,53 +229,50 @@ public class CentralUIController {
    * add time out implementation to a scene
    * @param scene the scene to add on
    */
-  public void addTimeOut (Scene scene) {
+  private void addTimeOut (Scene scene) {
     SettingsIO settings = new SettingsIO();
-    setTimeOut((Stage) scene.getWindow());
-    scene.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-      if (!scene.getRoot().getId().equals("MainAP")) {
-        resetTimeOut((Stage) scene.getWindow());
-      }
-    });
-    scene.addEventFilter(MouseEvent.MOUSE_MOVED, event -> {
-      if (!scene.getRoot().getId().equals("MainAP")) {
-        resetTimeOut((Stage) scene.getWindow());
-      }
-    });
-    scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-      if (!scene.getRoot().getId().equals("MainAP")) {
-        resetTimeOut((Stage) scene.getWindow());
-      }
-    });
+    if (settings.getTimeout() != 0) {
+      setTimeOut(settings.getTimeout(), (Stage) scene.getWindow());
+      scene.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+        setTimeOut(settings.getTimeout(), (Stage) scene.getWindow());
+      });
+      scene.addEventFilter(MouseEvent.MOUSE_MOVED, event -> {
+        setTimeOut(settings.getTimeout(), (Stage) scene.getWindow());
+      });
+      scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+        setTimeOut(settings.getTimeout(), (Stage) scene.getWindow());
+      });
+    }
   }
-
-
 
   /**@author Haofan Zhang
    * initialize the time out of a stage
+   * @param time the time out length in seconds
    * @param primaryStage the primary stage to apply the time out
    */
-  public void setTimeOut (Stage primaryStage) {
-    timeOut = makeKeyFrame(new SettingsIO().getTimeout(), primaryStage);
+  public void setTimeOut (int time, Stage primaryStage) {
+    timeOut = makeKeyFrame(time, primaryStage);
+    timeOut.play();
   }
 
-  public void resetTimeOut (Stage primaryStage) {
-    System.out.println("reseted");
-    stopTimeOut();
-    setTimeOut(primaryStage);
-    playTimeOut();
+  /**@author Haofan Zhang
+   * reset the timer of time out of a stage
+   * @param time the new time out length in seconds
+   * @param primaryStage the primary stage to reset the time out
+   */
+  /*
+  private void resetTimeOut (int time, Stage primaryStage) {
+    timeOut.stop();
+    setTimeOut(time, primaryStage);
   }
-
-  public void playTimeOut () {
-    if (new SettingsIO().getTimeout() != 0) {
-      timeOut.play();
-    }
-  }
+  */
   /**
    * stop the time out
    */
   public void stopTimeOut () {
-    timeOut.stop();
+    if (timeOut != null) {
+      timeOut.stop();
+    }
   }
 
   /**@author Haofan Zhang
