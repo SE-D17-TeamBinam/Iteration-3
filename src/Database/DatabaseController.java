@@ -758,8 +758,13 @@ public class DatabaseController implements DatabaseInterface {
     ArrayList<Point> namedPoints = new ArrayList<Point>();
     int i;
     for (i = 0; i < localPoints.size(); i++) {
-      if (localPoints.get(i).getName() != null && !localPoints.get(i).getName().equals("null")
-          && !localPoints.get(i).getName().equals("") && !(Objects.equals(localPoints.get(i).getName().replaceAll("\\s", ""), ""))) {namedPoints.add((Point) localPoints.get(i).clone());
+      if (localPoints.get(i).getName() != null &&
+          !localPoints.get(i).getName().contains("Elevator") &&
+          !localPoints.get(i).getName().equals("null") &&
+          !localPoints.get(i).getName().equals("INTERSECTION") &&
+          !localPoints.get(i).getName().equals("OUTSIDE") &&
+          !localPoints.get(i).getName().equals("") &&
+          !(Objects.equals(localPoints.get(i).getName().replaceAll("\\s", ""), ""))) {namedPoints.add((Point) localPoints.get(i).clone());
       }
     }
 
