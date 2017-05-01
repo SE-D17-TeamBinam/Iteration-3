@@ -2,6 +2,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
+import org.Astar;
 import org.ElevatorPoint;
 import org.ListPoints;
 import org.NoPathException;
@@ -19,6 +20,7 @@ import org.junit.jupiter.api.Test;
 public class ListPointsTest { //tests executeStrategy for one floor, all floor, and error case- not on floor
   ListPoints test = new ListPoints(new ArrayList<Point>());
   ArrayList<ArrayList<Point>> floor = new ArrayList<ArrayList<Point>>();
+  Astar strat = new Astar();
 
 
   @Test
@@ -970,9 +972,126 @@ public class ListPointsTest { //tests executeStrategy for one floor, all floor, 
       path = test.executeStrategy(start,goal);
     } catch (NoPathException e) {
       assertTrue(true);
-      e.printStackTrace();
+      //e.printStackTrace();
     }
 
   }
+
+  @Test
+  void executeStrategyMultifloorMulitBuildingTest(){ // tests to see if it doesnt touch any other floors
+    ArrayList<ArrayList<Point>> floor = test.grid3dCreate(5,5,3);
+    Point node1 = floor.get(0).get(4);
+    Point node2 = floor.get(1).get(4);
+    Point node3 = floor.get(2).get(4);
+    StairPoint stair1 = new StairPoint(node1.getXCoord(), node1.getYCoord(), node1.getName(),node1.getId(),
+        node1.neighbors,node1.getFloor());
+    StairPoint stair2 = new StairPoint(node2.getXCoord(), node2.getYCoord(), node2.getName(),node2.getId(),
+        node2.neighbors,node2.getFloor());
+    StairPoint stair3 = new StairPoint(node3.getXCoord(), node3.getYCoord(), node3.getName(),node3.getId(),
+        node3.neighbors,node3.getFloor());
+
+
+    stair1.neighbors.remove(node2);
+    stair2.neighbors.remove(node1);
+    stair2.neighbors.remove(node3);
+    stair3.neighbors.remove(node2);
+    stair1.neighbors.add(stair2);
+    stair2.neighbors.add(stair3);
+    stair2.neighbors.add(stair1);
+    stair3.neighbors.add(stair2);
+
+
+    floor.get(0).remove(4);
+    floor.get(1).remove(4);
+    floor.get(2).remove(4);
+
+    floor.get(0).add(4,stair1);
+    floor.get(1).add(4,stair2);
+    floor.get(2).add(4,stair3);
+
+    floor.get(0).get(3).neighbors.remove(node1);
+    floor.get(0).get(9).neighbors.remove(node1);
+    floor.get(1).get(3).neighbors.remove(node2);
+    floor.get(1).get(9).neighbors.remove(node2);
+    floor.get(2).get(3).neighbors.remove(node3);
+    floor.get(2).get(9).neighbors.remove(node3);
+
+    floor.get(0).get(3).neighbors.add(stair1);
+    floor.get(0).get(9).neighbors.add(stair1);
+    floor.get(1).get(3).neighbors.add(stair2);
+    floor.get(1).get(9).neighbors.add(stair2);
+    floor.get(2).get(3).neighbors.add(stair3);
+    floor.get(2).get(9).neighbors.add(stair3);
+    for (ArrayList<Point> buildingF : floor){
+      for (Point room : buildingF){
+        room.setBuilding("Faulkner Hospital");
+      }
+    }
+    ArrayList<ArrayList<Point>> floor2 = test.grid3dCreate(5,5,3);
+    node1 = floor2.get(0).get(4);
+    node2 = floor2.get(1).get(4);
+    node3 = floor2.get(2).get(4);
+    stair1 = new StairPoint(node1.getXCoord(), node1.getYCoord(), node1.getName(),node1.getId(),
+        node1.neighbors,node1.getFloor());
+    stair2 = new StairPoint(node2.getXCoord(), node2.getYCoord(), node2.getName(),node2.getId(),
+        node2.neighbors,node2.getFloor());
+    stair3 = new StairPoint(node3.getXCoord(), node3.getYCoord(), node3.getName(),node3.getId(),
+        node3.neighbors,node3.getFloor());
+
+
+    stair1.neighbors.remove(node2);
+    stair2.neighbors.remove(node1);
+    stair2.neighbors.remove(node3);
+    stair3.neighbors.remove(node2);
+    stair1.neighbors.add(stair2);
+    stair2.neighbors.add(stair3);
+    stair2.neighbors.add(stair1);
+    stair3.neighbors.add(stair2);
+
+
+    floor2.get(0).remove(4);
+    floor2.get(1).remove(4);
+    floor2.get(2).remove(4);
+
+    floor2.get(0).add(4,stair1);
+    floor2.get(1).add(4,stair2);
+    floor2.get(2).add(4,stair3);
+
+    floor2.get(0).get(3).neighbors.remove(node1);
+    floor2.get(0).get(9).neighbors.remove(node1);
+    floor2.get(1).get(3).neighbors.remove(node2);
+    floor2.get(1).get(9).neighbors.remove(node2);
+    floor2.get(2).get(3).neighbors.remove(node3);
+    floor2.get(2).get(9).neighbors.remove(node3);
+
+    floor2.get(0).get(3).neighbors.add(stair1);
+    floor2.get(0).get(9).neighbors.add(stair1);
+    floor2.get(1).get(3).neighbors.add(stair2);
+    floor2.get(1).get(9).neighbors.add(stair2);
+    floor2.get(2).get(3).neighbors.add(stair3);
+    floor2.get(2).get(9).neighbors.add(stair3);
+    for (ArrayList<Point> buildingF : floor2){
+      for (Point room : buildingF){
+        room.setBuilding("Belkin House");
+      }
+    }
+    floor2.get(0).get(0).neighbors.add(floor.get(0).get(24));
+    floor.get(0).get(24).neighbors.add(floor2.get(0).get(0));
+    Point start = floor.get(2).get(0); //Chose start and goal points and floors
+    Point goal = floor2.get(2).get(0);
+
+
+    ArrayList<Point> path = new ArrayList<Point>();
+    //CentralController.getCurrSession().algorithm = strat;
+    try {
+      path = test.executeStrategy(start,goal);
+    } catch (NoPathException e) {
+      assertTrue(false);
+      e.printStackTrace();
+    }
+    assertTrue(true);
+  }
+
+
 
 }
