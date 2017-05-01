@@ -123,7 +123,7 @@ public class CentralUIController {
       @Override
       public int compare(Physician doc1, Physician doc2) {
         int cmpLast = doc1.getLastName().compareToIgnoreCase(doc2.getLastName());
-        if (cmpLast == 0) {
+        if (cmpLast != 0) {
           return cmpLast;
         } else {
           return doc1.getFirstName().compareToIgnoreCase(doc2.getFirstName());

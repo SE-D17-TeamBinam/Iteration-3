@@ -42,6 +42,8 @@ public class DirectEditController extends CentralUIController implements Initial
   private String searchString = "";
 
   @FXML
+  private AnchorPane anchorPane;
+  @FXML
   private Pane DirectSearchPane;
   @FXML
   private TextField FirstName;
@@ -65,10 +67,6 @@ public class DirectEditController extends CentralUIController implements Initial
   private Button AddLocation;
   @FXML
   private Button RemoveLocation;
-  @FXML
-  private AnchorPane anchorPane;
-
-
   @FXML
   private Button DirectBack;
   @FXML
@@ -108,7 +106,20 @@ public class DirectEditController extends CentralUIController implements Initial
     double LocationButtonX = 0.065;
     AddLocation.setLayoutX(x_res * LocationButtonX - AddLocation.getPrefWidth()/2);
     RemoveLocation.setLayoutX(x_res * LocationButtonX - RemoveLocation.getPrefWidth()/2);
-    // directory zooming
+
+    double newWid = 0;
+    if ((y_res)/750 > (x_res)/1300) {
+      newWid = 45 *  (1+(x_res - 1300)/1300);
+    } else {
+      newWid = 45 *  (1+(y_res - 750)/750);
+    }
+    AddLocation.setPrefHeight(newWid);
+    AddLocation.setPrefWidth(newWid);
+    RemoveLocation.setPrefHeight(newWid);
+    RemoveLocation.setPrefWidth(newWid);
+    AddLocation.setLayoutY(y_res * 0.7 - AddLocation.getPrefHeight()*1.133333333333333);
+    RemoveLocation.setLayoutY(y_res * 0.7 + RemoveLocation.getPrefHeight()/7.5);
+
     Directory.setPrefWidth(670 * x_res / 1300);
     firstNameField.setPrefWidth(150 * x_res / 1300);
     lastNameField.setPrefWidth(150 * x_res / 1300);
@@ -122,6 +133,7 @@ public class DirectEditController extends CentralUIController implements Initial
     DirectCancel.setLayoutX(x_res * DataManipX - DirectCreate.getPrefWidth()/2);
     DirectSave.setLayoutX(x_res * DataManipX - DirectCreate.getPrefWidth()/2);
   }
+
   @Override
   public void customListenerY () {
     LastName.setLayoutY(y_res * 0.23 - LastName.getPrefHeight()/2);
@@ -134,26 +146,25 @@ public class DirectEditController extends CentralUIController implements Initial
     DirectLocations.setLayoutY(y_res * 0.56 - DirectLocations.getPrefHeight()/2);
     Locations.setLayoutY(y_res * 0.56 - 20);
     Locations.setPrefHeight(y_res * 9/10 - Locations.getLayoutY());
+
+    double newWid = 0;
     if ((y_res)/750 > (x_res)/1300) {
-      double newWid = 45 *  (1+(x_res - 1300)/1300);
-      AddLocation.setPrefHeight(newWid);
-      AddLocation.setPrefWidth(newWid);
-      RemoveLocation.setPrefHeight(newWid);
-      RemoveLocation.setPrefWidth(newWid);
+      newWid = 45 *  (1+(x_res - 1300)/1300);
     } else {
-      double newWid = 45 *  (1+(y_res - 750)/750);
-      AddLocation.setPrefHeight(newWid);
-      AddLocation.setPrefWidth(newWid);
-      RemoveLocation.setPrefHeight(newWid);
-      RemoveLocation.setPrefWidth(newWid);
+      newWid = 45 *  (1+(y_res - 750)/750);
     }
+    AddLocation.setPrefHeight(newWid);
+    AddLocation.setPrefWidth(newWid);
+    RemoveLocation.setPrefHeight(newWid);
+    RemoveLocation.setPrefWidth(newWid);
     AddLocation.setLayoutY(y_res * 0.7 - AddLocation.getPrefHeight()*1.133333333333333);
     RemoveLocation.setLayoutY(y_res * 0.7 + RemoveLocation.getPrefHeight()/7.5);
+
     Directory.setLayoutY(FirstName.getLayoutY() - (FirstName.getLayoutY() - LastName.getLayoutY() - LastName.getPrefHeight()) / 2);
     Directory.setPrefHeight(y_res * 9/10 - Directory.getLayoutY());
-    DirectCreate.setLayoutY(Directory.getLayoutY() + Directory.getPrefHeight() - 228);
-    DirectDelete.setLayoutY(Directory.getLayoutY() + Directory.getPrefHeight() - 168);
-    DirectSave.setLayoutY(Directory.getLayoutY() + Directory.getPrefHeight() - 108);
+    DirectCreate.setLayoutY(Directory.getLayoutY() + Directory.getPrefHeight() - 48 - 60*3);
+    DirectDelete.setLayoutY(Directory.getLayoutY() + Directory.getPrefHeight() - 48 - 60*2);
+    DirectSave.setLayoutY(Directory.getLayoutY() + Directory.getPrefHeight() - 48 - 60);
     DirectCancel.setLayoutY(Directory.getLayoutY() + Directory.getPrefHeight() - 48);
   }
 
@@ -238,6 +249,9 @@ public class DirectEditController extends CentralUIController implements Initial
   ///// Refresh functions /////
   /////////////////////////////
 
+  /**
+   * sort list of physicians, refresh directory table of physicians and apply simple search
+   */
   public void refreshDir () {
     sortDocs(docs);
     docDisplay.clear();
@@ -253,6 +267,9 @@ public class DirectEditController extends CentralUIController implements Initial
     }
   }
 
+  /**
+   * refresh tbe list view of locations of physician
+   */
   private void refreshLoc () {
     locations.clear();
     if (selectedHP != null) {
@@ -265,6 +282,9 @@ public class DirectEditController extends CentralUIController implements Initial
     }
   }
 
+  /**
+   * refresh the information fields of selected physician
+   */
   private void refreshInfo () {
     if (selectedHP != null) {
       LastName.setText(selectedHP.getLastName());
@@ -281,6 +301,10 @@ public class DirectEditController extends CentralUIController implements Initial
   /////////////////////////////
   ////// Clear functions //////
   /////////////////////////////
+
+  /**
+   * clear the search field
+   */
   public void clearSearch () {
     DirectSearch.setText("");
   }
@@ -289,6 +313,10 @@ public class DirectEditController extends CentralUIController implements Initial
   /////////////////////////////
   /// location manipulation ///
   /////////////////////////////
+
+  /**
+   * add a location choice box to the list view of locations
+   */
   public void addLocation () {
     if (selectedHP != null) {
       ChoiceBox<Point> cb = new ChoiceBox<>();
@@ -297,12 +325,20 @@ public class DirectEditController extends CentralUIController implements Initial
     }
   }
 
+  /**
+   * remove a location choice box from the list view of locations
+   */
   public void removeLocation () {
     if (selectedHP != null) {
       locations.remove(selectedCB);
     }
   }
 
+  /**
+   * go through every choice box in the list view of locations, retrieve locations and
+   * put them into an array list
+   * @return the array list of points in a list view
+   */
   private ArrayList<Point> finalLocs () {
     ArrayList<Point> ret = new ArrayList<>();
     for (ChoiceBox cb : locations) {
@@ -317,6 +353,10 @@ public class DirectEditController extends CentralUIController implements Initial
   /////////////////////////////
   ///// data manipulation /////
   /////////////////////////////
+
+  /**
+   * save the selected or newly created physician to database and refresh the directory
+   */
   public void save () {
     try {
       selectedHP.setFirstName(FirstName.getText());
@@ -350,6 +390,9 @@ public class DirectEditController extends CentralUIController implements Initial
     }
   }
 
+  /**
+   * discard the temporary change of a physician
+   */
   public void cancel () {
     try {
       refreshInfo();
@@ -359,6 +402,9 @@ public class DirectEditController extends CentralUIController implements Initial
     }
   }
 
+  /**
+   * create a new physician but don't save it to database
+   */
   public void create () {
     Directory.getSelectionModel().select(-1);
     long newPID;
@@ -379,6 +425,9 @@ public class DirectEditController extends CentralUIController implements Initial
     refreshLoc();
   }
 
+  /**
+   * delete a physician immediately from directory and database
+   */
   public void delete () {
     database.removePhysician(selectedHP.getID());
     docs.remove(selectedHP);
@@ -392,6 +441,10 @@ public class DirectEditController extends CentralUIController implements Initial
   /////////////////////////////
   //////// scene travel ///////
   /////////////////////////////
+
+  /**
+   * set the scene back to admin menu
+   */
   public void back () {
     Stage primaryStage = (Stage) anchorPane.getScene().getWindow();
     try {
@@ -402,6 +455,9 @@ public class DirectEditController extends CentralUIController implements Initial
     }
   }
 
+  /**
+   * set the scene back to main menu
+   */
   public void logoff () {
     Stage primaryStage = (Stage) anchorPane.getScene().getWindow();
     try {

@@ -68,10 +68,12 @@ public class SettingsMenuController extends CentralUIController implements Initi
   @FXML
   private TextField timeTimeout;
 
+  @Override
   public void customListenerX () {
     SettingsLogoff.setLayoutX(x_res - SettingsLogoff.getPrefWidth() - 12);
   }
 
+  @Override
   public void customListenerY () {
     double resLY = 353 * y_res/750;
     SettingsResolution.setLayoutY(resLY);
@@ -109,6 +111,7 @@ public class SettingsMenuController extends CentralUIController implements Initi
     rooms = database.getNamedPoints();
     sortRooms(rooms);
 
+    /* radio button group policies */
     final ToggleGroup resolution = new ToggleGroup();
     defaultResolution.setToggleGroup(resolution);
     fullscreenResolution.setToggleGroup(resolution);
@@ -118,6 +121,7 @@ public class SettingsMenuController extends CentralUIController implements Initi
     dfsAlgorithm.setToggleGroup(algorithm);
     astarAlgorithm.setToggleGroup(algorithm);
 
+    /* apply existing settings on radio buttons */
     if (settings.getScreenPreference() == 1){
       defaultResolution.setSelected(true);
     } else if (settings.getScreenPreference() == 2) {
@@ -159,6 +163,7 @@ public class SettingsMenuController extends CentralUIController implements Initi
         }
     });
 
+    /* timeout field listener */
     timeTimeout.textProperty().addListener((observable, oldValue, newValue) -> {
       try {
         Integer newTimeOut = Integer.parseInt(newValue);
@@ -207,14 +212,23 @@ public class SettingsMenuController extends CentralUIController implements Initi
 
   }
 
+  /**
+   * try to increase timeout length by 1
+   */
   public void increaseTimeout () {
     timeTimeout.setText(Integer.toString(Integer.parseInt(timeTimeout.getText()) + 1));
   }
 
+  /**
+   * try to decrease timeout length by 1
+   */
   public void decreaseTimeout() {
     timeTimeout.setText(Integer.toString(Integer.parseInt(timeTimeout.getText()) - 1));
   }
 
+  /**
+   * set the scene back to admin menu
+   */
   public void back () {
     Stage primaryStage = (Stage) anchorPane.getScene().getWindow();
     applySettings(primaryStage);
@@ -226,6 +240,9 @@ public class SettingsMenuController extends CentralUIController implements Initi
     }
   }
 
+  /**
+   * set the scene back to main menu
+   */
   public void logoff () {
     Stage primaryStage = (Stage) anchorPane.getScene().getWindow();
     applySettings(primaryStage);

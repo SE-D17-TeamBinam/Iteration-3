@@ -41,6 +41,7 @@ public class MainMenuController extends CentralUIController implements Initializ
   @FXML
   private Label MapLabel;
 
+  @Override
   public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
     Session session = new Session();
     chooseLang();
@@ -51,7 +52,9 @@ public class MainMenuController extends CentralUIController implements Initializ
 //    enterAlias();
   }
 
-
+  /**
+   * apply language configuration by set text from dictionary
+   */
   public void applyLanguageConfig(){
     SearchLabel.setText(dictionary.getString("Search", currSession.getLanguage()));
     MapLabel.setText(dictionary.getString("Map", currSession.getLanguage()));
@@ -78,6 +81,9 @@ public class MainMenuController extends CentralUIController implements Initializ
     InfoButton.setLayoutY(y_res/5);
   }
 
+  /**
+   * set the scene to user map
+   */
   public void gotoMap () {
     Stage primaryStage = (Stage) MainMenu.getScene().getWindow();
     try {
@@ -88,6 +94,9 @@ public class MainMenuController extends CentralUIController implements Initializ
     }
   }
 
+  /**
+   * set the scene to search menu
+   */
   public void gotoSearch () {
     Stage primaryStage = (Stage) MainMenu.getScene().getWindow();
     try {
@@ -96,6 +105,9 @@ public class MainMenuController extends CentralUIController implements Initializ
     }
   }
 
+  /**
+   * set the scene to admin login menu
+   */
   public void gotoAdmin () {
     Stage primaryStage = (Stage) MainMenu.getScene().getWindow();
     try {
@@ -104,6 +116,9 @@ public class MainMenuController extends CentralUIController implements Initializ
     }
   }
 
+  /**
+   * set the scene to about page
+   */
   public void gotoAbout() {
     Stage primaryStage = (Stage) MainMenu.getScene().getWindow();
     try {
@@ -112,6 +127,9 @@ public class MainMenuController extends CentralUIController implements Initializ
     }
   }
 
+  /**
+   * select and apply current language
+   */
   public void chooseLang() {
     langBox.getItems().add("ENGLISH");
     langBox.getItems().add("SPANISH");
