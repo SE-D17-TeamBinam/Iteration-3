@@ -261,7 +261,7 @@ public class CentralUIController {
    * @param time the time out length in seconds
    * @param primaryStage the primary stage to apply the time out
    */
-  private void setTimeOut (int time, Stage primaryStage) {
+  public void setTimeOut (int time, Stage primaryStage) {
     timeOut = makeKeyFrame(time, primaryStage);
     timeOut.play();
   }
@@ -279,7 +279,7 @@ public class CentralUIController {
   /**
    * stop the time out
    */
-  private void stopTimeOut () {
+  public void stopTimeOut () {
     timeOut.stop();
   }
 

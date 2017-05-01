@@ -172,6 +172,7 @@ public class SettingsMenuController extends CentralUIController implements Initi
           TimeoutError.setVisible(true);
         } else if (newTimeOut == 0) {
           System.out.println("timeout disabled");
+          settings.updateSetting("timeoutLength", newValue);
           TimeoutError.setVisible(false);
         } else {
           System.out.println("set timeout length to " + newValue);
