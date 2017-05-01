@@ -186,12 +186,7 @@ public class CentralUIController {
     });
     anchorPane.heightProperty().addListener((observableValue, oldSceneHeight, newSceneHeight) -> {
       y_res = (double) newSceneHeight;
-      bannerView.setFitHeight(120*y_res/750);
       backgroundView.setLayoutY(y_res/2.5);
-      logoView.setFitHeight(60*y_res/750);
-      logoView.setFitWidth(350*y_res/750);
-      logoView.setLayoutX(x_res/2 - logoView.getFitWidth()/2);
-      logoView.setLayoutY(14*y_res/750);
       customListenerY();
     });
   }
@@ -200,17 +195,13 @@ public class CentralUIController {
    * the resolution scale function for each ui controller to override
    * set layoutX/width of individual ui element here
    */
-  public void customListenerX () {
-
-  }
+  public void customListenerX () {}
 
   /**
    * the resolution scale function for each ui controller to override
    * set layoutY/height of individual ui element here
    */
-  public void customListenerY () {
-
-  }
+  public void customListenerY () {}
 
   /**
    * add banner background and logo to an anchor pane
@@ -221,8 +212,8 @@ public class CentralUIController {
     backgroundView.setImage(background);
     backgroundView.setPreserveRatio(true);
     logoView.setImage(logo);
-    logoView.setFitHeight(60);
-    logoView.setFitWidth(350);
+    logoView.setFitWidth(380);
+    logoView.setLayoutY(12);
     logoView.setPreserveRatio(true);
     anchorPane.getChildren().add(bannerView);
     anchorPane.getChildren().add(backgroundView);
