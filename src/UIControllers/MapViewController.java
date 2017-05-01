@@ -451,7 +451,6 @@ public class MapViewController extends CentralUIController implements Initializa
     repositionResultsList();
     initializePathFindingBox();
     findMaxID();
-    storeState();
   }
 
   private void initializePathFindingBox() {
@@ -1974,9 +1973,7 @@ public class MapViewController extends CentralUIController implements Initializa
           p = new Point(c.getX(), c.getY(), currentFloor);
         }
         floorPoints.add(p);
-        storeState();
         allPoints.add(p);
-        storeState();
         addVisualNodesForPoint(p, floorPoints);
         setPointFocus(p);
       }
@@ -2079,10 +2076,6 @@ public class MapViewController extends CentralUIController implements Initializa
   private void circleMouseClicked(MouseEvent e, Point p, Circle c) {
     if (!mouseDragged) { // if it was dragged, then it's not a click
       circleMouseClickNoDrag(e, p, c);
-    }
-    else{
-      storeState();
-      mapEdits.clearRedo();
     }
   }
 
@@ -2484,41 +2477,6 @@ public class MapViewController extends CentralUIController implements Initializa
     handlePoint(point);
   }
   //End Context Menu Testing
-
-
-  // this should be called when an action
-  public void storeState() {
-    mapEdits.pushToUndo(allPoints);
-    System.out.println(mapEdits.getUndoStack().toString());
-    editPos++;
-    System.out.println(editPos);
-  }
-
-  public void undo() {
-    if(!mapEdits.isUndoEmpty()) {
-      mapEdits.undo();
-      int size = mapEdits.undoSize();
-      ArrayList<Point> previousState = mapEdits.getUndoStack().get(size-1);
-      ListPoints lp = new ListPoints(previousState);
-      clearMapDisplay();
-      floorPoints = lp.getFloor(currentFloor).getPoints();
-      displayPoints(floorPoints);
-    }
-  }
-
-  public void redo() {
-    if (!mapEdits.isRedoEmpty()) {
-      mapEdits.redo();
-      int size = mapEdits.redoSize();
-      ArrayList<Point> previousState = mapEdits.getRedoStack().get(size - 1);
-      ListPoints lp = new ListPoints(previousState);
-      clearMapDisplay();
-      floorPoints = lp.getFloor(currentFloor).getPoints();
-      displayPoints(floorPoints);
-    }
-  }
-
-
 
 
 }
