@@ -92,9 +92,7 @@ public class CentralUIController {
    * Set the stage to a scene by an fxml file
    */
   public void loadScene (Stage primaryStage, String fxmlpath) throws Exception {
-    if (timeOut != null) {
-      stopTimeOut();
-    }
+    stopTimeOut();
     Parent root = FXMLLoader.load(getClass().getResource(fxmlpath));
     Scene currScene = primaryStage.getScene();
     currScene.setRoot(root);
@@ -236,13 +234,13 @@ public class CentralUIController {
     if (settings.getTimeout() != 0) {
       setTimeOut(settings.getTimeout(), (Stage) scene.getWindow());
       scene.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-        resetTimeOut(settings.getTimeout(), (Stage) scene.getWindow());
+        setTimeOut(settings.getTimeout(), (Stage) scene.getWindow());
       });
       scene.addEventFilter(MouseEvent.MOUSE_MOVED, event -> {
-        resetTimeOut(settings.getTimeout(), (Stage) scene.getWindow());
+        setTimeOut(settings.getTimeout(), (Stage) scene.getWindow());
       });
       scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-        resetTimeOut(settings.getTimeout(), (Stage) scene.getWindow());
+        setTimeOut(settings.getTimeout(), (Stage) scene.getWindow());
       });
     }
   }
@@ -262,16 +260,19 @@ public class CentralUIController {
    * @param time the new time out length in seconds
    * @param primaryStage the primary stage to reset the time out
    */
+  /*
   private void resetTimeOut (int time, Stage primaryStage) {
     timeOut.stop();
     setTimeOut(time, primaryStage);
   }
-
+  */
   /**
    * stop the time out
    */
   public void stopTimeOut () {
-    timeOut.stop();
+    if (timeOut != null) {
+      timeOut.stop();
+    }
   }
 
   /**@author Haofan Zhang
