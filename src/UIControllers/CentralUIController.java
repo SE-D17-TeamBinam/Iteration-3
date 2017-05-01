@@ -6,6 +6,7 @@ import Definitions.Physician;
 import FileController.DefaultKioskNotInMemoryException;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -34,7 +35,11 @@ public class CentralUIController {
    */
   protected static int mapViewFlag = 0;
   protected static Session currSession;
-  protected static CredentialManager credentialManager;
+  protected static CredentialManager credentialManager = CredentialManager.getInstance();
+  protected static Boolean adminPermissions = false;
+  protected static Boolean isLoggedIn = false;
+  protected static String currUsername;
+  protected static HashMap<String, String> currentUser = new HashMap<>();
   protected static Dictionary dictionary;
   private static Timeline timeOut = null;
   /* resolution */
@@ -56,7 +61,7 @@ public class CentralUIController {
 
   public void setSession (Session session, DatabaseInterface dbInterface) {
     this.currSession = session;
-    this.credentialManager = session.credentialManager;
+    this.credentialManager = credentialManager;
     this.dictionary = session.dictionary;
     this.database = dbInterface;
     try {

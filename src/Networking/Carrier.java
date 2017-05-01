@@ -4,10 +4,10 @@ package Networking;
  * Created by Praneeth Appikatla on 4/11/2017.
  */
 public enum Carrier {
-  att ("AT&T"),
-  sprint("Sprint"),
-  tmobile("T-Mobile"),
-  verizon("Verizon");
+  ATT("AT&T"),
+  SPRINT("Sprint"),
+  TMOBILE("T-Mobile"),
+  VERIZON("Verizon");
 
   private final String carrierName;
 
@@ -23,4 +23,3 @@ public enum Carrier {
     return this.carrierName;
   }
 }
-

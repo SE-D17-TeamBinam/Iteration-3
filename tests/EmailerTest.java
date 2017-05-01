@@ -16,7 +16,7 @@ class EmailerTest {
   @Test
   void smsTest() {
     Emailer e = new Emailer();
-    e.text("508-555-1212", Carrier.att, "hi");
+    e.text("508-555-1212", Carrier.ATT, "hi");
   }
 
 }
