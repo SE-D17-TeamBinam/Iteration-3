@@ -349,7 +349,7 @@ public class SearchMenuController extends CentralUIController implements Initial
       DetailMenuController DC = new DetailMenuController(room, doc);
       loader.setController(DC);
       Pane mainPane = loader.load();
-      primaryStage.setScene(new Scene(mainPane, x_res, y_res));
+      primaryStage.getScene().setRoot(mainPane);
     } catch (Exception e) {
       System.out.println("Cannot load main menu");
       e.printStackTrace();

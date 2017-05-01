@@ -138,10 +138,10 @@ public class DetailMenuController extends CentralUIController implements Initial
         Goto.setFont(Font.font("Times New Roman", 24));
         Goto.setText("Go");
         Goto.setVisible(false);
-        Platform.runLater(() -> {Goto.setLayoutX(ILabel.getWidth() + 10);});
 
         ILabel.setStyle("-fx-background-color: transparent");
         locPane.setOnMouseEntered(e -> {
+          Goto.setLayoutX(ILabel.getWidth() + 10);
           Goto.setVisible(true);
           ILabel.setStyle("-fx-background-color: white");
         });
