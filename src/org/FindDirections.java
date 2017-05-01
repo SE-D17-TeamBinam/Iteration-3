@@ -22,6 +22,7 @@ public class FindDirections {
   String finished = "You are at your destination";
   String changeFloor = "Go to floor";
 
+  private boolean outside = false;
   private int hallsPassed = 0;
 
   /**
@@ -105,6 +106,25 @@ public class FindDirections {
       if(current.getName().equals("INTERSECTION")){
         hallsPassed++;
       }
+
+      if(current.getName().equals("Atrium Main Entrance") ||
+          current.getName().equals("Belkin House Entrance") ||
+          current.getName().equals("Garage Entrance")){
+        if(outside){
+          directions.add("Enter at " + current.getName());
+          outside = false;
+        }else{
+          directions.add("Exit the building at the " + current.getName());
+          outside = true;
+          hallsPassed = 0;
+        }
+      }
+
+      if(outside){
+        count++;
+        continue;
+      }
+
       if(current.getFloor()==reversePath.get(count+1).getFloor()){
         floorDirections(reversePath.get(count+1), current, angle, crossProduct);
         count++;
