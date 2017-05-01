@@ -67,11 +67,13 @@ public class AdminLoginController extends CentralUIController implements Initial
     LoginError.setLayoutY(7*y_res/11 + 10);
   }
 
-  // Detects if a key is pressed when the username, password, or login button are highlighted
-  // If the key pressed is the ENTER key, then it attempts to login with the current input
+  /**@author Haofan Zhang
+   * try to login when enter is pressed
+   * @param event the Key event containing pressed key code
+   */
   @FXML
-  private void tryLogin(KeyEvent e) throws IOException {
-    if(e.getCode().toString().equals("ENTER")){
+  private void tryLogin(KeyEvent event) throws IOException {
+    if(event.getCode().toString().equals("ENTER")){
       login();
     }
   }
@@ -111,7 +113,7 @@ public class AdminLoginController extends CentralUIController implements Initial
     }
   }
 
-  /**
+  /**@author Haofan Zhang
    * go back to the main menu
    */
   public void back () {

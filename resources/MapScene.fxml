@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.URL?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
@@ -22,7 +21,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UIControllers.MapViewController">
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UIControllers.MapViewController">
    <children>
       <Pane fx:id="mapViewPane" layoutX="138.0" layoutY="139.0" onKeyPressed="#mapKeyPressed" prefHeight="200.0" prefWidth="200.0">
          <children>
@@ -30,19 +29,19 @@
          </children>
       </Pane>
       <Rectangle fx:id="leftBar" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="750.0" stroke="BLACK" strokeType="INSIDE" width="150.0" />
-      <Label fx:id="mainFloorLabel" layoutX="12.0" layoutY="274.0" prefHeight="49.0" prefWidth="83.0" text="Floor">
+      <Label fx:id="mainFloorLabel" layoutX="28.0" layoutY="274.0" prefHeight="49.0" prefWidth="83.0" text="Floor">
          <font>
             <Font name="Times New Roman" size="33.0" />
          </font>
       </Label>
-      <ChoiceBox fx:id="floorChoiceBox" layoutX="8.0" layoutY="315.0" prefHeight="43.0" prefWidth="96.0" />
+      <ChoiceBox fx:id="floorChoiceBox" layoutX="28.0" layoutY="315.0" prefHeight="43.0" prefWidth="75.0" />
       <VBox alignment="CENTER" layoutX="110.0" layoutY="305.0" spacing="5.0">
          <children>
-            <SVGPath content="M8 36 L38 36 L23 10 L8 36" fill="#2e7eff" onMouseClicked="#increaseFloorButtonClicked" stroke="#838383" />
-            <SVGPath content="M8 36 L38 36 L23 62 L8 36" fill="#2e7eff" layoutX="2.0" layoutY="64.0" onMouseClicked="#decreaseFloorButtonClicked" stroke="#838383" />
+            <SVGPath content="M8 36 L38 36 L23 10 L8 36" fill="#d0d0d0" onMouseClicked="#increaseFloorButtonClicked" stroke="#838383" />
+            <SVGPath content="M8 36 L38 36 L23 62 L8 36" fill="#d0d0d0" layoutX="2.0" layoutY="64.0" onMouseClicked="#decreaseFloorButtonClicked" stroke="#838383" />
          </children>
       </VBox>
-      <Button id="SearchBack" fx:id="backButton" layoutX="23.0" layoutY="16.0" mnemonicParsing="false" onMouseClicked="#backButtonClicked" prefHeight="49.0" prefWidth="105.0" text="Back" textFill="WHITE">
+      <Button id="SearchBack" fx:id="backButton" layoutX="23.0" layoutY="16.0" mnemonicParsing="false" onMouseClicked="#backButtonClicked" prefHeight="49.0" prefWidth="105.0" style="-fx-background-color: #3255bc;" text="Back" textFill="WHITE">
          <font>
             <Font name="Times New Roman" size="20.0" />
          </font>
@@ -50,12 +49,12 @@
       <Pane fx:id="zoomPane" layoutX="815.0" layoutY="28.0" prefHeight="205.0" prefWidth="93.0">
          <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff4c" height="75.0" layoutX="9.0" layoutY="10.0" stroke="#a3a3a380" strokeType="INSIDE" width="75.0" />
-            <Button layoutX="9.0" layoutY="43.0" mnemonicParsing="false" onMouseClicked="#zoomIn" prefHeight="75.0" prefWidth="75.0" text="+" textFill="WHITE">
+            <Button layoutX="9.0" layoutY="43.0" mnemonicParsing="false" onMouseClicked="#zoomIn" prefHeight="75.0" prefWidth="75.0" style="-fx-background-color: #3255bc;" text="+" textFill="WHITE">
                <font>
                   <Font size="35.0" />
                </font>
             </Button>
-            <Button layoutX="9.0" layoutY="127.0" mnemonicParsing="false" onMouseClicked="#zoomOut" prefHeight="75.0" prefWidth="75.0" text="-" textFill="WHITE">
+            <Button layoutX="9.0" layoutY="127.0" mnemonicParsing="false" onMouseClicked="#zoomOut" prefHeight="75.0" prefWidth="75.0" style="-fx-background-color: #3255bc;" text="-" textFill="WHITE">
                <font>
                   <Font size="35.0" />
                </font>
@@ -76,11 +75,11 @@
             <Text layoutX="124.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="y:" />
             <TextField fx:id="floorField" disable="true" layoutX="46.0" layoutY="73.0" prefHeight="21.0" prefWidth="53.0" />
             <Text fx:id="floorSelectLabel" layoutX="5.0" layoutY="94.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Floor:" />
-            <Button fx:id="newButton" layoutX="31.0" layoutY="159.0" mnemonicParsing="false" onMouseClicked="#newButtonClicked" prefHeight="31.0" prefWidth="65.0" text="New" textFill="WHITE">
+            <Button fx:id="newButton" layoutX="31.0" layoutY="159.0" mnemonicParsing="false" onMouseClicked="#newButtonClicked" prefHeight="31.0" prefWidth="65.0" style="-fx-background-color: #3255bc;" text="New" textFill="WHITE">
                <font>
                   <Font name="Times New Roman" size="15.0" />
                </font></Button>
-            <Button fx:id="deleteButton" layoutX="134.0" layoutY="159.0" mnemonicParsing="false" onMouseClicked="#deleteButtonClicked" prefHeight="31.0" prefWidth="65.0" text="Delete" textFill="WHITE">
+            <Button fx:id="deleteButton" layoutX="134.0" layoutY="159.0" mnemonicParsing="false" onMouseClicked="#deleteButtonClicked" prefHeight="31.0" prefWidth="65.0" style="-fx-background-color: #3255bc;" text="Delete" textFill="WHITE">
                <font>
                   <Font name="Times New Roman" size="15.0" />
                </font></Button>
@@ -90,7 +89,7 @@
                   <Font size="14.0" />
                </font>
             </Text>
-            <Button fx:id="saveButton" layoutX="31.0" layoutY="237.0" mnemonicParsing="false" onMouseClicked="#saveMapButtonClicked" prefHeight="31.0" prefWidth="168.0" text="Save Map" textFill="WHITE">
+            <Button fx:id="saveButton" layoutX="31.0" layoutY="250.0" mnemonicParsing="false" onMouseClicked="#saveMapButtonClicked" prefHeight="31.0" prefWidth="168.0" style="-fx-background-color: #3255bc;" text="Save Map" textFill="WHITE">
                <font>
                   <Font name="Times New Roman" size="15.0" />
                </font></Button>
@@ -105,43 +104,37 @@
             </Pane>
             <TextField fx:id="idField" disable="true" layoutX="135.0" layoutY="73.0" prefHeight="31.0" prefWidth="65.0" />
             <Text fx:id="floorSelectLabel1" layoutX="116.0" layoutY="94.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ID:" />
+      
+            <Button fx:id="aliasButton" layoutX="32.0" layoutY="198.0" mnemonicParsing="false" onMouseClicked="#addAlias" prefHeight="31.0" prefWidth="168.0" style="-fx-background-color: #3255bc;" text="Add Alias" textFill="WHITE">
+               <font>
+                  <Font name="Times New Roman" size="15.0" />
+               </font>
+            </Button>
          </children>
       </Pane>
       <Pane layoutX="11.0" layoutY="390.0" prefHeight="278.0" prefWidth="130.0">
          <children>
-            <Button fx:id="goButton" layoutX="19.0" layoutY="214.0" mnemonicParsing="false" onMouseClicked="#drawPathButtonClicked" prefHeight="65.0" prefWidth="93.0" text="Go" textFill="WHITE">
+            <Button fx:id="goButton" layoutX="19.0" layoutY="154.0" mnemonicParsing="false" onMouseClicked="#drawPathButtonClicked" prefHeight="65.0" prefWidth="93.0" style="-fx-background-color: #3255bc;" text="Go" textFill="WHITE">
                <font>
                   <Font name="Times New Roman" size="30.0" />
                </font>
             </Button>
-            <ChoiceBox fx:id="endNodeBox" layoutX="-2.0" layoutY="171.0" prefHeight="31.0" prefWidth="132.0" />
-            <ChoiceBox fx:id="startNodeBox" layoutX="-2.0" layoutY="35.0" prefHeight="31.0" prefWidth="132.0" />
-            <Text fx:id="startLabel" layoutX="-1.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Start">
+            <ChoiceBox fx:id="endNodeBox" layoutX="17.0" layoutY="111.0" prefHeight="31.0" prefWidth="93.0" />
+            <ChoiceBox fx:id="startNodeBox" layoutX="17.0" layoutY="42.0" prefHeight="31.0" prefWidth="93.0" />
+            <Text fx:id="startLabel" layoutX="18.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Start">
                <font>
                   <Font name="Times New Roman" size="32.0" />
                </font>
             </Text>
-            <Text fx:id="endLabel" layoutY="166.0" strokeType="OUTSIDE" strokeWidth="0.0" text="End">
+            <Text fx:id="endLabel" layoutX="18.0" layoutY="102.0" strokeType="OUTSIDE" strokeWidth="0.0" text="End">
                <font>
                   <Font name="Times New Roman" size="32.0" />
                </font>
             </Text>
-            <Button fx:id="clearButton" layoutX="19.0" layoutY="290.0" mnemonicParsing="false" onMouseClicked="#clearButtonClicked" prefHeight="43.0" prefWidth="93.0" text="Clear" textFill="WHITE">
+            <Button fx:id="clearButton" layoutX="19.0" layoutY="230.0" mnemonicParsing="false" onMouseClicked="#clearButtonClicked" prefHeight="43.0" prefWidth="93.0" style="-fx-background-color: #3255bc;" text="Clear" textFill="WHITE">
                <font>
                   <Font size="20.0" />
                </font>
-            </Button>
-            <Button id="SearchBack" fx:id="swapButton" layoutX="30.0" layoutY="81.0" mnemonicParsing="false" onMouseClicked="#swapPoints" prefHeight="49.0" prefWidth="62.0" textFill="WHITE">
-               <font>
-                  <Font name="Times New Roman" size="20.0" />
-               </font>
-               <graphic>
-                  <ImageView fitHeight="41.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@icons/swap_icon.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
             </Button>
          </children>
       </Pane>
@@ -170,15 +163,15 @@
                   <Font name="Times New Roman" size="25.0" />
                </font>
             </Text>
-            <Button fx:id="connectButton" disable="true" layoutX="23.0" layoutY="169.0" mnemonicParsing="false" onMouseClicked="#connectButtonClicked" text="Connect" textFill="WHITE">
+            <Button fx:id="connectButton" disable="true" layoutX="23.0" layoutY="169.0" mnemonicParsing="false" onMouseClicked="#connectButtonClicked" style="-fx-background-color: #3255bc;" text="Connect" textFill="WHITE">
                <font>
                   <Font name="Times New Roman" size="15.0" />
                </font></Button>
-            <Button fx:id="deselectButton" disable="true" layoutX="130.0" layoutY="169.0" mnemonicParsing="false" onMouseClicked="#deselectButtonClicked" text="Deselect" textFill="WHITE">
+            <Button fx:id="deselectButton" disable="true" layoutX="130.0" layoutY="169.0" mnemonicParsing="false" onMouseClicked="#deselectButtonClicked" style="-fx-background-color: #3255bc;" text="Deselect" textFill="WHITE">
                <font>
                   <Font name="Times New Roman" size="15.0" />
                </font></Button>
-            <Button fx:id="beginConnectionButton" layoutX="23.0" layoutY="126.0" mnemonicParsing="false" onMouseClicked="#beginConnectionButtonClicked" prefHeight="31.0" prefWidth="184.0" text="Begin Connection" textFill="WHITE">
+            <Button fx:id="beginConnectionButton" layoutX="23.0" layoutY="126.0" mnemonicParsing="false" onMouseClicked="#beginConnectionButtonClicked" prefHeight="31.0" prefWidth="184.0" style="-fx-background-color: #3255bc;" text="Begin Connection" textFill="WHITE">
                <font>
                   <Font name="Times New Roman" size="15.0" />
                </font></Button>
@@ -575,7 +568,7 @@
             </Text>
          </children>
       </Pane>
-      <Button fx:id="AdminLogOff" layoutX="1145.0" layoutY="5.0" mnemonicParsing="false" onMouseClicked="#logoff" prefHeight="75.0" prefWidth="150.0" text="Log off" textFill="WHITE">
+      <Button fx:id="AdminLogOff" layoutX="1145.0" layoutY="5.0" mnemonicParsing="false" onMouseClicked="#logoff" prefHeight="75.0" prefWidth="150.0" style="-fx-background-color: #3255bc;" text="Log off" textFill="WHITE">
          <font>
             <Font name="Times New Roman" size="26.0" />
          </font>
@@ -661,13 +654,13 @@
                   <ListView fx:id="resultsList" prefHeight="150.0" prefWidth="200.0" />
                   <HBox alignment="CENTER" prefHeight="28.0" prefWidth="175.0">
                      <children>
-                        <Button fx:id="setStartButton" mnemonicParsing="false" onMouseClicked="#setStartButtonClicked" prefHeight="31.0" prefWidth="97.0" text="Start Here" textFill="WHITE">
+                        <Button fx:id="setStartButton" mnemonicParsing="false" onMouseClicked="#setStartButtonClicked" prefHeight="31.0" prefWidth="97.0" style="-fx-background-color: #3255bc;" text="Start Here" textFill="WHITE">
                            <font>
                               <Font name="Times New Roman" size="15.0" />
                            </font>
                         </Button>
                         <Separator orientation="VERTICAL" prefHeight="200.0" />
-                        <Button fx:id="setEndButton" mnemonicParsing="false" onMouseClicked="#setEndButtonClicked" prefHeight="28.0" prefWidth="97.0" text="End Here" textFill="WHITE">
+                        <Button fx:id="setEndButton" mnemonicParsing="false" onMouseClicked="#setEndButtonClicked" prefHeight="28.0" prefWidth="97.0" style="-fx-background-color: #3255bc;" text="End Here" textFill="WHITE">
                            <font>
                               <Font name="Times New Roman" size="15.0" />
                            </font>
@@ -675,7 +668,7 @@
                      </children>
                   </HBox>
                   <Separator prefWidth="200.0" />
-                  <Button fx:id="searchGoButton" mnemonicParsing="false" onMouseClicked="#searchGoButtonClicked" prefHeight="45.0" prefWidth="200.0" text="View Point" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                  <Button fx:id="searchGoButton" mnemonicParsing="false" onMouseClicked="#searchGoButtonClicked" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: #3255bc;" text="View Point" textAlignment="CENTER" textFill="WHITE" wrapText="true">
                      <font>
                         <Font name="Times New Roman" size="17.0" />
                      </font>
@@ -735,13 +728,10 @@
          </children>
       </Pane>
       <ChoiceBox fx:id="buildingChoiceBox" layoutX="9.0" layoutY="218.0" prefHeight="31.0" prefWidth="132.0" />
-      <Label fx:id="zoneLabel" layoutX="10.0" layoutY="187.0" text="Zone">
+      <Label fx:id="zoneLabel" layoutX="44.0" layoutY="187.0" text="Zone">
          <font>
             <Font name="Times New Roman" size="30.0" />
          </font>
       </Label>
    </children>
-   <stylesheets>
-      <URL value="@General.css" />
-   </stylesheets>
 </AnchorPane>

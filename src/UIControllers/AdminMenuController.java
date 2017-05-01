@@ -45,6 +45,8 @@ public class AdminMenuController extends CentralUIController implements Initiali
     LogOffButton.setLayoutX(x_res - LogOffButton.getPrefWidth() - 12);
     MapButton.setLayoutX(x_res/5 - MapButton.getFitWidth()/2);
     EditButton.setLayoutX(x_res/2 - EditButton.getFitWidth()/2);
+    SettingsButton.setLayoutX(4*x_res/5 - SettingsButton.getFitWidth()/2);
+    MapLabel.setLayoutX(x_res/5 - MapLabel.getPrefWidth()/2);
     DirectEditLabel.setLayoutX(x_res/2 - DirectEditLabel.getPrefWidth()/2);
     MapLabel.setLayoutX(x_res/5 - MapLabel.getPrefWidth()/2);
     CreateAccountButton.setLayoutX(x_res - CreateAccountButton.getPrefWidth() - 12);
@@ -87,6 +89,19 @@ public class AdminMenuController extends CentralUIController implements Initiali
     }
   }
 
+  public void createAccount() {
+    Stage primaryStage = (Stage) AdminMenu.getScene().getWindow();
+    try {
+      loadScene(primaryStage, "/SignupMenu.fxml");
+    } catch (Exception e) {
+      System.out.println("Cannot load signup menu");
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * set the scene to admin map
+   */
   @FXML
   public void editMap() {
     mapViewFlag = 3;
@@ -98,6 +113,9 @@ public class AdminMenuController extends CentralUIController implements Initiali
     }
   }
 
+  /**
+   * set the scene to directory editor
+   */
   @FXML
   public void editDirectory() {
     Stage primaryStage = (Stage) AdminMenu.getScene().getWindow();
@@ -108,6 +126,23 @@ public class AdminMenuController extends CentralUIController implements Initiali
     }
   }
 
+  /**
+   * set the scene to settings menu
+   */
+  @FXML
+  public void editSettings () {
+    Stage primaryStage = (Stage) AdminMenu.getScene().getWindow();
+    try {
+      loadScene(primaryStage, "/SettingsMenu.fxml");
+    } catch (Exception e) {
+      System.out.println("Cannot load main menu");
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * set the scene back to admin login page
+   */
   @FXML
   public void back() {
     Stage primaryStage = (Stage) AdminMenu.getScene().getWindow();
@@ -132,26 +167,6 @@ public class AdminMenuController extends CentralUIController implements Initiali
     }
   }
 
-  public void createAccount() {
-    Stage primaryStage = (Stage) AdminMenu.getScene().getWindow();
-    try {
-      loadScene(primaryStage, "/SignupMenu.fxml");
-    } catch (Exception e) {
-      System.out.println("Cannot load signup menu");
-      e.printStackTrace();
-    }
-  }
-
-  @FXML
-  public void editSettings () {
-    Stage primaryStage = (Stage) AdminMenu.getScene().getWindow();
-    try {
-      loadScene(primaryStage, "/SettingsMenu.fxml");
-    } catch (Exception e) {
-      System.out.println("Cannot load main menu");
-      e.printStackTrace();
-    }
-  }
 }
 
 

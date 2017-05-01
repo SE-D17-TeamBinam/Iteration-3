@@ -18,7 +18,7 @@ import javafx.stage.Stage;
 import org.Point;
 
 /**
- * Created by Leon Zhang on 2017/4/1.
+ * Created by Haofan Zhang on 2017/4/1.
  */
 
 public class DetailMenuController extends CentralUIController implements Initializable {
@@ -100,6 +100,7 @@ public class DetailMenuController extends CentralUIController implements Initial
     DocInfoLabel.setLayoutX(x_res/2 - DocInfoLabel.getPrefWidth()/2);
     RoomDetailLabel.setLayoutX(x_res/2 - RoomDetailLabel.getPrefWidth()/2);
   }
+
   @Override
   public void customListenerY () {
     DocPane.setPrefHeight(y_res*9/10 - DocPane.getLayoutY() - 167*(y_res/750 - 1));
@@ -137,10 +138,10 @@ public class DetailMenuController extends CentralUIController implements Initial
         Goto.setFont(Font.font("Times New Roman", 24));
         Goto.setText("Go");
         Goto.setVisible(false);
-        Platform.runLater(() -> {Goto.setLayoutX(ILabel.getWidth() + 10);});
 
         ILabel.setStyle("-fx-background-color: transparent");
         locPane.setOnMouseEntered(e -> {
+          Goto.setLayoutX(ILabel.getWidth() + 10);
           Goto.setVisible(true);
           ILabel.setStyle("-fx-background-color: white");
         });
@@ -184,7 +185,12 @@ public class DetailMenuController extends CentralUIController implements Initial
     }
   }
 
-
+  /**
+   * constructor for detail menu controller
+   * @param room the room to display, if null, display physician
+   * @param doc the physician to display, if null, display room
+   * room and doc will not be both null
+   */
   DetailMenuController (Point room, Physician doc) {
     if (room == null) {
       this.mode = 0;
@@ -195,7 +201,9 @@ public class DetailMenuController extends CentralUIController implements Initial
     currentPhysician = doc;
   }
 
-
+  /**
+   * set the scene back to main menu
+   */
   public void quit () {
     Stage primaryStage = (Stage) anchorPane.getScene().getWindow();
     try {
@@ -206,6 +214,9 @@ public class DetailMenuController extends CentralUIController implements Initial
     }
   }
 
+  /**
+   * set the scene back to search menu
+   */
   public void back () {
     Stage primaryStage = (Stage) anchorPane.getScene().getWindow();
     try {
@@ -216,7 +227,12 @@ public class DetailMenuController extends CentralUIController implements Initial
     }
   }
 
+  /**
+   * set the scene to user map and display room selected
+   * @param room the room to be displayed
+   */
   public void gotoMap (Point room) {
+    mapViewFlag = 1;
     Stage primaryStage = (Stage) anchorPane.getScene().getWindow();
     try {
       searchingPoint = room;
