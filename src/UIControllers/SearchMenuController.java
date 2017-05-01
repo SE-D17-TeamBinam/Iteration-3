@@ -130,29 +130,26 @@ public class SearchMenuController extends CentralUIController implements Initial
       }
     });
 
-    SearchField.setOnKeyPressed(new EventHandler<KeyEvent>() {
-      @Override
-      public void handle(KeyEvent event) {
-          if (SearchField.isFocused()) {
-            switch (event.getCode()) {
-              case BACK_SPACE:
-                if (!SearchField.getSelectedText().equals("")) {
-                  isST = true;
-                  SearchField.deleteText(SearchField.getSelection());
-                }
-                if (!SearchField.getText().equals("")) {
-                  isBS = true;
-                }
-                break;
-              case ENTER:
-                SearchField.deselect();
-                searchString = SearchField.getText();
-                updatePhysicians(docs);
-                updateRooms(rooms);
-                break;
+    SearchField.setOnKeyPressed(event -> {
+      if (SearchField.isFocused()) {
+        switch (event.getCode()) {
+          case BACK_SPACE:
+            if (!SearchField.getSelectedText().equals("")) {
+              isST = true;
+              SearchField.deleteText(SearchField.getSelection());
             }
-          }
+            if (!SearchField.getText().equals("")) {
+              isBS = true;
+            }
+            break;
+          case ENTER:
+            SearchField.deselect();
+            searchString = SearchField.getText();
+            updatePhysicians(docs);
+            updateRooms(rooms);
+            break;
         }
+      }
     });
 
     SearchField.textProperty().addListener((observable, oldValue, newValue) -> {

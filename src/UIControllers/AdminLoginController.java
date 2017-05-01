@@ -39,7 +39,6 @@ public class AdminLoginController extends CentralUIController implements Initial
   private Button AdminLoginButton;
   @FXML
   private Label LoginError;
-
   @FXML
   private AnchorPane anchorPane;
 

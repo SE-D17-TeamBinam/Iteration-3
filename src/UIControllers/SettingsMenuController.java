@@ -12,10 +12,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.Astar;
 import org.BFS;
@@ -31,6 +33,20 @@ public class SettingsMenuController extends CentralUIController implements Initi
   private ArrayList<Point> rooms;
   SettingsIO settings = new SettingsIO();
 
+  @FXML
+  private Label SettingsResolution;
+  @FXML
+  private Label SettingsLocation;
+  @FXML
+  private Label SettingsTimeout;
+  @FXML
+  private Label SettingsAlgorithm;
+  @FXML
+  private Label TimeoutTip;
+  @FXML
+  private Label TimeoutError;
+  @FXML
+  private Pane timeoutPane;
   @FXML
   private AnchorPane anchorPane;
   @FXML
@@ -57,7 +73,24 @@ public class SettingsMenuController extends CentralUIController implements Initi
   }
 
   public void customListenerY () {
-
+    double resLY = 353 * y_res/750;
+    SettingsResolution.setLayoutY(resLY);
+    defaultResolution.setLayoutY(resLY);
+    fullscreenResolution.setLayoutY(resLY);
+    fullwindowResolution.setLayoutY(resLY);
+    double algLY = 553 * y_res/750;
+    SettingsAlgorithm.setLayoutY(algLY);
+    bfsAlgorithm.setLayoutY(algLY);
+    dfsAlgorithm.setLayoutY(algLY);
+    astarAlgorithm.setLayoutY(algLY);
+    double locLY = 247 * y_res/750;
+    SettingsLocation.setLayoutY(locLY);
+    locationsKiosk.setLayoutY(locLY);
+    double toutLY = 447 * y_res/740;
+    SettingsTimeout.setLayoutY(toutLY);
+    timeoutPane.setLayoutY(toutLY);
+    TimeoutTip.setLayoutY(toutLY);
+    TimeoutError.setLayoutY(toutLY + 20);
   }
 
   @Override
@@ -103,7 +136,7 @@ public class SettingsMenuController extends CentralUIController implements Initi
     /* initialize kiosk location */
     locationsKiosk.setItems(FXCollections.observableList(rooms));
     try {
-      locationsKiosk.getSelectionModel().select(settings.getDefaultKiosk(new ListPoints(rooms)).getId());
+      locationsKiosk.getSelectionModel().select(settings.getDefaultKiosk(new ListPoints(rooms)));
     } catch (DefaultKioskNotInMemoryException e) {
       System.out.println("Default kiosk location is not set");
     }
@@ -112,8 +145,7 @@ public class SettingsMenuController extends CentralUIController implements Initi
     timeTimeout.setText(Integer.toString(settings.getTimeout()));
 
     /* kiosk location listener */
-    locationsKiosk.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-      public void changed(ObservableValue ov, Number old_value, Number new_value) {
+    locationsKiosk.getSelectionModel().selectedIndexProperty().addListener((ov, old_value, new_value) -> {
         if ((Integer) new_value >= 0) {
           settings.updateSetting("startingKiosk", Integer
               .toString(((Point) locationsKiosk.getItems().get((Integer) new_value)).getId()));
@@ -125,24 +157,25 @@ public class SettingsMenuController extends CentralUIController implements Initi
 
           }
         }
-      }
     });
 
-    timeTimeout.textProperty().addListener(new ChangeListener<String>() {
-      @Override
-      public void changed(ObservableValue<? extends String> observable, String oldValue,
-          String newValue) {
-        try {
-          if (Integer.parseInt(newValue) < 0) {
-            timeTimeout.setText(Integer.toString(0));
-          } else {
-            System.out.println("changed timeout length to " + newValue);
-            settings.updateSetting("timeoutLength", newValue);
-          }
-        } catch (NumberFormatException e) {
-          System.out.println("Please enter something legit");
-          timeTimeout.setText(oldValue);
+    timeTimeout.textProperty().addListener((observable, oldValue, newValue) -> {
+      try {
+        Integer newTimeOut = Integer.parseInt(newValue);
+        if (newTimeOut < 10 && newTimeOut != 0) {
+          System.out.println("minimum timeout length is 10s");
+          TimeoutError.setVisible(true);
+        } else if (newTimeOut == 0) {
+          System.out.println("timeout disabled");
+          TimeoutError.setVisible(false);
+        } else {
+          System.out.println("set timeout length to " + newValue);
+          settings.updateSetting("timeoutLength", newValue);
+          TimeoutError.setVisible(false);
         }
+      } catch (NumberFormatException e) {
+        System.out.println("please enter a valid number");
+        TimeoutError.setVisible(true);
       }
     });
 

@@ -5,9 +5,15 @@ import Database.DatabaseInterface;
 import Definitions.Physician;
 import FileController.DefaultKioskNotInMemoryException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -36,6 +42,7 @@ public class CentralUIController {
   protected static Session currSession;
   protected static CredentialManager credentialManager;
   protected static Dictionary dictionary;
+  private static Timeline timeOut = null;
   /* resolution */
   protected static double x_res = 1300;
   protected static double y_res = 750;
@@ -65,6 +72,59 @@ public class CentralUIController {
   }
 
 
+  /**
+   * Set the stage to the initial scene (main menu)
+   * @parameter primaryStage: The main stage of the application
+   */
+  public void restartUI(Stage primaryStage) throws Exception {
+    applySettings(primaryStage);
+    loadScene(primaryStage, "/MainMenu.fxml");
+    primaryStage.show();
+  }
+
+  /**
+   * @parameter primaryStage: The main stage of the application
+   * @parameter fxmlpath: the file path of the fxml file to be loaded
+   * Set the stage to a scene by an fxml file
+   */
+  public void loadScene (Stage primaryStage, String fxmlpath) throws Exception {
+    if (timeOut != null) {
+      stopTimeOut();
+    }
+    Parent root = FXMLLoader.load(getClass().getResource(fxmlpath));
+    Scene newScene = new Scene(root, x_res, y_res);
+    if (!fxmlpath.equals("/MainMenu.fxml")) {
+      addTimeOut(newScene);
+    }
+    primaryStage.setScene(newScene);
+  }
+
+  ////////////////////////
+  //// apply settings ////
+  ////////////////////////
+
+  private void applySettings (Stage primaryStage) {
+    SettingsIO settings = new SettingsIO();
+    if (settings.getScreenPreference() == 1) {
+      x_res = 1300;
+      y_res = 750;
+    } else if (settings.getScreenPreference() == 2) {
+      primaryStage.setFullScreen(true);
+    } else if (settings.getScreenPreference() == 3) {
+      primaryStage.setMaximized(true);
+    }
+    try {
+      kioskLocation = settings.getDefaultKiosk(new ListPoints(database.getNamedPoints()));
+    } catch (DefaultKioskNotInMemoryException e) {
+      kioskLocation = null;
+    }
+    currSession.setAlgorithm(settings.getAlgorithm());
+  }
+
+  ////////////////////////
+  //// sort functions ////
+  ////////////////////////
+
   public void sortDocs (List<Physician> docs) {
     Collections.sort(docs, new Comparator<Physician>() {
       @Override
@@ -88,69 +148,27 @@ public class CentralUIController {
     });
   }
 
-
-  /**
-   * Set the stage to the initial scene (main menu)
-   * @parameter primaryStage: The main stage of the application
-   */
-  public void restartUI(Stage primaryStage) throws Exception {
-    SettingsIO settings = new SettingsIO();
-    if (settings.getScreenPreference() == 1) {
-      x_res = 1300;
-      y_res = 750;
-    } else if (settings.getScreenPreference() == 2) {
-      primaryStage.setFullScreen(true);
-    } else if (settings.getScreenPreference() == 3) {
-      primaryStage.setMaximized(true);
-    }
-    try {
-      kioskLocation = settings.getDefaultKiosk(new ListPoints(database.getNamedPoints()));
-    } catch (DefaultKioskNotInMemoryException e) {
-      kioskLocation = null;
-    }
-    currSession.setAlgorithm(settings.getAlgorithm());
-
-    Parent root = FXMLLoader.load(getClass().getResource("/MainMenu.fxml"));
-    primaryStage.setScene(new Scene(root, x_res, y_res));
-    primaryStage.setTitle("Faulkner Hospital Kiosk");
-    primaryStage.getIcons().add(new Image("/icons/kioskicon.png"));
-    primaryStage.show();
-  }
-
-  /**
-   * @parameter primaryStage: The main stage of the application
-   * @parameter fxmlpath: the file path of the fxml file to be loaded
-   * Set the stage to a scene by an fxml file
-   */
-  public void loadScene (Stage primaryStage, String fxmlpath) throws Exception {
-    Parent root = FXMLLoader.load(getClass().getResource(fxmlpath));
-    primaryStage.setScene(new Scene(root, x_res, y_res));
-    primaryStage.show();
-  }
-
+  ////////////////////////
+  //// banner and logo ///
+  ////////////////////////
 
   public void addResolutionListener (AnchorPane anchorPane) {
-    anchorPane.widthProperty().addListener(new ChangeListener<Number>() {
-      @Override
-      public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
-        x_res = (double) newSceneWidth;
-        bannerView.setFitWidth(x_res);
-        backgroundView.setFitWidth(x_res);
-        logoView.setFitWidth(350*x_res/1300);
-        logoView.setLayoutX(x_res/2 - logoView.getFitWidth()/2);
-        customListenerX();
-      }
+    anchorPane.widthProperty().addListener((observableValue, oldSceneWidth, newSceneWidth) -> {
+      x_res = (double) newSceneWidth;
+      bannerView.setFitWidth(x_res);
+      backgroundView.setFitWidth(x_res);
+      logoView.setLayoutX(x_res/2 - logoView.getFitWidth()/2);
+      customListenerX();
     });
-    anchorPane.heightProperty().addListener(new ChangeListener<Number>() {
-      @Override
-      public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
-        y_res = (double) newSceneHeight;
-        bannerView.setFitHeight(120*y_res/750);
-        backgroundView.setLayoutY(y_res/2.5);
-        logoView.setLayoutY(14*y_res/750);
-        logoView.setFitHeight(60*y_res/750);
-        customListenerY();
-      }
+    anchorPane.heightProperty().addListener((observableValue, oldSceneHeight, newSceneHeight) -> {
+      y_res = (double) newSceneHeight;
+      bannerView.setFitHeight(120*y_res/750);
+      backgroundView.setLayoutY(y_res/2.5);
+      logoView.setFitHeight(60*y_res/750);
+      logoView.setFitWidth(350*y_res/750);
+      logoView.setLayoutX(x_res/2 - logoView.getFitWidth()/2);
+      logoView.setLayoutY(14*y_res/750);
+      customListenerY();
     });
   }
 
@@ -169,6 +187,7 @@ public class CentralUIController {
     logoView.setImage(logo);
     logoView.setFitHeight(60);
     logoView.setFitWidth(350);
+    logoView.setPreserveRatio(true);
     anchorPane.getChildren().add(bannerView);
     anchorPane.getChildren().add(backgroundView);
     anchorPane.getChildren().add(logoView);
@@ -177,4 +196,52 @@ public class CentralUIController {
     backgroundView.toBack();
   }
 
+  //////////////////////////
+  /// time out functions ///
+  //////////////////////////
+
+  private void addTimeOut (Scene scene) {
+    SettingsIO settings = new SettingsIO();
+    if (settings.getTimeout() != 0) {
+      setTimeOut(settings.getTimeout(), (Stage) scene.getWindow());
+      scene.setOnMouseMoved(e -> {
+        resetTimeOut(settings.getTimeout(), (Stage) scene.getWindow());
+      });
+      scene.setOnMouseClicked(e -> {
+        resetTimeOut(settings.getTimeout(), (Stage) scene.getWindow());
+      });
+      scene.setOnKeyTyped(e -> {
+        resetTimeOut(settings.getTimeout(), (Stage) scene.getWindow());
+      });
+    }
+  }
+
+  private void setTimeOut (int time, Stage primaryStage) {
+    timeOut = makeKeyFrame(time, primaryStage);
+    timeOut.play();
+  }
+
+  private void resetTimeOut (int time, Stage primaryStage) {
+    timeOut.stop();
+    setTimeOut(time, primaryStage);
+  }
+
+  private void stopTimeOut () {
+    timeOut.stop();
+  }
+
+  private Timeline makeKeyFrame (int time, Stage primaryStage) {
+    KeyFrame KF = new KeyFrame(javafx.util.Duration.seconds(time), event-> {
+      System.out.println("Session timed out");
+      try {
+        loadScene(primaryStage, "/MainMenu.fxml");
+      } catch (Exception e) {
+        System.out.println("Cannot load main menu from keyframe");
+        e.printStackTrace();
+      }
+    });
+    Timeline timeout = new Timeline(KF);
+    timeout.setCycleCount(1);
+    return timeout;
+  }
 }

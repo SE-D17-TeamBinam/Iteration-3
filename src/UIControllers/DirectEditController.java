@@ -215,27 +215,18 @@ public class DirectEditController extends CentralUIController implements Initial
     ///////// Listeners /////////
     /////////////////////////////
     // when select any doc
-    Directory.getSelectionModel().selectedItemProperty().addListener(
-        new ChangeListener<Physician>() {
-          public void changed(ObservableValue<? extends Physician> ov,
-              Physician old_val, Physician new_val) {
-            int clicked = Directory.getSelectionModel().getSelectedIndex();
-            if (clicked >= 0) {
-              selectedHPIndex = clicked;
-              selectedHP = new_val;
-            }
-            refreshLoc();
-            refreshInfo();
-          }
-        });
-    Locations.getSelectionModel().selectedItemProperty().addListener(
-        new ChangeListener<ChoiceBox>() {
-          @Override
-          public void changed(ObservableValue<? extends ChoiceBox> observable, ChoiceBox oldValue,
-              ChoiceBox newValue) {
-            selectedCB = newValue;
-          }
-        });
+    Directory.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+      int clicked = Directory.getSelectionModel().getSelectedIndex();
+      if (clicked >= 0) {
+        selectedHPIndex = clicked;
+        selectedHP = newValue;
+      }
+      refreshLoc();
+      refreshInfo();
+    });
+    Locations.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+      selectedCB = newValue;
+    });
     DirectSearch.textProperty().addListener((observable, oldValue, newValue) -> {
       searchString = newValue.toString();
       refreshDir();
