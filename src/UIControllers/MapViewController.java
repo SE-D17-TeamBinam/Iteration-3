@@ -2465,7 +2465,7 @@ public class MapViewController extends CentralUIController implements Initializa
   public void logoff() {
     Stage primaryStage = (Stage) mapViewPane.getScene().getWindow();
     try {
-      loadScene(primaryStage, "/MainMenu.fxml");
+      restartUI(primaryStage);
     } catch (Exception e) {
       System.out.println("Cannot load main menu");
       e.printStackTrace();
