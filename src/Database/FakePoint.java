@@ -3,6 +3,7 @@ package Database;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import org.ListPoints;
 import org.Point;
 
 /**
@@ -22,19 +23,19 @@ public class FakePoint {
   int cost;
 
   //Constructor
-  public FakePoint(double xCoord, double yCoord, String name) {
-    this.xCoord = (int) xCoord;
-    this.yCoord = (int) yCoord;
-    this.name = name;
-    this.name.replace(';','_');
-  }
+//  public FakePoint(double xCoord, double yCoord, String name) {
+//    this.xCoord = (int) xCoord;
+//    this.yCoord = (int) yCoord;
+//    this.name = name;
+//    this.name.replace(';','_');
+//  }
+//
+//  public FakePoint(double xCoord, double yCoord, int floor) {
+//    this.xCoord = (int) xCoord;
+//    this.yCoord = (int) yCoord;
+//    this.floor = floor;
+//  }
 
-  public FakePoint(double xCoord, double yCoord, int floor) {
-    this.xCoord = (int) xCoord;
-    this.yCoord = (int) yCoord;
-    this.floor = floor;
-  }
-//probably will not work properly
   public FakePoint(int xCoord, int yCoord, String name, int id, ArrayList<Integer> new_neighbors,
       int floor) {
     this.xCoord = xCoord;
@@ -54,7 +55,7 @@ public class FakePoint {
     this.name = "";
     if (equivalent.getNames() != null) {
       for (String n : equivalent.getNames()) {
-        if (n.length() > 1) {
+        if (n != null) {
           this.name += n + "\t";
         }
       }
@@ -75,8 +76,6 @@ public class FakePoint {
       this.neighbors.add(equivalent.neighbors.get(i).getId());
     }
     this.name.replace(';','_');
-
-
   }
 
   //Methods

@@ -2,6 +2,7 @@ package org;
 
 import Database.DatabaseInterface;
 import UIControllers.CentralUIController;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 /**
@@ -17,10 +18,10 @@ public class CentralController {
   }
 
   public void startUI (Stage primaryStage, DatabaseInterface dbe) throws Exception {
-    //primaryStage.setFullScreen(true);
-    //primaryStage.setMaximized(true);
     primaryStage.setMinHeight(790);
     primaryStage.setMinWidth(1300);
+    primaryStage.setTitle("Faulkner Hospital Kiosk");
+    primaryStage.getIcons().add(new Image("/icons/kioskicon.png"));
     this.uiController = new CentralUIController();
     uiController.setSession(currSession, dbe);
     uiController.restartUI(primaryStage);

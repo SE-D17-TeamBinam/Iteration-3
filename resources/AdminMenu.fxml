@@ -10,32 +10,34 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="750.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UIControllers.AdminMenuController">
+
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="750.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UIControllers.AdminMenuController">
    <children>
       <Pane fx:id="AdminMenu" prefHeight="750.0" prefWidth="1300.0">
          <children>
-            <ImageView fx:id="MapButton" fitHeight="351.0" fitWidth="351.0" layoutX="725.0" layoutY="240.0" onMouseClicked="#editMap" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="MapButton" fitHeight="300.0" fitWidth="300.0" layoutX="501.0" layoutY="240.0" onMouseClicked="#editMap" pickOnBounds="true" preserveRatio="true">
+
                <cursor>
-                  <Cursor fx:constant="OPEN_HAND" />
+                  <Cursor fx:constant="HAND" />
                </cursor>
                <image>
                   <Image url="@icons/mapbutton.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="EditButton" fitHeight="351.0" fitWidth="351.0" layoutX="225.0" layoutY="240.0" onMouseClicked="#editDirectory" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="EditButton" fitHeight="300.0" fitWidth="300.0" layoutX="102.0" layoutY="240.0" onMouseClicked="#editDirectory" pickOnBounds="true" preserveRatio="true">
                <cursor>
-                  <Cursor fx:constant="OPEN_HAND" />
+                  <Cursor fx:constant="HAND" />
                </cursor>
                <image>
                   <Image url="@icons/directory.png" />
                </image>
             </ImageView>
-            <Label fx:id="DirectEditLabel" alignment="CENTER" layoutX="293.0" layoutY="523.0" mouseTransparent="true" prefHeight="47.0" prefWidth="221.0" text="Edit Directory">
+            <Label fx:id="DirectEditLabel" alignment="CENTER" layoutX="142.0" layoutY="553.0" mouseTransparent="true" prefHeight="47.0" prefWidth="221.0" text="Edit Directory">
                <font>
                   <Font name="Times New Roman" size="30.0" />
                </font>
             </Label>
-            <Label fx:id="MapLabel" alignment="CENTER" layoutX="807.0" layoutY="523.0" mouseTransparent="true" prefHeight="53.0" prefWidth="190.0" text="Edit Map">
+            <Label fx:id="MapLabel" alignment="CENTER" layoutX="555.0" layoutY="550.0" mouseTransparent="true" prefHeight="53.0" prefWidth="190.0" text="Edit Map">
                <font>
                   <Font name="Times New Roman" size="30.0" />
                </font>
@@ -55,6 +57,19 @@
                   <Font name="Times New Roman" size="18.0" />
                </font>
             </Button>
+            <ImageView fx:id="SettingsButton" fitHeight="300.0" fitWidth="300.0" layoutX="877.0" layoutY="240.0" onMouseClicked="#editSettings" pickOnBounds="true" preserveRatio="true">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <image>
+                  <Image url="@icons/settings-icon.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="SettingsLabel" alignment="CENTER" layoutX="917.0" layoutY="553.0" mouseTransparent="true" prefHeight="47.0" prefWidth="221.0" text="Edit Settings">
+               <font>
+                  <Font name="Times New Roman" size="30.0" />
+               </font>
+            </Label>
          </children>
       </Pane>
    </children>

@@ -66,7 +66,7 @@ public class MainMenuController extends CentralUIController implements Initializ
     MapButton.setLayoutX(5*(x_res/7) - MapButton.getFitWidth()/2);
     SearchButton.setLayoutX(2*(x_res/7) - SearchButton.getFitWidth()/2);
     MainKey.setLayoutX(x_res - MainKey.getFitWidth() - 10);
-    InfoButton.setLayoutX(x_res - InfoButton.getFitWidth() + 5);
+    InfoButton.setLayoutX(15*x_res/16);
     SearchLabel.setLayoutX(2*(x_res/7) - SearchLabel.getPrefWidth()/2);
   }
 
