@@ -436,7 +436,9 @@ public class MapViewController extends CentralUIController implements Initializa
     if (mapViewFlag == 1 || mapViewFlag == 2) {
       AdminLogOff.setVisible(false);
       helpButton.setVisible(false);
-      initializeLanguageConfigs();
+      if(mapViewFlag == 1) {
+        initializeLanguageConfigs();
+      }
     } else {
       userPane.setVisible(false);
       textDirectionsPane.setVisible(false);
