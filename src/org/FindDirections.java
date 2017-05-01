@@ -107,6 +107,14 @@ public class FindDirections {
         hallsPassed++;
       }
 
+      //check if we are staring on an entrance
+      if (count == 1 &&
+          (reversePath.get(0).getName().equals("Atrium Main Entrance") ||
+              reversePath.get(0).getName().equals("Belkin House Entrance") ||
+              reversePath.get(0).getName().equals("Garage Entrance"))) {
+        outside = true;
+      }
+
       if(current.getName().equals("Atrium Main Entrance") ||
           current.getName().equals("Belkin House Entrance") ||
           current.getName().equals("Garage Entrance")){
