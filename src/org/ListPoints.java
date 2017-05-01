@@ -43,11 +43,11 @@ public class ListPoints {
     HashMap<Point, Point> newPoints = new HashMap<Point, Point>();
     for(Point p : points){
       if(p.isElevator()){
-        newPoints.put(p, new ElevatorPoint(p.getXCoord(), p.getYCoord(), p.getName(), p.getId(), new ArrayList<Point>(), p.getFloor()));
+        newPoints.put(p, new ElevatorPoint(p.getXCoord(), p.getYCoord(), p.getName(), p.getId(), new ArrayList<Point>(), p.getFloor(), p.getBuilding()));
       }else if(p.isStair()){
-        newPoints.put(p, new StairPoint(p.getXCoord(), p.getYCoord(), p.getName(), p.getId(), new ArrayList<Point>(), p.getFloor()));
+        newPoints.put(p, new StairPoint(p.getXCoord(), p.getYCoord(), p.getName(), p.getId(), new ArrayList<Point>(), p.getFloor(), p.getBuilding()));
       }else{
-        newPoints.put(p, new Point(p.getXCoord(), p.getYCoord(), p.getName(), p.getId(), new ArrayList<Point>(), p.getFloor()));
+        newPoints.put(p, new Point(p.getXCoord(), p.getYCoord(), p.getName(), p.getId(), new ArrayList<Point>(), p.getFloor(), p.getBuilding()));
       }
     }
     for(Point p : points){
