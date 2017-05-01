@@ -362,7 +362,7 @@ public class SearchMenuController extends CentralUIController implements Initial
   public void back () {
     Stage primaryStage = (Stage) anchorPane.getScene().getWindow();
     try {
-      loadScene(primaryStage, "/MainMenu.fxml");
+      restartUI(primaryStage);
     } catch (Exception e) {
       System.out.println("Cannot load main menu");
       e.printStackTrace();

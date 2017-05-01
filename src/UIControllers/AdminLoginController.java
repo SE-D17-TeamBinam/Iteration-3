@@ -119,7 +119,7 @@ public class AdminLoginController extends CentralUIController implements Initial
   public void back () {
     Stage primaryStage = (Stage) AdminLogin.getScene().getWindow();
     try {
-      loadScene(primaryStage, "/MainMenu.fxml");
+      restartUI(primaryStage);
     } catch (Exception e) {
       System.out.println("Cannot load main menu");
       e.printStackTrace();

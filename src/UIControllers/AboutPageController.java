@@ -53,7 +53,7 @@ public class AboutPageController extends CentralUIController implements Initiali
   public void back () {
   Stage primaryStage = (Stage) AboutPage.getScene().getWindow();
     try {
-      loadScene(primaryStage, "/MainMenu.fxml");
+      restartUI(primaryStage);
     } catch (Exception e) {
       System.out.println("Cannot load main menu");
       e.printStackTrace();

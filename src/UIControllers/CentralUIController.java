@@ -82,7 +82,8 @@ public class CentralUIController {
   public void restartUI(Stage primaryStage) throws Exception {
     applySettings(primaryStage);
     Parent root = FXMLLoader.load(getClass().getResource("/MainMenu.fxml"));
-    primaryStage.setScene(new Scene(root, x_res, y_res));
+    Scene currScene = new Scene(root, x_res, y_res);
+    primaryStage.setScene(currScene);
     primaryStage.show();
   }
 
@@ -96,9 +97,7 @@ public class CentralUIController {
     Parent root = FXMLLoader.load(getClass().getResource(fxmlpath));
     Scene currScene = primaryStage.getScene();
     currScene.setRoot(root);
-    if (!fxmlpath.equals("/MainMenu.fxml")) {
-      addTimeOut(currScene);
-    }
+    playTimeOut();
   }
 
   ////////////////////////
@@ -128,7 +127,6 @@ public class CentralUIController {
     } catch (DefaultKioskNotInMemoryException e) {
       kioskLocation = null;
     }
-    currSession.setAlgorithm(settings.getAlgorithm());
   }
 
   ////////////////////////
@@ -229,47 +227,53 @@ public class CentralUIController {
    * add time out implementation to a scene
    * @param scene the scene to add on
    */
-  private void addTimeOut (Scene scene) {
+  public void addTimeOut (Scene scene) {
     SettingsIO settings = new SettingsIO();
     if (settings.getTimeout() != 0) {
-      setTimeOut(settings.getTimeout(), (Stage) scene.getWindow());
-      playTimeOut();
+      setTimeOut((Stage) scene.getWindow());
       scene.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-        resetTimeOut(scene, settings);
+        resetTimeOut((Stage) scene.getWindow());
       });
       scene.addEventFilter(MouseEvent.MOUSE_MOVED, event -> {
-        resetTimeOut(scene, settings);
+        resetTimeOut((Stage) scene.getWindow());
       });
       scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-        resetTimeOut(scene, settings);
+        resetTimeOut((Stage) scene.getWindow());
       });
     }
   }
+
+  private void removeTimeOut (Scene scene) {
+    scene.removeEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+      resetTimeOut((Stage) scene.getWindow());
+    });
+    scene.removeEventFilter(MouseEvent.MOUSE_MOVED, event -> {
+      resetTimeOut((Stage) scene.getWindow());
+    });
+    scene.removeEventFilter(KeyEvent.KEY_PRESSED, event -> {
+      resetTimeOut((Stage) scene.getWindow());
+    });
+  }
+
 
   /**@author Haofan Zhang
    * initialize the time out of a stage
-   * @param time the time out length in seconds
    * @param primaryStage the primary stage to apply the time out
    */
-  public void setTimeOut (int time, Stage primaryStage) {
-    timeOut = makeKeyFrame(time, primaryStage);
+  public void setTimeOut (Stage primaryStage) {
+    timeOut = makeKeyFrame(new SettingsIO().getTimeout(), primaryStage);
+  }
+
+  public void resetTimeOut (Stage primaryStage) {
+    stopTimeOut();
+    setTimeOut(primaryStage);
+    playTimeOut();
   }
 
   public void playTimeOut () {
-    if (timeOut != null) {
+    if (timeOut != null && new SettingsIO().getTimeout() != 0) {
       timeOut.play();
     }
-  }
-  /**@author Haofan Zhang
-   * reset the timer of time out of a stage
-   * @param scene the scene to reset on
-   * @param settings the settings io to get time out length
-   */
-  public void resetTimeOut (Scene scene, SettingsIO settings) {
-    stopTimeOut();
-    timeOut = null;
-    setTimeOut(settings.getTimeout(), (Stage) scene.getWindow());
-    playTimeOut();
   }
   /**
    * stop the time out

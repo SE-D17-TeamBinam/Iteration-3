@@ -160,7 +160,7 @@ public class AdminMenuController extends CentralUIController implements Initiali
       currentUser.clear();
       currUsername = null;
       isLoggedIn = false;
-      loadScene(primaryStage, "/MainMenu.fxml");
+      restartUI(primaryStage);
     } catch (Exception e) {
       System.out.println("Cannot load main menu");
       e.printStackTrace();
