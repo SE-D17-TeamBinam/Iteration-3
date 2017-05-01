@@ -261,6 +261,18 @@ public class MapViewController extends CentralUIController implements Initializa
   private Pane emailPane;
 
   @FXML
+  private Button sendButton;
+
+  @FXML
+  private Button clearButton;
+
+  @FXML
+  private Button setStartButton;
+
+  @FXML
+  private Button setEndButton;
+
+  @FXML
   private ListView textDirectionsListView;
 
   private int searchType;
@@ -717,6 +729,11 @@ public class MapViewController extends CentralUIController implements Initializa
     deleteButton.setText(dictionary.getString("Delete", currSession.getLanguage()));
     saveButton.setText(dictionary.getString("Save Map", currSession.getLanguage()));
     mainFloorLabel.setText(dictionary.getString("Floor", currSession.getLanguage()));
+    sendButton.setText(dictionary.getString("Send", currSession.getLanguage()));
+    clearButton.setText(dictionary.getString("Clear", currSession.getLanguage()));
+    setStartButton.setText(dictionary.getString("Start Here", currSession.getLanguage()));
+    setEndButton.setText(dictionary.getString("End Here" , currSession.getLanguage()));
+
 
   }
 

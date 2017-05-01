@@ -31,7 +31,7 @@ public class CredentialManager implements CredentialInterface{
     CredentialManager instance = new CredentialManager();
     try {
       out.createNewFile();
-      if (instance.containsUser("admin", "admin")){
+      if (!instance.containsUser("admin", "admin")){
         instance.signup("admin", "admin", UserType.ADMIN);
       }
     } catch (Exception e) {

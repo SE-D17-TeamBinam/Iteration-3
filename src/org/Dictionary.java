@@ -282,6 +282,33 @@ public class Dictionary {
     Entry stm = new Entry(sendToMeLabel);
     this.addEntry("Send to Me" , stm);
 
+    HashMap<Language, String> clearLabel = new HashMap<Language, String> ();
+    clearLabel.put(Language.SPANISH, "Borrar");
+    clearLabel.put(Language.ENGLISH, "Clear");
+    clearLabel.put(Language.PORTUGESE, "Desmarcar");
+    Entry clear = new Entry(clearLabel);
+    this.addEntry("Clear" , clear);
+
+    HashMap<Language, String> startHereLabel = new HashMap<Language, String> ();
+    startHereLabel.put(Language.SPANISH, "Empieza Aqui");
+    startHereLabel.put(Language.ENGLISH, "Start Here");
+    startHereLabel.put(Language.PORTUGESE, "Começa Aqui");
+    Entry startHere = new Entry(startHereLabel);
+    this.addEntry("Start Here" , startHere);
+
+    HashMap<Language, String> endHereLabel = new HashMap<Language, String> ();
+    endHereLabel.put(Language.SPANISH, "Termina aqui");
+    endHereLabel.put(Language.ENGLISH, "End Here");
+    endHereLabel.put(Language.PORTUGESE, "Termine Aqui");
+    Entry endHere = new Entry(endHereLabel);
+    this.addEntry("End Here" , endHere);
+
+    HashMap<Language, String> sendLabel = new HashMap<Language, String> ();
+    sendLabel.put(Language.SPANISH, "Enviar");
+    sendLabel.put(Language.ENGLISH, "Send");
+    sendLabel.put(Language.PORTUGESE, "Enviar");
+    Entry send = new Entry(sendLabel);
+    this.addEntry("Send" , send);
   }
 
   /**
