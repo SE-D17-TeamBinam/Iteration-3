@@ -5,3 +5,4 @@ out/
 testDB/
 derby.log
 kiosk.properties
+users.txt

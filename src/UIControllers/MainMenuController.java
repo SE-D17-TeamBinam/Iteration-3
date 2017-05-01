@@ -1,4 +1,6 @@
 package UIControllers;
+
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
@@ -49,7 +51,7 @@ public class MainMenuController extends CentralUIController implements Initializ
     setBackground(anchorPane);
     CentralController.resetSession();
     applyLanguageConfig();
-//    enterAlias();
+    isLoggedIn = false;
   }
 
   /**
@@ -78,7 +80,7 @@ public class MainMenuController extends CentralUIController implements Initializ
     SearchButton.setLayoutY(6*(y_res/11) - SearchButton.getFitHeight()/2);
     SearchLabel.setLayoutY(6*(y_res/11) + 100);
     langBox.setLayoutY(y_res - 50);
-    InfoButton.setLayoutY(y_res/5);
+    MainKey.setLayoutY(y_res - 50);
   }
 
   /**
@@ -108,11 +110,14 @@ public class MainMenuController extends CentralUIController implements Initializ
   /**
    * set the scene to admin login menu
    */
-  public void gotoAdmin () {
+  public void gotoAdmin () throws IOException {
+    // for now sign up admin when loaded so people can get to admin view
+    //credentialManager.signup("admin", "admin", UserType.ADMIN);
+    // sign up staff when loaded for testing purposes
     Stage primaryStage = (Stage) MainMenu.getScene().getWindow();
     try {
       loadScene(primaryStage, "/AdminLogin.fxml");
-    } catch (Exception e) {
+    } catch (Exception e) { e.printStackTrace();
     }
   }
 
@@ -155,29 +160,6 @@ public class MainMenuController extends CentralUIController implements Initializ
         });
   }
 
-//  public ArrayList<String> enterAlias(){
-////    Directory.getSelectionModel().selectedItemProperty().addListener(
-////        new ChangeListener<Physician>() {
-////          public void changed(ObservableValue<? extends Physician> ov,
-////              Physician old_val, Physician new_val) {
-////            int clicked = Directory.getSelectionModel().getSelectedIndex();
-////            if (clicked >= 0) {
-////              selectedHPIndex = clicked;
-////              selectedHP = docDisplay.get(selectedHPIndex);
-////            }
-////          }}
-////    );
-//
-//    TextInputDialog aliasEntry = new TextInputDialog();
-//    aliasEntry.setResizable(true);
-//    aliasEntry.setTitle("Alias Entry");
-//    aliasEntry.setHeaderText("Enter alias for point");
-//    aliasEntry.setContentText("Please enter an alias");
-//    Optional<String> res = aliasEntry.showAndWait();
-//    String s = res.toString().substring(9, res.toString().length()-1);
-//    ArrayList<String> aliases = new ArrayList<String>(Arrays.asList(s.split(", ")));
-//    return aliases;
-//    //ArrayList<String>(Arrays.asList(String.split))
   }
 
 

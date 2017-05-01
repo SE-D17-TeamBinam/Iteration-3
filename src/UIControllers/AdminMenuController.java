@@ -1,13 +1,7 @@
 package UIControllers;
 
-import FileController.SettingsIO;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -38,6 +32,10 @@ public class AdminMenuController extends CentralUIController implements Initiali
   @FXML
   private Label DirectEditLabel;
   @FXML
+  private Label LoginLabel;
+  @FXML
+  private Button CreateAccountButton;
+  @FXML
   private Label SettingsLabel;
   @FXML
   private Button LogOffButton;
@@ -50,6 +48,10 @@ public class AdminMenuController extends CentralUIController implements Initiali
     SettingsButton.setLayoutX(4*x_res/5 - SettingsButton.getFitWidth()/2);
     MapLabel.setLayoutX(x_res/5 - MapLabel.getPrefWidth()/2);
     DirectEditLabel.setLayoutX(x_res/2 - DirectEditLabel.getPrefWidth()/2);
+    MapLabel.setLayoutX(x_res/5 - MapLabel.getPrefWidth()/2);
+    CreateAccountButton.setLayoutX(x_res - CreateAccountButton.getPrefWidth() - 12);
+    LoginLabel.setLayoutX(x_res/2 - LoginLabel.getPrefWidth()/2 + 70);
+    SettingsButton.setLayoutX(4*x_res/5 - SettingsButton.getFitWidth()/2);
     SettingsLabel.setLayoutX(4*x_res/5 - SettingsLabel.getPrefWidth()/2);
   }
 
@@ -61,7 +63,10 @@ public class AdminMenuController extends CentralUIController implements Initiali
     DirectEditLabel.setLayoutY(6*y_res / 11 + EditButton.getFitHeight()/2 + 20);
     MapLabel.setLayoutY(6*y_res / 11 + MapButton.getFitHeight()/2 + 20);
     SettingsLabel.setLayoutY(6*y_res/11 + SettingsButton.getFitHeight()/2 + 20);
+    CreateAccountButton.setLayoutY(y_res - CreateAccountButton.getPrefWidth()/2);
+    LoginLabel.setLayoutY(y_res - LoginLabel.getPrefHeight());
   }
+
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
@@ -74,6 +79,24 @@ public class AdminMenuController extends CentralUIController implements Initiali
     }
     addResolutionListener(anchorPane);
     setBackground(anchorPane);
+    LoginLabel.setText(LoginLabel.getText() + currUsername);
+    initializeCreationButton();
+  }
+
+  public void initializeCreationButton() {
+    if(!adminPermissions) {
+      CreateAccountButton.setVisible(false);
+    }
+  }
+
+  public void createAccount() {
+    Stage primaryStage = (Stage) AdminMenu.getScene().getWindow();
+    try {
+      loadScene(primaryStage, "/SignupMenu.fxml");
+    } catch (Exception e) {
+      System.out.println("Cannot load signup menu");
+      e.printStackTrace();
+    }
   }
 
   /**
@@ -130,12 +153,13 @@ public class AdminMenuController extends CentralUIController implements Initiali
     }
   }
 
-  /**
-   * set the scene to main menu
-   */
   public void logoff() {
     Stage primaryStage = (Stage) AdminMenu.getScene().getWindow();
     try {
+      adminPermissions = false;
+      currentUser.clear();
+      currUsername = null;
+      isLoggedIn = false;
       loadScene(primaryStage, "/MainMenu.fxml");
     } catch (Exception e) {
       System.out.println("Cannot load main menu");

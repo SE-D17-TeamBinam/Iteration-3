@@ -1,6 +1,9 @@
 package Networking;
 
 import java.util.Properties;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Dialog;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
@@ -8,7 +11,6 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.lang.Object;
 
 
 
@@ -67,7 +69,7 @@ public class Emailer implements IEmailer{
       System.out.println("Sent message successfully!");
 
     } catch (MessagingException e) {
-      throw new RuntimeException(e);
+      errorMessage();
     }
   }
 
@@ -79,10 +81,10 @@ public class Emailer implements IEmailer{
    */
   public String format (Carrier c, String number) {
     switch(c) {
-      case att: return number + "@txt.att.net";
-      case sprint: return number + "@messaging.sprintpcs.com";
-      case tmobile: return number + "@tmomail.net";
-      case verizon: return number + "@vtext.com";
+      case ATT: return number + "@txt.ATT.net";
+      case SPRINT: return number + "@messaging.sprintpcs.com";
+      case TMOBILE: return number + "@tmomail.net";
+      case VERIZON: return number + "@vtext.com";
       default:return "Unexpected error" + c.name();
     }
   }
@@ -97,6 +99,13 @@ public class Emailer implements IEmailer{
     Emailer e = new Emailer();
     String recepient = e.format(c, number);
     e.email(recepient, text);
+  }
+
+  public void errorMessage() {
+    Dialog error = new Alert(AlertType.ERROR);
+    error.setHeaderText("Email not found");
+    error.setContentText("This is not a valid email.");
+    error.showAndWait();
   }
 
 }

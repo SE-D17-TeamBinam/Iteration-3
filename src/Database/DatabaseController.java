@@ -364,7 +364,7 @@ public class DatabaseController implements DatabaseInterface {
     int floor = point.getFloor();
     String name = point.getName().replace(';', '_');
     ArrayList<Integer> neighbors = point.getNeighbors();
-
+    System.out.println("name in addpoint " + name);
     dbc.send_Command(
         "insert into Point (x,y,cost,pid,floor,name) values (" + x + ","
             + y + "," + cost + "," + id + "," + floor + ",'" + name + "'); \n");
@@ -759,9 +759,7 @@ public class DatabaseController implements DatabaseInterface {
     int i;
     for (i = 0; i < localPoints.size(); i++) {
       if (localPoints.get(i).getName() != null && !localPoints.get(i).getName().equals("null")
-          && !localPoints.get(i).getName().equals("") && !(
-          Objects.equals(localPoints.get(i).getName().replaceAll("\\s", ""), ""))) {
-        namedPoints.add((Point) localPoints.get(i).clone());
+          && !localPoints.get(i).getName().equals("") && !(Objects.equals(localPoints.get(i).getName().replaceAll("\\s", ""), ""))) {namedPoints.add((Point) localPoints.get(i).clone());
       }
     }
 
@@ -791,6 +789,7 @@ public class DatabaseController implements DatabaseInterface {
 //        }
       }
     }
+
 
     ArrayList<Point> ret = FakePoint.deepClone(localPoints);
 

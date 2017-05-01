@@ -459,6 +459,10 @@ public class DirectEditController extends CentralUIController implements Initial
    * set the scene back to main menu
    */
   public void logoff () {
+    adminPermissions = false;
+    currentUser.clear();
+    currUsername = null;
+    isLoggedIn = false;
     Stage primaryStage = (Stage) anchorPane.getScene().getWindow();
     try {
       loadScene(primaryStage, "/MainMenu.fxml");

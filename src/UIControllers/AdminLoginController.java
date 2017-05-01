@@ -1,5 +1,6 @@
 package UIControllers;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -28,7 +29,6 @@ public class AdminLoginController extends CentralUIController implements Initial
   @FXML
   private PasswordField AdminPassField;
 
-  /* language fields */
   @FXML
   private Button AdminBack;
   @FXML
@@ -44,11 +44,6 @@ public class AdminLoginController extends CentralUIController implements Initial
 
   @Override
   public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
-    /* apply language configs */
-    //AdminBack.setText(dictionary.getString("Back", currSession.getLanguage()));
-    //AdminNameLabel.setText(dictionary.getString("Username", currSession.getLanguage()));
-    //AdminPassLabel.setText(dictionary.getString("Password", currSession.getLanguage()));
-    //AdminLoginButton.setText(dictionary.getString("Login", currSession.getLanguage()));
     addResolutionListener(anchorPane);
     setBackground(anchorPane);
   }
@@ -62,7 +57,6 @@ public class AdminLoginController extends CentralUIController implements Initial
     AdminPassField.setLayoutX(x_res/2 - 20);
     LoginError.setLayoutX(x_res/2 - LoginError.getPrefWidth()/2);
   }
-
   @Override
   public void customListenerY () {
     AdminNameLabel.setLayoutY(4*y_res/11);
@@ -78,7 +72,7 @@ public class AdminLoginController extends CentralUIController implements Initial
    * @param event the Key event containing pressed key code
    */
   @FXML
-  private void tryLogin(KeyEvent event){
+  private void tryLogin(KeyEvent event) throws IOException {
     if(event.getCode().toString().equals("ENTER")){
       login();
     }
@@ -88,13 +82,26 @@ public class AdminLoginController extends CentralUIController implements Initial
    * checks login credential. If pass, log into directory editor; if fail, show an error message
    * TODO: throw an exception in the future.
    */
-  public void login () {
-
+  public void login () throws IOException {
+    adminPermissions = false;
     Stage primaryStage = (Stage) AdminLogin.getScene().getWindow();
     String enteredName = AdminNameField.getText();
     String enteredPass = AdminPassField.getText();
-    if (credentialManager.userIsAdmin(enteredName, enteredPass))  {
+
+    if (credentialManager.login(enteredName, enteredPass)){
       LoginError.setVisible(false);
+      currUsername = enteredName;
+      currentUser.put(enteredName, enteredPass);
+      if (credentialManager.userIsAdmin(enteredName)){
+        mapViewFlag = 3;
+        adminPermissions = true;
+        isLoggedIn = true;
+      }
+      else {
+        mapViewFlag = 2;
+        isLoggedIn = true;
+      }
+
       try {
         loadScene(primaryStage, "/AdminMenu.fxml");
       } catch (Exception e) {
@@ -107,7 +114,7 @@ public class AdminLoginController extends CentralUIController implements Initial
   }
 
   /**
-   * set the scene back to main menu
+   * go back to the main menu
    */
   public void back () {
     Stage primaryStage = (Stage) AdminLogin.getScene().getWindow();
