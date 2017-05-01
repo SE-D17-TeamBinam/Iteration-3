@@ -272,7 +272,7 @@ public class MapViewController extends CentralUIController implements Initializa
   private HashMap<String, Point> searchPoints = new HashMap<>();
 
 
-  private int userPaneVisible = 1;
+  private int userPaneVisible = 0;
 
   private void initializeSearchChoices() {
     choose1();

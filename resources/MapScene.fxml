@@ -603,7 +603,7 @@
             <Rectangle fx:id="userPaneRectangle" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="620.0" layoutX="19.0" stroke="BLACK" strokeType="INSIDE" width="243.0" />
             <ImageView fx:id="userPaneTabImageView" fitHeight="44.0" fitWidth="19.0" layoutY="1.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@icons/tab1.png" />
+                  <Image url="@icons/tab0.png" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />
