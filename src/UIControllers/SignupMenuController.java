@@ -1,6 +1,7 @@
 package UIControllers;
 
 import CredentialManager.UserType;
+import FileController.SettingsIO;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -276,6 +277,7 @@ public class SignupMenuController extends CentralUIController implements Initial
         if (username.equals(currUsername) && pass.equals(currentUser.get(currUsername))) {
           res.set(true);
           dialog.close();
+          resetTimeOut(primaryStage.getScene(), new SettingsIO());
         } else {
           res.set(false);
           error.showAndWait();
@@ -301,6 +303,7 @@ public class SignupMenuController extends CentralUIController implements Initial
           if (username.equals(currUsername) && pass.equals(currentUser.get(currUsername))) {
             res.set(true);
             dialog.close();
+            resetTimeOut(primaryStage.getScene(), new SettingsIO());
           } else {
             res.set(false);
             error.showAndWait();
@@ -326,6 +329,7 @@ public class SignupMenuController extends CentralUIController implements Initial
           if (username.equals(currUsername) && pass.equals(currentUser.get(currUsername))) {
             res.set(true);
             dialog.close();
+            resetTimeOut(primaryStage.getScene(), new SettingsIO());
           } else {
             res.set(false);
             error.showAndWait();
@@ -343,12 +347,12 @@ public class SignupMenuController extends CentralUIController implements Initial
       @Override
       public void handle(MouseEvent event) {
         dialog.close();
+        resetTimeOut(primaryStage.getScene(), new SettingsIO());
         res.set(false);
       }
     });
-
+    stopTimeOut();
     dialog.showAndWait();
-
       getFlag = res.getValue();
       return getFlag;
     }

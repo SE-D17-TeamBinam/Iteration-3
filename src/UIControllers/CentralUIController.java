@@ -233,14 +233,15 @@ public class CentralUIController {
     SettingsIO settings = new SettingsIO();
     if (settings.getTimeout() != 0) {
       setTimeOut(settings.getTimeout(), (Stage) scene.getWindow());
+      playTimeOut();
       scene.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-        setTimeOut(settings.getTimeout(), (Stage) scene.getWindow());
+        resetTimeOut(scene, settings);
       });
       scene.addEventFilter(MouseEvent.MOUSE_MOVED, event -> {
-        setTimeOut(settings.getTimeout(), (Stage) scene.getWindow());
+        resetTimeOut(scene, settings);
       });
       scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-        setTimeOut(settings.getTimeout(), (Stage) scene.getWindow());
+        resetTimeOut(scene, settings);
       });
     }
   }
@@ -252,20 +253,24 @@ public class CentralUIController {
    */
   public void setTimeOut (int time, Stage primaryStage) {
     timeOut = makeKeyFrame(time, primaryStage);
-    timeOut.play();
   }
 
+  public void playTimeOut () {
+    if (timeOut != null) {
+      timeOut.play();
+    }
+  }
   /**@author Haofan Zhang
    * reset the timer of time out of a stage
-   * @param time the new time out length in seconds
-   * @param primaryStage the primary stage to reset the time out
+   * @param scene the scene to reset on
+   * @param settings the settings io to get time out length
    */
-  /*
-  private void resetTimeOut (int time, Stage primaryStage) {
-    timeOut.stop();
-    setTimeOut(time, primaryStage);
+  public void resetTimeOut (Scene scene, SettingsIO settings) {
+    stopTimeOut();
+    timeOut = null;
+    setTimeOut(settings.getTimeout(), (Stage) scene.getWindow());
+    playTimeOut();
   }
-  */
   /**
    * stop the time out
    */
