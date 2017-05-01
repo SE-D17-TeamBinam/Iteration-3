@@ -41,7 +41,7 @@
             <SVGPath content="M8 36 L38 36 L23 62 L8 36" fill="#3083ff" layoutX="2.0" layoutY="64.0" onMouseClicked="#decreaseFloorButtonClicked" stroke="#2088ff" />
          </children>
       </VBox>
-      <Button id="SearchBack" fx:id="backButton" layoutX="23.0" layoutY="16.0" mnemonicParsing="false" onMouseClicked="#backButtonClicked" prefHeight="49.0" prefWidth="105.0" text="Back" textFill="WHITE">
+      <Button id="SearchBack" fx:id="backButton" layoutX="5.0" layoutY="5.0" mnemonicParsing="false" onMouseClicked="#backButtonClicked" prefHeight="49.0" prefWidth="105.0" text="Back" textFill="WHITE">
          <font>
             <Font name="Times New Roman" size="20.0" />
          </font>
@@ -580,7 +580,7 @@
             </Text>
          </children>
       </Pane>
-      <Button fx:id="AdminLogOff" layoutX="1145.0" layoutY="5.0" mnemonicParsing="false" onMouseClicked="#logoff" prefHeight="75.0" prefWidth="150.0" text="Log off" textFill="WHITE">
+      <Button fx:id="AdminLogOff" layoutX="1175.0" layoutY="5.0" mnemonicParsing="false" onMouseClicked="#logoff" prefHeight="60.0" prefWidth="120.0" text="Log off" textFill="WHITE">
          <font>
             <Font name="Times New Roman" size="26.0" />
          </font>
